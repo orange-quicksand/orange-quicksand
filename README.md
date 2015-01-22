@@ -1,12 +1,12 @@
-# Project Name
+# uGame
 
-> Pithy project description
+> Netflix for games
 
 ## Team
 
-  - __Product Owner__: teamMember
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - __Product Owner__: Bren Cubacub
+  - __Scrum Master__: Omar Duarte
+  - __Development Team Members__: Mike Moss, Ryan Lee
 
 ## Table of Contents
 
@@ -25,9 +25,6 @@
 ## Requirements
 
 - Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
 - etc
 
 ## Development
