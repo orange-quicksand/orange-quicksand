@@ -1,0 +1,13 @@
+{
+  "name": "orange-quicksand",
+  "version": "0.0.0",
+  "homepage": "https://github.com/realmike33/orange-quicksand",
+  "authors": [
+    "Mike <realmike33@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "lumx": "~0.2.50",
+    "gulp": "~3.8.10"
+  }
+}
