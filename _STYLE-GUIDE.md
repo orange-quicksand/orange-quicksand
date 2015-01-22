@@ -129,7 +129,7 @@ When writing any block of code that is logically subordinate to the line immedia
     }
     ```
 
-* Don't use function statements for the entire first half of the course. They introduce a slew of subtle new rules to how the language behaves, and without a clear benefit. Once you and all your peers are expert level in the second half, you can start to use the more (needlessly) complicated option if you like.
+* Don't use function statements for the entire first half of the course. They introduce a slew of subtle new rules to how the language behaves, and without a clear benefit.
 
     ```javascript
     // good:
@@ -181,20 +181,52 @@ When writing any block of code that is logically subordinate to the line immedia
   }
   ```
 
+### Comments
+
+* Provide comments within a function any time you are confident it will make reading your code easier.
+* Comment on what code is attempting to do, not how it will achieve it.
+* A good comment is often less effective than a good variable name.
+* Comment all interfaces with the following format
+
+  ```javascript
+  // good:
+  
+  /* greet (String, Array of Strings)
+   * returns: Array of Strings
+   *
+   ** WHAT IT DOES **
+   * It concatenates a greeting message and a name, 
+   * adding an '!' at the end
+   */
+  var greet = function(greeting, names){
+    var results = [];
+    names.forEach(function(name) {
+      results.push(greeting + ' ' + name + '!');
+    });
+    return results;
+  };
+  
+  // good:
+  
+  /* printName (Array of Strings)
+   * returns: null
+   *
+   ** WHAT IT DOES **
+   * It console.log's names provided on input. 
+   */
+  var printName = function(names){
+    names.forEach(function(name) {
+      console.log(name);
+    });
+  };
+  ```
+
 # Supplemental reading
 
 ### Code density
 
 * Conserve line quantity by minimizing the number lines you write in. The more concisely your code is written, the more context can be seen in one screen.
 * Conserve line length by minimizing the amount of complexity you put on each line. Long lines are difficult to read. Rather than a character count limit, I recommend limiting the amount of complexity you put on a single line. Try to make it easily read in one glance. This goal is in conflict with the line quantity goal, so you must do your best to balance them.
-
-### Comments
-
-* Provide comments any time you are confident it will make reading your code easier.
-* Be aware that comments come at some cost. They make a file longer and can drift out of sync with the code they annotate.
-* Comment on what code is attempting to do, not how it will achieve it.
-* A good comment is often less effective than a good variable name.
-
 
 ### Padding & additional whitespace
 
@@ -236,27 +268,9 @@ When writing any block of code that is logically subordinate to the line immedia
     ```
 
 
-
 ### Working with files
 
 * Do not end a file with any character other than a newline.
-* Don't use the -a or -m flags for `git commit` for the first half of the class, since they conceal what is actually happening (and do slightly different things than most people expect).
-
-    ```shell
-    # good:
-    > git add .
-    > git commit
-    [save edits to the commit message file using the text editor that opens]
-
-    # bad:
-    > git commit -a
-    [save edits to the commit message file using the text editor that opens]
-
-    # bad:
-    > git add .
-    > git commit -m "updated algorithm"
-    ```
-
 
 ### Opening or closing too many blocks at once
 
