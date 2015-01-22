@@ -1,0 +1,23 @@
+{
+  "name": "orange-quicksand",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/realmike33/orange-quicksand.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/realmike33/orange-quicksand/issues"
+  },
+  "homepage": "https://github.com/realmike33/orange-quicksand",
+  "dependencies": {
+    "express": "^4.11.1",
+    "mongoose": "^3.8.21"
+  }
+}
