@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/realmike33/orange-quicksand.git"
+    "url": "https://github.com/orange-quicksand/orange-quicksand.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/realmike33/orange-quicksand/issues"
+    "url": "https://github.com/orange-quicksand/orange-quicksand/issues"
   },
-  "homepage": "https://github.com/realmike33/orange-quicksand",
+  "homepage": "https://github.com/orange-quicksand/orange-quicksand",
   "dependencies": {
     "express": "^4.11.1",
     "mongoose": "^3.8.21"
