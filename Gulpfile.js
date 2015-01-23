@@ -1,15 +1,24 @@
 'use strict';
+var gulp  = require('gulp');
+var sass  = require('gulp-sass');
+var watch = require('gulp-watch');
 
-var gulp      = require('gulp'),
-    nodemon   = require('gulp-nodemon');
-
-// the paths to our app files
+// The paths to our app files
 var paths = {
-  // all our client app js files, not including 3rd party js files
-  scripts: ['client/app/*.js'],
+  scripts: ['./client/app/*.js'],
   html: [],
-  styles: ['client/styles/*.css'],
-  test: ['specs/*.js']
+  styles: ['./client/styles/*.scss'],
+  test: ['./specs/*.js']
 };
 
-gulp.task();
+// Sass
+gulp.task('sass', function () {
+  gulp.src(paths.styles)
+    .pipe(sass())
+    .pipe(gulp.dest('./client/styles/'));
+});
+
+// Watch when files change
+gulp.task('watch', function () {
+  gulp.watch('./client/styles/*.scss', ['sass']);
+});
