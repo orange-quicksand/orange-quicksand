@@ -1,1 +1,4 @@
-angular.module('uGame', ['lumx']);
+angular.module('uGame', [
+  'ui.router',
+  'lumx'
+]);

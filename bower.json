@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "lumx": "~0.2.50",
-    "gulp": "~3.8.10"
+    "gulp": "~3.8.10",
+    "angular-ui-router": "~0.2.13"
   }
 }
