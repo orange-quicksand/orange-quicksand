@@ -18,6 +18,10 @@
   "homepage": "https://github.com/orange-quicksand/orange-quicksand",
   "dependencies": {
     "express": "^4.11.1",
-    "mongoose": "^3.8.21"
+    "gulp": "^3.8.10",
+    "gulp-sass": "^1.3.2",
+    "gulp-watch": "^4.0.2",
+    "mongoose": "^3.8.21",
+    "node-sass": "^2.0.0-beta"
   }
 }
