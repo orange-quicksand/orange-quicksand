@@ -1,11 +1,10 @@
 var mongoose = require('mongoose');
 
 var GamesSchema = new mongoose.Schema({
-  hashBrowns: {
+  id: {
     type: String,
     required: true,
-    unique: true,
-    dropDups: true
+    unique: true
   },
   title: {
     type: String,

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var RomsSchema = new mongoose.Schema({
-  hashBrowns: {
+  id: {
     type: String,
     required: true,
     unique: true

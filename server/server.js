@@ -20,10 +20,15 @@ for (var i = 0; i < library.length; i++) {
   new Game(library[i]).save();
 }
 
-// set up routing
+// routing for homepage
 app.get('/', function(res, req){
   Game.find(function(err, results) {
     console.log(results);
     res.send(results);
   });
+});
+
+// routing for game page
+app.get('/:code', function(res, req){
+
 });
