@@ -1,8 +1,11 @@
 var app = angular
   .module('uGame', [
+    'HomeController',
+    'GameController',
     'ui.router',
     'lumx'
   ])
+  
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
