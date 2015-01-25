@@ -9,6 +9,6 @@
     <h1>{{object.title}}</h1>
     <p>{{object.image}}</p>
     <p>{{object.description}}</p>
-    <button class="btn btn--m btn--raised bgc-indigo-200 tc-indigo-600" lx-ripple="purple-600" >Play {{object.title}}</button>
+    <button  ng-class={{object.id}} class="btn btn--m btn--raised bgc-indigo-200 tc-indigo-600" lx-ripple="purple-600" ng-click="goToState(object.id)">Play {{object.title}}</button>
   </div>
 </div>

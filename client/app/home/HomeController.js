@@ -1,6 +1,6 @@
 angular.module('uGame.home', [])
 
-.controller('HomeController', function ($scope, $http, $interval) {
+.controller('HomeController', function ($scope, $http, $interval, $state) {
   $http({
     method: 'GET',
     url: '/api/games'
@@ -20,4 +20,9 @@ angular.module('uGame.home', [])
     i++
     $scope.changedWords = array[i]
   }, 500, 4);
+
+
+  $scope.goToState = function(id){
+   $state.go('game', {code: id})
+  };
 });
