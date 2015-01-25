@@ -23,6 +23,6 @@ angular.module('uGame.home', [])
 
 
   $scope.goToState = function(id){
-   $state.go('game', {code: id})
+   $state.go('game', {id: id})
   };
 });

@@ -5,13 +5,16 @@ body {
   margin: 20px; 
 }
 header{
-	background-color: #3F51B5;
-	text-align: center;
+  background-color: #3F51B5;
+  text-align: center;
 }
 #game-container{
-	float: left;
-	width: 20vw;
-	height: 16.5vw;
-	text-align: center;
-	margin: 10px;
+  float: left;
+  width: 20vw;
+  height: 16.5vw;
+  text-align: center;
+  margin: 10px;
+}
+#emulator{
+  
 }
