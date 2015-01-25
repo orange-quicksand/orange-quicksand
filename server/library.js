@@ -14,7 +14,25 @@ module.exports = [
   {
     id: '0',
     title: 'title 3',
-    image: 'image 3',
+    image: 'image 4',
+    description: 'mooar digits'
+  },
+   {
+    id: '5',
+    title: 'title 3',
+    image: 'image 4',
+    description: 'mooar digits'
+  },
+   {
+    id: '6',
+    title: 'title 3',
+    image: 'image 4',
+    description: 'mooar digits'
+  },
+   {
+    id: '7',
+    title: 'title 3',
+    image: 'image 4',
     description: 'mooar digits'
   }
 ];

@@ -1,4 +1,14 @@
 <div>
+  <header>
+    <h1 class="fs-display-4">{{changedWords}}Game</h1>
+  </header>
+
+
   <h5>Choose Game:</h5>
-  <button class="btn btn--m btn--raised bgc-indigo-200 tc-indigo-600" lx-ripple="purple-600" >A Game</button>
+  <div id="game-container" ng-repeat="object in data">
+    <h1>{{object.title}}</h1>
+    <p>{{object.image}}</p>
+    <p>{{object.description}}</p>
+    <button class="btn btn--m btn--raised bgc-indigo-200 tc-indigo-600" lx-ripple="purple-600" >Play {{object.title}}</button>
+  </div>
 </div>
