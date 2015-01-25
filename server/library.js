@@ -1,18 +1,18 @@
 module.exports = [
   {
-    hashBrowns: 'aaaaa',
+    id: '2',
     title: 'random title',
     image: 'random fake image',
     description: 'random digits or whatever'
   },
   {
-    hashBrowns: 'bbbbb',
+    id: '1',
     title: 'title 2',
     image: 'image 2',
     description: 'moar digits'
   },
   {
-    hashBrowns: 'ccccc',
+    id: '0',
     title: 'title 3',
     image: 'image 3',
     description: 'mooar digits'

@@ -6,6 +6,6 @@ build/
 dist/
 
 #Files that might appear on external disk
-node_modules/
 client/lib
 server/data
+.DS_Store

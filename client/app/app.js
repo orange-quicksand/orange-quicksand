@@ -1,21 +1,21 @@
 var app = angular
   .module('uGame', [
-    'HomeController',
-    'GameController',
+    'uGame.home',
     'ui.router',
     'lumx'
   ])
   
   .config(function ($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/");
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'home/HomeTemplate.html',
+        templateUrl: 'app/home/HomeTemplate.html',
         controller: 'HomeController'
       })
       .state('game', {
         url: '/game/:id',
-        templateUrl: 'game/GameTemplate.html',
+        templateUrl: 'app/game/GameTemplate.html',
         controller: 'GameController'
       });
   });

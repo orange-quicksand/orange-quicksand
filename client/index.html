@@ -2,7 +2,7 @@
 
 <head>
   <title>uGame</title>
-  <!-- <link rel="stylesheet" href="lib/lumx/dist/css/lumx.css"> -->
+  <link rel="stylesheet" href="lib/lumx/dist/css/lumx.css">
   <link rel="stylesheet" href="styles/main.css">
 </head>
 
@@ -12,14 +12,7 @@
   <h1 class="fs-display-4">uGame</h1>
 </header>
 
-
-
-
-<div ng-controller="HomeController">
-  <h5>Choose Game:</h5>
-  {{ test }}
-
-  <a class="btn btn--m btn--raised bgc-indigo-200 tc-indigo-600" lx-ripple="purple-400" ng-repeat="game in games">A Game</a>
+<ui-view></ui-view>
 
 </div>
 
