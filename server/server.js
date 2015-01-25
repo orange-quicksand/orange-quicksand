@@ -21,7 +21,7 @@ for (var i = 0; i < library.length; i++) {
 }
 
 // routing for homepage
-app.get('/games', function(req, res){
+app.get('/api/games', function(req, res){
   Game.find(function(err, results) {
     console.log(results);
     res.send(results);
@@ -29,6 +29,6 @@ app.get('/games', function(req, res){
 });
 
 // routing for game page
-app.get('/:code', function(req, res){
+app.get('/api/game/:code', function(req, res){
 
 });
