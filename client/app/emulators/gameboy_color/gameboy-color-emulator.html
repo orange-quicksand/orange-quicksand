@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+    <link rel="stylesheet" href="css/gameboy-color-emulator.css"/>
+  </head>
+  <body>    
+  
+    <div id="canvas_container">
+      <canvas id="mainCanvas">No Canvas Support</canvas>
+    </div>  
+
+    <script src="js/other/mobile.js"></script>
+    <script src="js/other/base64.js"></script>
+    <script src="js/other/json2.js"></script>
+    <script src="js/other/swfobject.js"></script>
+    <script src="js/other/resampler.js"></script>
+    <script src="js/other/XAudioServer.js"></script>
+    <script src="js/other/resize.js"></script>
+    <script src="js/GameBoyCore.js"></script>
+    <script src="js/GameBoyIO.js"></script>
+    <script src="js/API.js"></script>
+
+    <script>
+    $(function() {
+      windowingInitialize();
+      gameBoyAPI.init();
+      $('canvas').css('width', window.innerHeight * 160 / 144 + 'px');
+
+      $( window ).resize(function() {
+        $('canvas').css('width', window.innerHeight * 160 / 144 + 'px');
+      });
+    });
+    </script>
+    
+  </body>
+</html>
