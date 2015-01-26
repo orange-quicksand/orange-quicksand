@@ -9,3 +9,13 @@ body {
   background-color: $blue-grey-800;
   color: $blue-grey-50;
 }
+
+.emulator {
+  display: inline-block;
+  height: 100%;
+  margin: 0 auto;
+}
+
+// #GBC {
+//   //width: 800px * (144px / 160px) * 100%;
+// }
