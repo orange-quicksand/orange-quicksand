@@ -1,11 +1,7 @@
-<div>
-  <header>
-    <h1 class="fs-display-4">uGame</h1>
-  </header>
+<div ng-controller="GameController">
 
-  <container id="emulator">yo</container>
-  
-  <iframe class="gameboy-color-emulator" src="../emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts"></iframe>
-
+  <container id="emulator">
+  	<iframe name="GBC" class="gameboy-color-emulator" src="app/emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" iframe-onload="getGameBoyAPI()"></iframe>
+  </container>
 
 </div>
