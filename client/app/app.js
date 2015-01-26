@@ -1,10 +1,10 @@
 var app = angular
   .module('uGame', [
     'uGame.home',
+    'uGame.game',
     'ui.router',
     'lumx'
   ])
-  
   .config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
     $stateProvider
