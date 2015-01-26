@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/orange-quicksand/orange-quicksand",
   "dependencies": {
+    "docco": "^0.6.3",
     "express": "^4.11.1",
     "gulp": "^3.8.10",
     "gulp-docco": "0.0.4",
