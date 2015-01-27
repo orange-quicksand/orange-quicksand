@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>windowStack.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>windowStack.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-pi">"use strict"</span>;
+<span class="hljs-keyword">var</span> windowStacks = [];
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">windowCreate</span><span class="hljs-params">(sId, bShow)</span> </span>{
+	<span class="hljs-keyword">var</span> oWindow = <span class="hljs-keyword">new</span> windowStack(<span class="hljs-built_in">document</span>.getElementById(sId));
+	<span class="hljs-keyword">if</span> (bShow) {
+		oWindow.show();
+	}
+	<span class="hljs-keyword">return</span> oWindow;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">windowStack</span><span class="hljs-params">(element)</span> </span>{
+	<span class="hljs-keyword">if</span> (element != <span class="hljs-literal">null</span> &amp;&amp; <span class="hljs-keyword">typeof</span> element == <span class="hljs-string">"object"</span>) {
+		<span class="hljs-keyword">this</span>.lastOpacity = <span class="hljs-literal">null</span>;
+		<span class="hljs-keyword">this</span>.domObject = element;
+		<span class="hljs-keyword">this</span>.hadFocus = <span class="hljs-literal">true</span>;
+		<span class="hljs-keyword">this</span>.hookedMouse = <span class="hljs-literal">false</span>;
+		<span class="hljs-keyword">var</span> thisObj2 = <span class="hljs-keyword">this</span>;
+		<span class="hljs-keyword">this</span>.events = [
+			[<span class="hljs-string">"mousedown"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{ thisObj2.dragEnable(event); }],
+			[<span class="hljs-string">"mousemove"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{ thisObj2.drag(event); }],
+			[<span class="hljs-string">"mouseup"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{ thisObj2.dragDisable(); }]
+		];
+	}
+}
+windowStack.prototype.registerMouseEvents = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.hookedMouse) {
+		<span class="hljs-keyword">this</span>.hookedMouse = <span class="hljs-literal">true</span>;
+		<span class="hljs-keyword">var</span> eventIndex = <span class="hljs-literal">null</span>;
+		<span class="hljs-keyword">for</span> (eventIndex <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.events) {
+			addEvent(<span class="hljs-keyword">this</span>.events[eventIndex][<span class="hljs-number">0</span>], <span class="hljs-built_in">document</span>, <span class="hljs-keyword">this</span>.events[eventIndex][<span class="hljs-number">1</span>]);
+		}
+		<span class="hljs-keyword">this</span>.center();
+	}
+}
+windowStack.prototype.unregisterMouseEvents = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hookedMouse) {
+		<span class="hljs-keyword">this</span>.hookedMouse = <span class="hljs-literal">false</span>;
+		<span class="hljs-keyword">var</span> eventIndex = <span class="hljs-literal">null</span>;
+		<span class="hljs-keyword">for</span> (eventIndex <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.events) {
+			removeEvent(<span class="hljs-keyword">this</span>.events[eventIndex][<span class="hljs-number">0</span>], <span class="hljs-built_in">document</span>, <span class="hljs-keyword">this</span>.events[eventIndex][<span class="hljs-number">1</span>]);
+		}
+	}
+}
+windowStack.prototype.getStyleFloatOf = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(propertyNameOf, JSpropertyNameOf)</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		<span class="hljs-keyword">var</span> dirtyValue = <span class="hljs-built_in">window</span>.getComputedStyle(<span class="hljs-keyword">this</span>.domObject, <span class="hljs-literal">null</span>).getPropertyValue(propertyNameOf);
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		<span class="hljs-keyword">try</span> {
+			<span class="hljs-keyword">var</span> dirtyValue = <span class="hljs-keyword">this</span>.domObject.currentStyle.getAttribute(JSpropertyNameOf);	<span class="hljs-comment">/*JS object notation style keywords, not the CSS keywords!*/</span>
+		}
+		<span class="hljs-keyword">catch</span> (error) {
+			cout(error.message, <span class="hljs-number">2</span>);
+		}
+	}
+	<span class="hljs-keyword">var</span> cleanValue = <span class="hljs-built_in">parseFloat</span>((dirtyValue != <span class="hljs-literal">null</span> &amp;&amp; dirtyValue.length) ? dirtyValue : <span class="hljs-string">"0"</span>);
+	<span class="hljs-keyword">return</span> (!<span class="hljs-built_in">isNaN</span>(cleanValue) &amp;&amp; cleanValue != -<span class="hljs-number">1</span>) ? cleanValue : <span class="hljs-number">0</span>;	<span class="hljs-comment">/*Note: Opera gives -1, not NaN for cleanValue when no number is found.*/</span>
+}
+windowStack.prototype.dragEnable = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">var</span> elementAt = <span class="hljs-built_in">document</span>.elementFromPoint(event.clientX, event.clientY);
+	<span class="hljs-keyword">this</span>.leftPos = <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"left"</span>, <span class="hljs-string">"left"</span>);
+	<span class="hljs-keyword">this</span>.topPos = <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"top"</span>, <span class="hljs-string">"top"</span>);
+	<span class="hljs-keyword">var</span> highX = <span class="hljs-keyword">this</span>.leftPos + <span class="hljs-keyword">this</span>.domObject.offsetWidth - <span class="hljs-built_in">document</span>.documentElement.scrollLeft - <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"body"</span>)[<span class="hljs-number">0</span>].scrollLeft;
+	<span class="hljs-keyword">var</span> highY = <span class="hljs-keyword">this</span>.topPos + <span class="hljs-keyword">this</span>.domObject.offsetHeight - <span class="hljs-built_in">document</span>.documentElement.scrollTop - <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"body"</span>)[<span class="hljs-number">0</span>].scrollTop;
+	<span class="hljs-keyword">var</span> mousedWindow = isSameNode(elementAt, <span class="hljs-keyword">this</span>.domObject);
+	<span class="hljs-keyword">this</span>.mousedInsideWindow = (mousedWindow) ? <span class="hljs-literal">false</span> : isDescendantOf(<span class="hljs-keyword">this</span>.domObject, elementAt);
+	<span class="hljs-keyword">if</span> (mousedWindow || <span class="hljs-keyword">this</span>.mousedInsideWindow) {
+		<span class="hljs-keyword">this</span>.movable = <span class="hljs-literal">true</span>;
+		<span class="hljs-keyword">this</span>.leftLast = event.clientX;
+		<span class="hljs-keyword">this</span>.topLast = event.clientY;
+		<span class="hljs-keyword">this</span>.domObject.style.zIndex = <span class="hljs-number">2</span>;
+		<span class="hljs-keyword">if</span> (highX - <span class="hljs-keyword">this</span>.leftLast &lt; <span class="hljs-number">25</span> &amp;&amp; highY - <span class="hljs-keyword">this</span>.topLast &lt; <span class="hljs-number">25</span>) {	<span class="hljs-comment">/*Inivisible resize corner area for windows.*/</span>
+			<span class="hljs-keyword">this</span>.resize = <span class="hljs-literal">true</span>;
+		}
+		<span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">this</span>.resize = <span class="hljs-literal">false</span>;
+		}
+		<span class="hljs-keyword">this</span>.coordDiffLeft = <span class="hljs-keyword">this</span>.leftLast - <span class="hljs-keyword">this</span>.leftPos;
+		<span class="hljs-keyword">this</span>.coordDiffTop = <span class="hljs-keyword">this</span>.topLast - <span class="hljs-keyword">this</span>.topPos;
+		<span class="hljs-keyword">this</span>.lastLeft = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">this</span>.lastTop = <span class="hljs-number">0</span>;
+	}
+	<span class="hljs-keyword">else</span> {
+		<span class="hljs-keyword">this</span>.lostFocus();
+	}
+}
+windowStack.prototype.drag = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.movable) {
+		<span class="hljs-keyword">this</span>.lastLeft += event.clientX - <span class="hljs-keyword">this</span>.coordDiffLeft;
+		<span class="hljs-keyword">this</span>.lastTop += event.clientY - <span class="hljs-keyword">this</span>.coordDiffTop;
+		<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.resize) {
+			<span class="hljs-keyword">var</span> newWidth = <span class="hljs-keyword">this</span>.domObject.clientWidth + event.clientX - <span class="hljs-keyword">this</span>.leftLast - <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"padding-left"</span>, <span class="hljs-string">"paddingLeft"</span>) - <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"padding-right"</span>, <span class="hljs-string">"paddingRight"</span>);
+			<span class="hljs-keyword">var</span> newHeight = <span class="hljs-keyword">this</span>.domObject.clientHeight + event.clientY - <span class="hljs-keyword">this</span>.topLast - <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"padding-top"</span>, <span class="hljs-string">"paddingTop"</span>) - <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"padding-bottom"</span>, <span class="hljs-string">"paddingBottom"</span>);
+			<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"min-width"</span>, <span class="hljs-string">"minWidth"</span>) &lt;= newWidth &amp;&amp; <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"min-height"</span>, <span class="hljs-string">"minHeight"</span>) &lt;= newHeight &amp;&amp; ((<span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"max-width"</span>, <span class="hljs-string">"maxWidth"</span>) &gt;= newWidth || <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"max-width"</span>, <span class="hljs-string">"maxWidth"</span>) == <span class="hljs-number">0</span>) &amp;&amp; (<span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"max-height"</span>, <span class="hljs-string">"maxHeight"</span>) &gt;= newHeight || <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"max-height"</span>, <span class="hljs-string">"maxHeight"</span>) == <span class="hljs-number">0</span>))) {
+				<span class="hljs-keyword">this</span>.domObject.style.width = newWidth + <span class="hljs-string">"px"</span>;
+				<span class="hljs-keyword">this</span>.domObject.style.height = newHeight + <span class="hljs-string">"px"</span>;
+			}
+		}
+		<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.mousedInsideWindow) {
+			<span class="hljs-keyword">this</span>.domObject.style.left = <span class="hljs-keyword">this</span>.lastLeft + <span class="hljs-string">"px"</span>;
+			<span class="hljs-keyword">this</span>.domObject.style.top = <span class="hljs-keyword">this</span>.lastTop + <span class="hljs-string">"px"</span>;
+		}
+		<span class="hljs-keyword">this</span>.coordDiffLeft = <span class="hljs-keyword">this</span>.leftLast = event.clientX;
+		<span class="hljs-keyword">this</span>.coordDiffTop = <span class="hljs-keyword">this</span>.topLast = event.clientY;
+	}
+}
+windowStack.prototype.dragDisable = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">this</span>.movable = <span class="hljs-literal">false</span>;
+	<span class="hljs-keyword">this</span>.hadFocus = <span class="hljs-literal">true</span>;
+}
+windowStack.prototype.lostFocus = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hadFocus) {
+		<span class="hljs-keyword">this</span>.domObject.style.zIndex = <span class="hljs-number">1</span>;
+		<span class="hljs-keyword">this</span>.hadFocus = <span class="hljs-literal">false</span>;
+	}
+}
+windowStack.prototype.interceptOpacity = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lastOpacity != <span class="hljs-literal">null</span>) {
+		<span class="hljs-keyword">this</span>.lastOpacity.bDoneRun = <span class="hljs-literal">true</span>;
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.lastOpacity.RefOpacityAREABegin;
+	}
+	<span class="hljs-keyword">var</span> sampledOpacity = <span class="hljs-keyword">this</span>.getStyleFloatOf(<span class="hljs-string">"opacity"</span>, <span class="hljs-string">"opacity"</span>) * <span class="hljs-number">100</span>;
+	<span class="hljs-keyword">return</span> (sampledOpacity &gt; <span class="hljs-number">0</span>) ? sampledOpacity : <span class="hljs-number">100</span>;	<span class="hljs-comment">/*Dirty opacity first-set for IE*/</span>
+}
+windowStack.prototype.center = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> docWidth = <span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">document</span>.documentElement.clientWidth, <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"body"</span>)[<span class="hljs-number">0</span>].clientWidth);
+	<span class="hljs-keyword">var</span> docHeight = <span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">document</span>.documentElement.clientHeight, <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"body"</span>)[<span class="hljs-number">0</span>].clientHeight);
+	<span class="hljs-keyword">var</span> docLeft = <span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">document</span>.documentElement.scrollLeft, <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"body"</span>)[<span class="hljs-number">0</span>].scrollLeft);
+	<span class="hljs-keyword">var</span> docTop = <span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">document</span>.documentElement.scrollTop, <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"body"</span>)[<span class="hljs-number">0</span>].scrollTop);
+	<span class="hljs-keyword">this</span>.domObject.style.left = <span class="hljs-built_in">Math</span>.round(((docWidth - <span class="hljs-keyword">this</span>.domObject.offsetWidth) / <span class="hljs-number">2</span>) + docLeft) + <span class="hljs-string">"px"</span>;
+	<span class="hljs-keyword">this</span>.domObject.style.top = <span class="hljs-built_in">Math</span>.round(((docHeight - <span class="hljs-keyword">this</span>.domObject.offsetHeight) / <span class="hljs-number">2</span>) + docTop) + <span class="hljs-string">"px"</span>;
+}
+windowStack.prototype.hide = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">this</span>.domObject.style.display = <span class="hljs-string">"none"</span>;
+	<span class="hljs-keyword">this</span>.unregisterMouseEvents();
+}
+windowStack.prototype.show = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">this</span>.domObject.style.display = <span class="hljs-string">"block"</span>;
+	<span class="hljs-keyword">this</span>.registerMouseEvents();
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">popupMenu</span><span class="hljs-params">(oClick, oMenu)</span> </span>{
+	<span class="hljs-keyword">this</span>.clickElement = oClick;
+	<span class="hljs-keyword">this</span>.menuElement = oMenu;
+	<span class="hljs-keyword">var</span> thisObj2 = <span class="hljs-keyword">this</span>;
+	<span class="hljs-keyword">this</span>.eventHandle = [
+		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{ thisObj2.startPopup(event); },
+		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{ thisObj2.endPopup(event); }
+	];
+	<span class="hljs-keyword">this</span>.open = <span class="hljs-literal">false</span>;
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-keyword">this</span>.clickElement, <span class="hljs-keyword">this</span>.eventHandle[<span class="hljs-number">0</span>]);
+}
+popupMenu.prototype.startPopup = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.open) {
+		<span class="hljs-keyword">this</span>.open = <span class="hljs-literal">true</span>;
+		<span class="hljs-keyword">this</span>.menuElement.style.display = <span class="hljs-string">"block"</span>;
+		removeEvent(<span class="hljs-string">"click"</span>, <span class="hljs-keyword">this</span>.clickElement, <span class="hljs-keyword">this</span>.eventHandle[<span class="hljs-number">0</span>]);
+		<span class="hljs-keyword">this</span>.position(event);
+		addEvent(<span class="hljs-string">"mouseout"</span>, <span class="hljs-keyword">this</span>.menuElement, <span class="hljs-keyword">this</span>.eventHandle[<span class="hljs-number">1</span>]);
+	}
+}
+popupMenu.prototype.endPopup = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.open) {
+		<span class="hljs-keyword">if</span> (mouseLeaveVerify(<span class="hljs-keyword">this</span>.menuElement, event)) {
+			<span class="hljs-keyword">this</span>.open = <span class="hljs-literal">false</span>;
+			<span class="hljs-keyword">this</span>.menuElement.style.display = <span class="hljs-string">"none"</span>;
+			removeEvent(<span class="hljs-string">"mouseout"</span>, <span class="hljs-keyword">this</span>.menuElement, <span class="hljs-keyword">this</span>.eventHandle[<span class="hljs-number">1</span>]);
+			addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-keyword">this</span>.clickElement, <span class="hljs-keyword">this</span>.eventHandle[<span class="hljs-number">0</span>]);
+		}
+	}
+}
+popupMenu.prototype.position = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.open) {
+		<span class="hljs-keyword">this</span>.menuElement.style.left = (pageXCoord(event) - <span class="hljs-number">5</span>) + <span class="hljs-string">"px"</span>;
+		<span class="hljs-keyword">this</span>.menuElement.style.top = (pageYCoord(event) - <span class="hljs-number">5</span>) + <span class="hljs-string">"px"</span>;
+	}
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

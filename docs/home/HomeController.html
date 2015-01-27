@@ -32,7 +32,9 @@
             
             <div class="content"><div class='highlight'><pre>angular.module(<span class="hljs-string">'uGame.home'</span>, [])
 
-.controller(<span class="hljs-string">'HomeController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">($scope, $http, $interval, $state)</span> </span>{
+
+.controller(<span class="hljs-string">'HomeController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">($scope, $http, $interval, $state, Game)</span> </span>{
+
   $http({
     method: <span class="hljs-string">'GET'</span>,
     url: <span class="hljs-string">'/api/games'</span>
@@ -47,16 +49,19 @@
 
   $interval(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
     <span class="hljs-keyword">if</span>(i &gt;= array.length){
-      i = -<span class="hljs-number">1</span>
+      i = -<span class="hljs-number">1</span>;
     }
-    i++
-    $scope.changedWords = array[i]
+    i++;
+    $scope.changedWords = array[i];
   }, <span class="hljs-number">500</span>, <span class="hljs-number">4</span>);
 
-
   $scope.goToState = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span></span>{
-   $state.go(<span class="hljs-string">'game'</span>, {id: id})
+   $state.go(<span class="hljs-string">'game'</span>, {id: id});
   };
+
+  Game.gameData().then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{
+    $scope.data = data; 
+  })
 });</pre></div></div>
             
         </li>

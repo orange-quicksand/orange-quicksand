@@ -30,10 +30,30 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>app.factory(<span class="hljs-string">'Game'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>app.factory(<span class="hljs-string">'Game'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($http)</span> </span>{
   <span class="hljs-keyword">return</span> {
-    
-  };
+    get: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> </span>{
+      <span class="hljs-keyword">return</span> $http.get(<span class="hljs-string">'/api/game/'</span> + id);
+    },
+    gameData: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/api/games'</span>
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resp)</span></span>{
+        <span class="hljs-keyword">return</span> resp.data;
+      });
+    },
+    gameLogin: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(userObj)</span></span>{
+      <span class="hljs-keyword">return</span> $http({
+        url: <span class="hljs-string">'/user/login'</span>,
+        method: <span class="hljs-string">'POST'</span>,
+        data: userObj
+      }).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resp)</span></span>{
+        <span class="hljs-keyword">return</span> resp;
+      })  
+    }
+  }
 });</pre></div></div>
             
         </li>

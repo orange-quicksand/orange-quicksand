@@ -34,14 +34,27 @@
   .module(<span class="hljs-string">'uGame'</span>, [
     <span class="hljs-string">'uGame.home'</span>,
     <span class="hljs-string">'uGame.game'</span>,
+    <span class="hljs-string">'uGame.login'</span>,
+    <span class="hljs-string">'uGame.register'</span>,
     <span class="hljs-string">'ui.router'</span>,
     <span class="hljs-string">'lumx'</span>
   ])
+  
   .config(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">($stateProvider, $urlRouterProvider)</span> </span>{
     $urlRouterProvider.otherwise(<span class="hljs-string">"/"</span>);
     $stateProvider
-      .state(<span class="hljs-string">'home'</span>, {
+      .state(<span class="hljs-string">'login'</span>, {
         url: <span class="hljs-string">'/'</span>,
+        templateUrl: <span class="hljs-string">'app/login/LoginTemplate.html'</span>,
+        controller: <span class="hljs-string">'LoginController'</span>
+      })
+      .state(<span class="hljs-string">'register'</span>, {
+        url: <span class="hljs-string">'/register'</span>,
+        templateUrl: <span class="hljs-string">'app/register/RegisterTemplate.html'</span>,
+        controller: <span class="hljs-string">'RegisterController'</span>
+      })
+      .state(<span class="hljs-string">'home'</span>, {
+        url: <span class="hljs-string">'/home'</span>,
         templateUrl: <span class="hljs-string">'app/home/HomeTemplate.html'</span>,
         controller: <span class="hljs-string">'HomeController'</span>
       })

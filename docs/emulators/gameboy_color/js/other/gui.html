@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>gui.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>gui.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> inFullscreen = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">var</span> mainCanvas = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">var</span> fullscreenCanvas = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">var</span> showAsMinimal = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">var</span> keyZones = [
+	[<span class="hljs-string">"right"</span>, [<span class="hljs-number">39</span>]],
+	[<span class="hljs-string">"left"</span>, [<span class="hljs-number">37</span>]],
+	[<span class="hljs-string">"up"</span>, [<span class="hljs-number">38</span>]],
+	[<span class="hljs-string">"down"</span>, [<span class="hljs-number">40</span>]],
+	[<span class="hljs-string">"a"</span>, [<span class="hljs-number">88</span>]],
+	[<span class="hljs-string">"b"</span>, [<span class="hljs-number">90</span>]],
+	[<span class="hljs-string">"select"</span>, [<span class="hljs-number">16</span>]],
+	[<span class="hljs-string">"start"</span>, [<span class="hljs-number">13</span>]]
+];
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">windowingInitialize</span><span class="hljs-params">()</span> </span>{
+	cout(<span class="hljs-string">"windowingInitialize() called."</span>, <span class="hljs-number">0</span>);
+	windowStacks[<span class="hljs-number">0</span>] = windowCreate(<span class="hljs-string">"GameBoy"</span>, <span class="hljs-literal">true</span>);
+	windowStacks[<span class="hljs-number">1</span>] = windowCreate(<span class="hljs-string">"terminal"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">2</span>] = windowCreate(<span class="hljs-string">"about"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">3</span>] = windowCreate(<span class="hljs-string">"settings"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">4</span>] = windowCreate(<span class="hljs-string">"input_select"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">5</span>] = windowCreate(<span class="hljs-string">"instructions"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">6</span>] = windowCreate(<span class="hljs-string">"local_storage_popup"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">7</span>] = windowCreate(<span class="hljs-string">"local_storage_listing"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">8</span>] = windowCreate(<span class="hljs-string">"freeze_listing"</span>, <span class="hljs-literal">false</span>);
+	windowStacks[<span class="hljs-number">9</span>] = windowCreate(<span class="hljs-string">"save_importer"</span>, <span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="-important">   IMPORTANT</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>  Change these if you want to set the element
+  in which the Emulator will run in FullScreen mode
+  and in minimized mode</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+	mainCanvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"mainCanvas"</span>);
+	fullscreenCanvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"fullscreen"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <hr>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+
+
+	<span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Hook the GUI controls.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		registerGUIEvents();
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		cout(<span class="hljs-string">"Fatal windowing error: \""</span> + error.message + <span class="hljs-string">"\" file:"</span> + error.fileName + <span class="hljs-string">" line: "</span> + error.lineNumber, <span class="hljs-number">2</span>);
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Update the settings to the emulator’s default:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_sound"</span>).checked = settings[<span class="hljs-number">0</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_gbc_bios"</span>).checked = settings[<span class="hljs-number">1</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"disable_colors"</span>).checked = settings[<span class="hljs-number">2</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"rom_only_override"</span>).checked = settings[<span class="hljs-number">9</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"mbc_enable_override"</span>).checked = settings[<span class="hljs-number">10</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_colorization"</span>).checked = settings[<span class="hljs-number">4</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"do_minimal"</span>).checked = showAsMinimal;
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"software_resizing"</span>).checked = settings[<span class="hljs-number">12</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"typed_arrays_disallow"</span>).checked = settings[<span class="hljs-number">5</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"gb_boot_rom_utilized"</span>).checked = settings[<span class="hljs-number">11</span>];
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"resize_smoothing"</span>).checked = settings[<span class="hljs-number">13</span>];
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel1"</span>).checked = settings[<span class="hljs-number">14</span>][<span class="hljs-number">0</span>];
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel2"</span>).checked = settings[<span class="hljs-number">14</span>][<span class="hljs-number">1</span>];
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel3"</span>).checked = settings[<span class="hljs-number">14</span>][<span class="hljs-number">2</span>];
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel4"</span>).checked = settings[<span class="hljs-number">14</span>][<span class="hljs-number">3</span>];
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">registerGUIEvents</span><span class="hljs-params">()</span> </span>{
+	cout(<span class="hljs-string">"In registerGUIEvents() : Registering GUI Events."</span>, -<span class="hljs-number">1</span>);
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"terminal_clear_button"</span>), clear_terminal);
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"local_storage_list_refresh_button"</span>), refreshStorageListing);
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"terminal_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">1</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"about_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">2</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"settings_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">3</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"input_select_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">4</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"instructions_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">5</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"local_storage_list_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">7</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"local_storage_popup_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">6</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"save_importer_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">9</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"freeze_list_close_button"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">8</span>].hide() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"GameBoy_about_menu"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">2</span>].show() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"GameBoy_settings_menu"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">3</span>].show() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"local_storage_list_menu"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ refreshStorageListing(); windowStacks[<span class="hljs-number">7</span>].show(); });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"freeze_list_menu"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ refreshFreezeListing(); windowStacks[<span class="hljs-number">8</span>].show(); });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"view_importer"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">9</span>].show() });
+	addEvent(<span class="hljs-string">"keydown"</span>, <span class="hljs-built_in">document</span>, keyDown);
+	addEvent(<span class="hljs-string">"keyup"</span>, <span class="hljs-built_in">document</span>,  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+		<span class="hljs-keyword">if</span> (event.keyCode == <span class="hljs-number">27</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Fullscreen on/off</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			fullscreenPlayer();
+		}
+		<span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Control keys / other</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			keyUp(event);
+		}
+	});
+	addEvent(<span class="hljs-string">"MozOrientation"</span>, <span class="hljs-built_in">window</span>, GameBoyGyroSignalHandler);
+	addEvent(<span class="hljs-string">"deviceorientation"</span>, <span class="hljs-built_in">window</span>, GameBoyGyroSignalHandler);
+	<span class="hljs-keyword">new</span> popupMenu(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"GameBoy_file_menu"</span>), <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"GameBoy_file_popup"</span>));
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data_uri_clicker"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">var</span> datauri = prompt(<span class="hljs-string">"Please input the ROM image's Base 64 Encoded Text:"</span>, <span class="hljs-string">""</span>);
+		<span class="hljs-keyword">if</span> (datauri != <span class="hljs-literal">null</span> &amp;&amp; datauri.length &gt; <span class="hljs-number">0</span>) {
+			<span class="hljs-keyword">try</span> {
+				cout(<span class="hljs-built_in">Math</span>.floor(datauri.length * <span class="hljs-number">3</span> / <span class="hljs-number">4</span>) + <span class="hljs-string">" bytes of data submitted by form (text length of "</span> + datauri.length + <span class="hljs-string">")."</span>, <span class="hljs-number">0</span>);
+				initPlayer();
+				start(mainCanvas, base64_decode(datauri));
+			}
+			<span class="hljs-keyword">catch</span> (error) {
+				alert(error.message + <span class="hljs-string">" file: "</span> + error.fileName + <span class="hljs-string">" line: "</span> + error.lineNumber);
+			}
+		}
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"set_volume"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">if</span> (GameBoyEmulatorInitialized()) {
+			<span class="hljs-keyword">var</span> volume = prompt(<span class="hljs-string">"Set the volume here:"</span>, <span class="hljs-string">"1.0"</span>);
+			<span class="hljs-keyword">if</span> (volume != <span class="hljs-literal">null</span> &amp;&amp; volume.length &gt; <span class="hljs-number">0</span>) {
+				settings[<span class="hljs-number">3</span>] = <span class="hljs-built_in">Math</span>.min(<span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">parseFloat</span>(volume), <span class="hljs-number">0</span>), <span class="hljs-number">1</span>);
+				gameboy.changeVolume();
+			}
+		}
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"set_speed"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">if</span> (GameBoyEmulatorInitialized()) {
+			<span class="hljs-keyword">var</span> speed = prompt(<span class="hljs-string">"Set the emulator speed here:"</span>, <span class="hljs-string">"1.0"</span>);
+			<span class="hljs-keyword">if</span> (speed != <span class="hljs-literal">null</span> &amp;&amp; speed.length &gt; <span class="hljs-number">0</span>) {
+				gameboy.setSpeed(<span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">parseFloat</span>(speed), <span class="hljs-number">0.001</span>));
+			}
+		}
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"internal_file_clicker"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">var</span> file_opener = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"local_file_open"</span>);
+		windowStacks[<span class="hljs-number">4</span>].show();
+		file_opener.click();
+	});
+	addEvent(<span class="hljs-string">"blur"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"input_select"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		windowStacks[<span class="hljs-number">4</span>].hide();
+	});
+	addEvent(<span class="hljs-string">"change"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"local_file_open"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		windowStacks[<span class="hljs-number">4</span>].hide();
+		<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.files != <span class="hljs-string">"undefined"</span>) {
+			<span class="hljs-keyword">try</span> {
+				<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.files.length &gt;= <span class="hljs-number">1</span>) {
+					cout(<span class="hljs-string">"Reading the local file \""</span> + <span class="hljs-keyword">this</span>.files[<span class="hljs-number">0</span>].name + <span class="hljs-string">"\""</span>, <span class="hljs-number">0</span>);
+					<span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Gecko 1.9.2+ (Standard Method)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>						<span class="hljs-keyword">var</span> binaryHandle = <span class="hljs-keyword">new</span> FileReader();
+						binaryHandle.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+							<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.readyState == <span class="hljs-number">2</span>) {
+								cout(<span class="hljs-string">"file loaded."</span>, <span class="hljs-number">0</span>);
+								<span class="hljs-keyword">try</span> {
+									initPlayer();
+									start(mainCanvas, <span class="hljs-keyword">this</span>.result);
+								}
+								<span class="hljs-keyword">catch</span> (error) {
+									alert(error.message + <span class="hljs-string">" file: "</span> + error.fileName + <span class="hljs-string">" line: "</span> + error.lineNumber);
+								}
+							}
+							<span class="hljs-keyword">else</span> {
+								cout(<span class="hljs-string">"loading file, please wait..."</span>, <span class="hljs-number">0</span>);
+							}
+						}
+						binaryHandle.readAsBinaryString(<span class="hljs-keyword">this</span>.files[<span class="hljs-keyword">this</span>.files.length - <span class="hljs-number">1</span>]);
+					}
+					<span class="hljs-keyword">catch</span> (error) {
+						cout(<span class="hljs-string">"Browser does not support the FileReader object, falling back to the non-standard File object access,"</span>, <span class="hljs-number">2</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Gecko 1.9.0, 1.9.1 (Non-Standard Method)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>						<span class="hljs-keyword">var</span> romImageString = <span class="hljs-keyword">this</span>.files[<span class="hljs-keyword">this</span>.files.length - <span class="hljs-number">1</span>].getAsBinary();
+						<span class="hljs-keyword">try</span> {
+							initPlayer();
+							start(mainCanvas, romImageString);
+						}
+						<span class="hljs-keyword">catch</span> (error) {
+							alert(error.message + <span class="hljs-string">" file: "</span> + error.fileName + <span class="hljs-string">" line: "</span> + error.lineNumber);
+						}
+						
+					}
+				}
+				<span class="hljs-keyword">else</span> {
+					cout(<span class="hljs-string">"Incorrect number of files selected for local loading."</span>, <span class="hljs-number">1</span>);
+				}
+			}
+			<span class="hljs-keyword">catch</span> (error) {
+				cout(<span class="hljs-string">"Could not load in a locally stored ROM file."</span>, <span class="hljs-number">2</span>);
+			}
+		}
+		<span class="hljs-keyword">else</span> {
+			cout(<span class="hljs-string">"could not find the handle on the file to open."</span>, <span class="hljs-number">2</span>);
+		}
+	});
+	addEvent(<span class="hljs-string">"change"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"save_open"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		windowStacks[<span class="hljs-number">9</span>].hide();
+		<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.files != <span class="hljs-string">"undefined"</span>) {
+			<span class="hljs-keyword">try</span> {
+				<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.files.length &gt;= <span class="hljs-number">1</span>) {
+					cout(<span class="hljs-string">"Reading the local file \""</span> + <span class="hljs-keyword">this</span>.files[<span class="hljs-number">0</span>].name + <span class="hljs-string">"\" for importing."</span>, <span class="hljs-number">0</span>);
+					<span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Gecko 1.9.2+ (Standard Method)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>						<span class="hljs-keyword">var</span> binaryHandle = <span class="hljs-keyword">new</span> FileReader();
+						binaryHandle.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+							<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.readyState == <span class="hljs-number">2</span>) {
+								cout(<span class="hljs-string">"file imported."</span>, <span class="hljs-number">0</span>);
+								<span class="hljs-keyword">try</span> {
+									import_save(<span class="hljs-keyword">this</span>.result);
+									refreshStorageListing();
+								}
+								<span class="hljs-keyword">catch</span> (error) {
+									alert(error.message + <span class="hljs-string">" file: "</span> + error.fileName + <span class="hljs-string">" line: "</span> + error.lineNumber);
+								}
+							}
+							<span class="hljs-keyword">else</span> {
+								cout(<span class="hljs-string">"importing file, please wait..."</span>, <span class="hljs-number">0</span>);
+							}
+						}
+						binaryHandle.readAsBinaryString(<span class="hljs-keyword">this</span>.files[<span class="hljs-keyword">this</span>.files.length - <span class="hljs-number">1</span>]);
+					}
+					<span class="hljs-keyword">catch</span> (error) {
+						cout(<span class="hljs-string">"Browser does not support the FileReader object, falling back to the non-standard File object access,"</span>, <span class="hljs-number">2</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Gecko 1.9.0, 1.9.1 (Non-Standard Method)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>						<span class="hljs-keyword">var</span> romImageString = <span class="hljs-keyword">this</span>.files[<span class="hljs-keyword">this</span>.files.length - <span class="hljs-number">1</span>].getAsBinary();
+						<span class="hljs-keyword">try</span> {
+							import_save(romImageString);
+							refreshStorageListing();
+						}
+						<span class="hljs-keyword">catch</span> (error) {
+							alert(error.message + <span class="hljs-string">" file: "</span> + error.fileName + <span class="hljs-string">" line: "</span> + error.lineNumber);
+						}
+						
+					}
+				}
+				<span class="hljs-keyword">else</span> {
+					cout(<span class="hljs-string">"Incorrect number of files selected for local loading."</span>, <span class="hljs-number">1</span>);
+				}
+			}
+			<span class="hljs-keyword">catch</span> (error) {
+				cout(<span class="hljs-string">"Could not load in a locally stored ROM file."</span>, <span class="hljs-number">2</span>);
+			}
+		}
+		<span class="hljs-keyword">else</span> {
+			cout(<span class="hljs-string">"could not find the handle on the file to open."</span>, <span class="hljs-number">2</span>);
+		}
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"restart_cpu_clicker"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">if</span> (GameBoyEmulatorInitialized()) {
+			<span class="hljs-keyword">try</span> {
+				<span class="hljs-keyword">if</span> (!gameboy.fromSaveState) {
+					initPlayer();
+					start(mainCanvas, gameboy.getROMImage());
+				}
+				<span class="hljs-keyword">else</span> {
+					initPlayer();
+					openState(gameboy.savedStateFileName, mainCanvas);
+				}
+			}
+			<span class="hljs-keyword">catch</span> (error) {
+				alert(error.message + <span class="hljs-string">" file: "</span> + error.fileName + <span class="hljs-string">" line: "</span> + error.lineNumber);
+			}
+		}
+		<span class="hljs-keyword">else</span> {
+			cout(<span class="hljs-string">"Could not restart, as a previous emulation session could not be found."</span>, <span class="hljs-number">1</span>);
+		}
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"run_cpu_clicker"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		run();
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"kill_cpu_clicker"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		pause();
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"save_state_clicker"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		save();
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"save_SRAM_state_clicker"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		saveSRAM();
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_sound"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">0</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_sound"</span>).checked;
+		<span class="hljs-keyword">if</span> (GameBoyEmulatorInitialized()) {
+			gameboy.initSound();
+		}
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"disable_colors"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">2</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"disable_colors"</span>).checked;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"rom_only_override"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">9</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"rom_only_override"</span>).checked;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"mbc_enable_override"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">10</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"mbc_enable_override"</span>).checked;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_gbc_bios"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">1</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_gbc_bios"</span>).checked;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_colorization"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">4</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"enable_colorization"</span>).checked;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"do_minimal"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		showAsMinimal = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"do_minimal"</span>).checked;
+		fullscreenCanvas.className = (showAsMinimal) ? <span class="hljs-string">"minimum"</span> : <span class="hljs-string">"maximum"</span>;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"software_resizing"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">12</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"software_resizing"</span>).checked;
+		<span class="hljs-keyword">if</span> (GameBoyEmulatorInitialized()) {
+			gameboy.initLCD();
+		}
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"typed_arrays_disallow"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">5</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"typed_arrays_disallow"</span>).checked;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"gb_boot_rom_utilized"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">11</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"gb_boot_rom_utilized"</span>).checked;
+	});
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"resize_smoothing"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		settings[<span class="hljs-number">13</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"resize_smoothing"</span>).checked;
+		<span class="hljs-keyword">if</span> (GameBoyEmulatorInitialized()) {
+			gameboy.initLCD();
+		}
+	});
+    addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel1"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+        settings[<span class="hljs-number">14</span>][<span class="hljs-number">0</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel1"</span>).checked;
+    });
+    addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel2"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+        settings[<span class="hljs-number">14</span>][<span class="hljs-number">1</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel2"</span>).checked;
+    });
+    addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel3"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+        settings[<span class="hljs-number">14</span>][<span class="hljs-number">2</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel3"</span>).checked;
+    });
+    addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel4"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+        settings[<span class="hljs-number">14</span>][<span class="hljs-number">3</span>] = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"channel4"</span>).checked;
+    });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"view_fullscreen"</span>), fullscreenPlayer);
+	<span class="hljs-keyword">new</span> popupMenu(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"GameBoy_view_menu"</span>), <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"GameBoy_view_popup"</span>));
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"view_terminal"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">1</span>].show() });
+	addEvent(<span class="hljs-string">"click"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"view_instructions"</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ windowStacks[<span class="hljs-number">5</span>].show() });
+	addEvent(<span class="hljs-string">"mouseup"</span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"gfx"</span>), initNewCanvasSize);
+	addEvent(<span class="hljs-string">"resize"</span>, <span class="hljs-built_in">window</span>, initNewCanvasSize);
+	addEvent(<span class="hljs-string">"unload"</span>, <span class="hljs-built_in">window</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+		autoSave();
+	});
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">keyDown</span><span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">var</span> keyCode = event.keyCode;
+	<span class="hljs-keyword">var</span> keyMapLength = keyZones.length;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> keyMapIndex = <span class="hljs-number">0</span>; keyMapIndex &lt; keyMapLength; ++keyMapIndex) {
+		<span class="hljs-keyword">var</span> keyCheck = keyZones[keyMapIndex];
+		<span class="hljs-keyword">var</span> keysMapped = keyCheck[<span class="hljs-number">1</span>];
+		<span class="hljs-keyword">var</span> keysTotal = keysMapped.length;
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; keysTotal; ++index) {
+			<span class="hljs-keyword">if</span> (keysMapped[index] == keyCode) {
+				GameBoyKeyDown(keyCheck[<span class="hljs-number">0</span>]);
+				<span class="hljs-keyword">try</span> {
+					event.preventDefault();
+				}
+				<span class="hljs-keyword">catch</span> (error) { }
+			}
+		}
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">keyUp</span><span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">var</span> keyCode = event.keyCode;
+	<span class="hljs-keyword">var</span> keyMapLength = keyZones.length;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> keyMapIndex = <span class="hljs-number">0</span>; keyMapIndex &lt; keyMapLength; ++keyMapIndex) {
+		<span class="hljs-keyword">var</span> keyCheck = keyZones[keyMapIndex];
+		<span class="hljs-keyword">var</span> keysMapped = keyCheck[<span class="hljs-number">1</span>];
+		<span class="hljs-keyword">var</span> keysTotal = keysMapped.length;
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; keysTotal; ++index) {
+			<span class="hljs-keyword">if</span> (keysMapped[index] == keyCode) {
+				GameBoyKeyUp(keyCheck[<span class="hljs-number">0</span>]);
+				<span class="hljs-keyword">try</span> {
+					event.preventDefault();
+				}
+				<span class="hljs-keyword">catch</span> (error) { }
+			}
+		}
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initPlayer</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"title"</span>).style.display = <span class="hljs-string">"none"</span>;
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"port_title"</span>).style.display = <span class="hljs-string">"none"</span>;
+	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"fullscreenContainer"</span>).style.display = <span class="hljs-string">"none"</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fullscreenPlayer</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">if</span> (GameBoyEmulatorInitialized()) {
+		<span class="hljs-keyword">if</span> (!inFullscreen) {
+			gameboy.canvas = fullscreenCanvas;
+			fullscreenCanvas.className = (showAsMinimal) ? <span class="hljs-string">"minimum"</span> : <span class="hljs-string">"maximum"</span>;
+			<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"fullscreenContainer"</span>).style.display = <span class="hljs-string">"block"</span>;
+			windowStacks[<span class="hljs-number">0</span>].hide();
+		}
+		<span class="hljs-keyword">else</span> {
+			gameboy.canvas = mainCanvas;
+			<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"fullscreenContainer"</span>).style.display = <span class="hljs-string">"none"</span>;
+			windowStacks[<span class="hljs-number">0</span>].show();
+		}
+		gameboy.initLCD();
+		inFullscreen = !inFullscreen;
+	}
+	<span class="hljs-keyword">else</span> {
+		cout(<span class="hljs-string">"Cannot go into fullscreen mode."</span>, <span class="hljs-number">2</span>);
+	}
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runFreeze</span><span class="hljs-params">(keyName)</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		windowStacks[<span class="hljs-number">8</span>].hide();
+		initPlayer();
+		openState(keyName, mainCanvas);
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		cout(<span class="hljs-string">"A problem with attempting to open the selected save state occurred."</span>, <span class="hljs-number">2</span>);
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Wrapper for localStorage getItem, so that data can be retrieved in various types.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findValue</span><span class="hljs-params">(key)</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.localStorage.getItem(key) != <span class="hljs-literal">null</span>) {
+			<span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">window</span>.localStorage.getItem(key));
+		}
+	}
+	<span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.globalStorage[location.hostname].getItem(key) != <span class="hljs-literal">null</span>) {
+			<span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">window</span>.globalStorage[location.hostname].getItem(key));
+		}
+	}
+	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Wrapper for localStorage setItem, so that data can be set in various types.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setValue</span><span class="hljs-params">(key, value)</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		<span class="hljs-built_in">window</span>.localStorage.setItem(key, <span class="hljs-built_in">JSON</span>.stringify(value));
+	}
+	<span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-built_in">window</span>.globalStorage[location.hostname].setItem(key, <span class="hljs-built_in">JSON</span>.stringify(value));
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Wrapper for localStorage removeItem, so that data can be set in various types.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteValue</span><span class="hljs-params">(key)</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		<span class="hljs-built_in">window</span>.localStorage.removeItem(key);
+	}
+	<span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-built_in">window</span>.globalStorage[location.hostname].removeItem(key);
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">outputLocalStorageLink</span><span class="hljs-params">(keyName, dataFound, downloadName)</span> </span>{
+	<span class="hljs-keyword">return</span> generateDownloadLink(<span class="hljs-string">"data:application/octet-stream;base64,"</span> + dataFound, keyName, downloadName);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">refreshFreezeListing</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> storageListMasterDivSub = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"freezeListingMasterContainerSub"</span>);
+	<span class="hljs-keyword">var</span> storageListMasterDiv = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"freezeListingMasterContainer"</span>);
+	storageListMasterDiv.removeChild(storageListMasterDivSub);
+	storageListMasterDivSub = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+	storageListMasterDivSub.id = <span class="hljs-string">"freezeListingMasterContainerSub"</span>;
+	<span class="hljs-keyword">var</span> keys = getLocalStorageKeys();
+	<span class="hljs-keyword">while</span> (keys.length &gt; <span class="hljs-number">0</span>) {
+		key = keys.shift();
+		<span class="hljs-keyword">if</span> (key.substring(<span class="hljs-number">0</span>, <span class="hljs-number">7</span>) == <span class="hljs-string">"FREEZE_"</span>) {
+			storageListMasterDivSub.appendChild(outputFreezeStateRequestLink(key));
+		}
+	}
+	storageListMasterDiv.appendChild(storageListMasterDivSub);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">outputFreezeStateRequestLink</span><span class="hljs-params">(keyName)</span> </span>{
+	<span class="hljs-keyword">var</span> linkNode = generateLink(<span class="hljs-string">"javascript:runFreeze(\""</span> + keyName + <span class="hljs-string">"\")"</span>, keyName);
+	<span class="hljs-keyword">var</span> storageContainerDiv = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+	storageContainerDiv.className = <span class="hljs-string">"storageListingContainer"</span>;
+	storageContainerDiv.appendChild(linkNode)
+	<span class="hljs-keyword">return</span> storageContainerDiv;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">refreshStorageListing</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> storageListMasterDivSub = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"storageListingMasterContainerSub"</span>);
+	<span class="hljs-keyword">var</span> storageListMasterDiv = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"storageListingMasterContainer"</span>);
+	storageListMasterDiv.removeChild(storageListMasterDivSub);
+	storageListMasterDivSub = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+	storageListMasterDivSub.id = <span class="hljs-string">"storageListingMasterContainerSub"</span>;
+	<span class="hljs-keyword">var</span> keys = getLocalStorageKeys();
+	<span class="hljs-keyword">var</span> blobPairs = [];
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; keys.length; ++index) {
+		blobPairs[index] = getBlobPreEncoded(keys[index]);
+		storageListMasterDivSub.appendChild(outputLocalStorageRequestLink(keys[index]));
+	}
+	storageListMasterDiv.appendChild(storageListMasterDivSub);
+	<span class="hljs-keyword">var</span> linkToManipulate = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"download_local_storage_dba"</span>);
+	linkToManipulate.href = <span class="hljs-string">"data:application/octet-stream;base64,"</span> + base64(generateMultiBlob(blobPairs));
+	linkToManipulate.download = <span class="hljs-string">"gameboy_color_saves.export"</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBlobPreEncoded</span><span class="hljs-params">(keyName)</span> </span>{
+	<span class="hljs-keyword">if</span> (keyName.substring(<span class="hljs-number">0</span>, <span class="hljs-number">9</span>) == <span class="hljs-string">"B64_SRAM_"</span>) {
+		<span class="hljs-keyword">return</span> [keyName.substring(<span class="hljs-number">4</span>), base64_decode(findValue(keyName))];
+	}
+	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyName.substring(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>) == <span class="hljs-string">"SRAM_"</span>) {
+		<span class="hljs-keyword">return</span> [keyName, convertToBinary(findValue(keyName))];
+	}
+	<span class="hljs-keyword">else</span> {
+		<span class="hljs-keyword">return</span> [keyName, <span class="hljs-built_in">JSON</span>.stringify(findValue(keyName))];
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">outputLocalStorageRequestLink</span><span class="hljs-params">(keyName)</span> </span>{
+	<span class="hljs-keyword">var</span> linkNode = generateLink(<span class="hljs-string">"javascript:popupStorageDialog(\""</span> + keyName + <span class="hljs-string">"\")"</span>, keyName);
+	<span class="hljs-keyword">var</span> storageContainerDiv = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+	storageContainerDiv.className = <span class="hljs-string">"storageListingContainer"</span>;
+	storageContainerDiv.appendChild(linkNode)
+	<span class="hljs-keyword">return</span> storageContainerDiv;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">popupStorageDialog</span><span class="hljs-params">(keyName)</span> </span>{
+	<span class="hljs-keyword">var</span> subContainer = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"storagePopupMasterContainer"</span>);
+	<span class="hljs-keyword">var</span> parentContainer = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"storagePopupMasterParent"</span>);
+	parentContainer.removeChild(subContainer);
+	subContainer = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+	subContainer.id = <span class="hljs-string">"storagePopupMasterContainer"</span>;
+	parentContainer.appendChild(subContainer);
+	<span class="hljs-keyword">var</span> downloadDiv = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+	downloadDiv.id = <span class="hljs-string">"storagePopupDownload"</span>;
+	<span class="hljs-keyword">if</span> (keyName.substring(<span class="hljs-number">0</span>, <span class="hljs-number">9</span>) == <span class="hljs-string">"B64_SRAM_"</span>) {
+		<span class="hljs-keyword">var</span> downloadDiv2 = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+		downloadDiv2.id = <span class="hljs-string">"storagePopupDownloadRAW"</span>;
+		downloadDiv2.appendChild(outputLocalStorageLink(<span class="hljs-string">"Download RAW save data."</span>, findValue(keyName), keyName));
+		subContainer.appendChild(downloadDiv2);
+		downloadDiv.appendChild(outputLocalStorageLink(<span class="hljs-string">"Download in import compatible format."</span>, base64(generateBlob(keyName.substring(<span class="hljs-number">4</span>), base64_decode(findValue(keyName)))), keyName));
+	}
+	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyName.substring(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>) == <span class="hljs-string">"SRAM_"</span>) {
+		<span class="hljs-keyword">var</span> downloadDiv2 = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+		downloadDiv2.id = <span class="hljs-string">"storagePopupDownloadRAW"</span>;
+		downloadDiv2.appendChild(outputLocalStorageLink(<span class="hljs-string">"Download RAW save data."</span>, base64(convertToBinary(findValue(keyName))), keyName));
+		subContainer.appendChild(downloadDiv2);
+		downloadDiv.appendChild(outputLocalStorageLink(<span class="hljs-string">"Download in import compatible format."</span>, base64(generateBlob(keyName, convertToBinary(findValue(keyName)))), keyName));
+	}
+	<span class="hljs-keyword">else</span> {
+		downloadDiv.appendChild(outputLocalStorageLink(<span class="hljs-string">"Download in import compatible format."</span>, base64(generateBlob(keyName, <span class="hljs-built_in">JSON</span>.stringify(findValue(keyName)))), keyName));
+	}
+	<span class="hljs-keyword">var</span> deleteLink = generateLink(<span class="hljs-string">"javascript:deleteStorageSlot(\""</span> + keyName + <span class="hljs-string">"\")"</span>, <span class="hljs-string">"Delete data item from HTML5 local storage."</span>);
+	deleteLink.id = <span class="hljs-string">"storagePopupDelete"</span>;
+	subContainer.appendChild(downloadDiv);
+	subContainer.appendChild(deleteLink);
+	windowStacks[<span class="hljs-number">6</span>].show();
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToBinary</span><span class="hljs-params">(jsArray)</span> </span>{
+	<span class="hljs-keyword">var</span> length = jsArray.length;
+	<span class="hljs-keyword">var</span> binString = <span class="hljs-string">""</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> indexBin = <span class="hljs-number">0</span>; indexBin &lt; length; indexBin++) {
+		binString += <span class="hljs-built_in">String</span>.fromCharCode(jsArray[indexBin]);
+	}
+	<span class="hljs-keyword">return</span> binString;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteStorageSlot</span><span class="hljs-params">(keyName)</span> </span>{
+	deleteValue(keyName);
+	windowStacks[<span class="hljs-number">6</span>].hide();
+	refreshStorageListing();
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateLink</span><span class="hljs-params">(address, textData)</span> </span>{
+	<span class="hljs-keyword">var</span> link = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"a"</span>);
+	link.href = address;
+	link.appendChild(<span class="hljs-built_in">document</span>.createTextNode(textData));
+	<span class="hljs-keyword">return</span> link;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateDownloadLink</span><span class="hljs-params">(address, textData, keyName)</span> </span>{
+	<span class="hljs-keyword">var</span> link = generateLink(address, textData);
+	link.download = keyName + <span class="hljs-string">".sav"</span>;
+	<span class="hljs-keyword">return</span> link;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkStorageLength</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		<span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.localStorage.length;
+	}
+	<span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.globalStorage[location.hostname].length;
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getLocalStorageKeys</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> storageLength = checkStorageLength();
+	<span class="hljs-keyword">var</span> keysFound = [];
+	<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">var</span> nextKey = <span class="hljs-literal">null</span>;
+	<span class="hljs-keyword">while</span> (index &lt; storageLength) {
+		nextKey = findKey(index++);
+		<span class="hljs-keyword">if</span> (nextKey !== <span class="hljs-literal">null</span> &amp;&amp; nextKey.length &gt; <span class="hljs-number">0</span>) {
+			<span class="hljs-keyword">if</span> (nextKey.substring(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>) == <span class="hljs-string">"SRAM_"</span> || nextKey.substring(<span class="hljs-number">0</span>, <span class="hljs-number">9</span>) == <span class="hljs-string">"B64_SRAM_"</span> || nextKey.substring(<span class="hljs-number">0</span>, <span class="hljs-number">7</span>) == <span class="hljs-string">"FREEZE_"</span> || nextKey.substring(<span class="hljs-number">0</span>, <span class="hljs-number">4</span>) == <span class="hljs-string">"RTC_"</span>) {
+				keysFound.push(nextKey);
+			}
+		}
+		<span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">break</span>;
+		}
+	}
+	<span class="hljs-keyword">return</span> keysFound;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findKey</span><span class="hljs-params">(keyNum)</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		<span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.localStorage.key(keyNum);
+	}
+	<span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.globalStorage[location.hostname].key(keyNum);
+	}
+	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Some wrappers and extensions for non-DOM3 browsers:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isDescendantOf</span><span class="hljs-params">(ParentElement, toCheck)</span> </span>{
+	<span class="hljs-keyword">if</span> (!ParentElement || !toCheck) {
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Verify an object as either a direct or indirect child to another object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">traverseTree</span><span class="hljs-params">(domElement)</span> </span>{
+		<span class="hljs-keyword">while</span> (domElement != <span class="hljs-literal">null</span>) {
+			<span class="hljs-keyword">if</span> (domElement.nodeType == <span class="hljs-number">1</span>) {
+				<span class="hljs-keyword">if</span> (isSameNode(domElement, toCheck)) {
+					<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+				}
+				<span class="hljs-keyword">if</span> (hasChildNodes(domElement)) {
+					<span class="hljs-keyword">if</span> (traverseTree(domElement.firstChild)) {
+						<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+					}
+				}
+			}
+			domElement = domElement.nextSibling;
+		}
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+	}
+	<span class="hljs-keyword">return</span> traverseTree(ParentElement.firstChild);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasChildNodes</span><span class="hljs-params">(oElement)</span> </span>{
+	<span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> oElement.hasChildNodes == <span class="hljs-string">"function"</span>) ? oElement.hasChildNodes() : ((oElement.firstChild != <span class="hljs-literal">null</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isSameNode</span><span class="hljs-params">(oCheck1, oCheck2)</span> </span>{
+	<span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> oCheck1.isSameNode == <span class="hljs-string">"function"</span>) ? oCheck1.isSameNode(oCheck2) : (oCheck1 === oCheck2);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pageXCoord</span><span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> event.pageX == <span class="hljs-string">"undefined"</span>) {
+		<span class="hljs-keyword">return</span> event.clientX + <span class="hljs-built_in">document</span>.documentElement.scrollLeft;
+	}
+	<span class="hljs-keyword">return</span> event.pageX;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pageYCoord</span><span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> event.pageY == <span class="hljs-string">"undefined"</span>) {
+		<span class="hljs-keyword">return</span> event.clientY + <span class="hljs-built_in">document</span>.documentElement.scrollTop;
+	}
+	<span class="hljs-keyword">return</span> event.pageY;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mouseLeaveVerify</span><span class="hljs-params">(oElement, event)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Hook target element with onmouseout and use this function to verify onmouseleave.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">return</span> isDescendantOf(oElement, (<span class="hljs-keyword">typeof</span> event.target != <span class="hljs-string">"undefined"</span>) ? event.target : event.srcElement) &amp;&amp; !isDescendantOf(oElement, (<span class="hljs-keyword">typeof</span> event.relatedTarget != <span class="hljs-string">"undefined"</span>) ? event.relatedTarget : event.toElement);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mouseEnterVerify</span><span class="hljs-params">(oElement, event)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Hook target element with onmouseover and use this function to verify onmouseenter.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">return</span> !isDescendantOf(oElement, (<span class="hljs-keyword">typeof</span> event.target != <span class="hljs-string">"undefined"</span>) ? event.target : event.srcElement) &amp;&amp; isDescendantOf(oElement, (<span class="hljs-keyword">typeof</span> event.relatedTarget != <span class="hljs-string">"undefined"</span>) ? event.relatedTarget : event.fromElement);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addEvent</span><span class="hljs-params">(sEvent, oElement, fListener)</span> </span>{
+	<span class="hljs-keyword">try</span> {	
+		oElement.addEventListener(sEvent, fListener, <span class="hljs-literal">false</span>);
+		cout(<span class="hljs-string">"In addEvent() : Standard addEventListener() called to add a(n) \""</span> + sEvent + <span class="hljs-string">"\" event."</span>, -<span class="hljs-number">1</span>);
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		oElement.attachEvent(<span class="hljs-string">"on"</span> + sEvent, fListener);	<span class="hljs-comment">//Pity for IE.</span>
+		cout(<span class="hljs-string">"In addEvent() : Nonstandard attachEvent() called to add an \"on"</span> + sEvent + <span class="hljs-string">"\" event."</span>, -<span class="hljs-number">1</span>);
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeEvent</span><span class="hljs-params">(sEvent, oElement, fListener)</span> </span>{
+	<span class="hljs-keyword">try</span> {	
+		oElement.removeEventListener(sEvent, fListener, <span class="hljs-literal">false</span>);
+		cout(<span class="hljs-string">"In removeEvent() : Standard removeEventListener() called to remove a(n) \""</span> + sEvent + <span class="hljs-string">"\" event."</span>, -<span class="hljs-number">1</span>);
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		oElement.detachEvent(<span class="hljs-string">"on"</span> + sEvent, fListener);	<span class="hljs-comment">//Pity for IE.</span>
+		cout(<span class="hljs-string">"In removeEvent() : Nonstandard detachEvent() called to remove an \"on"</span> + sEvent + <span class="hljs-string">"\" event."</span>, -<span class="hljs-number">1</span>);
+	}
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
