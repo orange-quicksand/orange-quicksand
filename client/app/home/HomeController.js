@@ -1,6 +1,8 @@
 angular.module('uGame.home', [])
 
-.controller('HomeController', function ($scope, $http, $interval, $state) {
+
+.controller('HomeController', function ($scope, $http, $interval, $state, Game) {
+
   $http({
     method: 'GET',
     url: '/api/games'
@@ -15,14 +17,17 @@ angular.module('uGame.home', [])
 
   $interval(function(){
     if(i >= array.length){
-      i = -1
+      i = -1;
     }
-    i++
-    $scope.changedWords = array[i]
+    i++;
+    $scope.changedWords = array[i];
   }, 500, 4);
 
-
   $scope.goToState = function(id){
-   $state.go('game', {id: id})
+   $state.go('game', {id: id});
   };
+
+  Game.gameData().then(function(data) {
+    $scope.data = data; 
+  })
 });

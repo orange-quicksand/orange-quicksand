@@ -3,9 +3,27 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto);
 
 body {
-  font-family: 'Roboto', Arial;
   font-size: 16px;
   margin: 20px;
   background-color: $blue-grey-800;
   color: $blue-grey-50;
+}
+
+.game-view {
+  display: block; 
+  width: 100%;
+  height: 100%;
+}
+
+.emulator {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.gameboy-color-emulator {
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;	
 }

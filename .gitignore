@@ -9,3 +9,4 @@ dist/
 client/lib
 server/data
 .DS_Store
+.sass-cache
