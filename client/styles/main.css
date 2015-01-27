@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/*@import url(http://fonts.googleapis.com/css?family=Roboto);*/
+@import url(http://fonts.googleapis.com/css?family=Roboto);
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -926,7 +926,7 @@ html {
   padding: 0 !important;
   position: absolute !important;
   width: 1px !important; }
-/*
+
 @font-face {
   font-family: roboto;
   font-style: normal;
@@ -946,7 +946,7 @@ html {
   font-family: roboto;
   font-style: normal;
   font-weight: 700;
-  src: url("../fonts/roboto/roboto-bold.eot?#iefix") format("embedded-opentype"), url("../fonts/roboto/roboto-bold.woff2") format("woff2"), url("../fonts/roboto/roboto-bold.woff") format("woff"), url("../fonts/roboto/roboto-bold.ttf") format("truetype"), url("../fonts/roboto/roboto-bold.svg#roboto") format("svg"); }*/
+  src: url("../fonts/roboto/roboto-bold.eot?#iefix") format("embedded-opentype"), url("../fonts/roboto/roboto-bold.woff2") format("woff2"), url("../fonts/roboto/roboto-bold.woff") format("woff"), url("../fonts/roboto/roboto-bold.ttf") format("truetype"), url("../fonts/roboto/roboto-bold.svg#roboto") format("svg"); }
 @font-face {
   font-family: md-icons;
   font-style: normal;
@@ -8414,8 +8414,18 @@ html {
 body {
   font-family: 'Roboto', Arial;
   font-size: 16px;
-  margin: 20px;
-  color: #ECEFF1; }
+  margin: 20px; }
+
+header {
+  background-color: #3F51B5;
+  text-align: center; }
+
+#game-container {
+  float: left;
+  width: 20vw;
+  height: 16.5vw;
+  text-align: center;
+  margin: 10px; }
 
 .game-view {
   display: block;
