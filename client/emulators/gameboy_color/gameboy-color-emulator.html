@@ -3,14 +3,12 @@
   <head>
     
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-
     <link rel="stylesheet" href="css/gameboy-color-emulator.css"/>
+    
   </head>
   <body>    
   
-    <div id="canvas_container">
-      <canvas id="mainCanvas">No Canvas Support</canvas>
-    </div>  
+    <canvas id="mainCanvas">No Canvas Support</canvas>
 
     <script src="js/other/mobile.js"></script>
     <script src="js/other/base64.js"></script>
@@ -26,7 +24,6 @@
     <script>
     $(function() {
       windowingInitialize();
-      gameBoyAPI.init();
       $('canvas').css('width', window.innerHeight * 160 / 144 + 'px');
 
       $( window ).resize(function() {

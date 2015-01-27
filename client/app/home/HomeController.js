@@ -15,14 +15,14 @@ angular.module('uGame.home', [])
 
   $interval(function(){
     if(i >= array.length){
-      i = -1
+      i = -1;
     }
-    i++
-    $scope.changedWords = array[i]
+    i++;
+    $scope.changedWords = array[i];
   }, 500, 4);
 
 
   $scope.goToState = function(id){
-   $state.go('game', {id: id})
+   $state.go('game', {id: id});
   };
 });

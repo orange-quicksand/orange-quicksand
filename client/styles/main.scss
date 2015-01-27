@@ -10,12 +10,21 @@ body {
   color: $blue-grey-50;
 }
 
+.game-view {
+  display: block; 
+  width: 100%;
+  height: 100%;
+}
+
 .emulator {
   display: inline-block;
   height: 100%;
+  width: 100%;
   margin: 0 auto;
 }
 
-// #GBC {
-//   //width: 800px * (144px / 160px) * 100%;
-// }
+.gameboy-color-emulator {
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;	
+}

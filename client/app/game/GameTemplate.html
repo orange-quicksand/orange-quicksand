@@ -1,7 +1,7 @@
-<div ng-controller="GameController">
-
-  <container class="emulator" id="GBC">
-  	<iframe name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" iframe-onload="getGameBoyAPI()"></iframe>
+<div class="game-view" ng-controller="GameController">
+  
+  <container class="emulator">
+  	<iframe name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" u-game-iframe-onload="getGameBoyAPI()"></iframe>
   </container>
 
 </div>

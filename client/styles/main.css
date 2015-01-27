@@ -8418,4 +8418,18 @@ body {
   background-color: #37474F;
   color: #ECEFF1; }
 
-/*# sourceMappingURL=main.css.map */
+.game-view {
+  display: block;
+  width: 100%;
+  height: 100%; }
+
+.emulator {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto; }
+
+.gameboy-color-emulator {
+  margin: 0 auto;
+  height: 100%;
+  width: 100%; }
