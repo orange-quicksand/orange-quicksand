@@ -1,7 +1,7 @@
 'use strict';
 var gulp    = require('gulp');
 var watch   = require('gulp-watch');
-var sass    = require('gulp-sass');
+var sass    = require('gulp-ruby-sass');
 var jshint  = require('gulp-jshint');
 var docco   = require('gulp-docco');
 
@@ -13,15 +13,27 @@ var paths = {
     './server/**/*.js'
     ],
   styles: ['./client/styles/*.scss'],
+  styleFolder: './client/styles/',
   html: [],
   test: ['./specs/*.js']
 };
 
 // Compile SASS to CSS
-gulp.task('sass', function () {
-  gulp.src(paths.styles)
-    .pipe(sass())
-    .pipe(gulp.dest('./client/styles/'));
+// OLD gulp-sass task
+// gulp.task('sass', function () {
+//   gulp.src(paths.styles)
+//     .pipe(sass())
+//     .pipe(gulp.dest('./client/styles/'));
+// });
+
+// Compile SASS to CSS
+// NEW gulp-ruby-sass task
+gulp.task('sass', function() {
+    return sass(paths.styleFolder) 
+    .on('error', function (err) {
+      console.error('Error!', err.message);
+   })
+    .pipe(gulp.dest(paths.styleFolder));
 });
 
 // Lint js files using JSHint

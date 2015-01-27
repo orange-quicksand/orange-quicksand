@@ -7,6 +7,7 @@ var app = angular
     'ui.router',
     'lumx'
   ])
+  
   .config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
     $stateProvider
