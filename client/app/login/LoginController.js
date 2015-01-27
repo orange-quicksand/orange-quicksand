@@ -8,10 +8,10 @@ angular.module('uGame.login', [])
   //creates the banner for the login page. Change if wanted
   $interval(function(){
     if(i >= array.length){
-      i = -1
+      i = -1;
     }
-    i++
-    $scope.changedWords = array[i]
+    i++;
+    $scope.changedWords = array[i];
   }, 500, 4);
 
   //sends login information to server
@@ -21,8 +21,8 @@ angular.module('uGame.login', [])
     if($scope.user.username && $scope.user.password){
       Game.gameLogin($scope.user).then(function(data){
         console.log(data);
-      })
+      });
     }
-  }
+  };
 
 });

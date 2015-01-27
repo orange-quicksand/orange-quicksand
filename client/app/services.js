@@ -19,7 +19,7 @@ app.factory('Game', function($http) {
         data: userObj
       }).then(function(resp){
         return resp;
-      })  
+      });  
     }
-  }
+  };
 });

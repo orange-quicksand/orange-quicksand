@@ -29,5 +29,5 @@ angular.module('uGame.home', [])
 
   Game.gameData().then(function(data) {
     $scope.data = data; 
-  })
+  });
 });

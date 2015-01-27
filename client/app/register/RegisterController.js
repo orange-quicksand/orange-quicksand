@@ -16,7 +16,7 @@ angular.module('uGame.register', [])
         //if true, will redirect to login for user to login
         //if false, will let user know username is already in use
         console.log(resp);
-      })
+      });
     }
   };
 });
