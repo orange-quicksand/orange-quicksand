@@ -191,13 +191,14 @@ When writing any block of code that is logically subordinate to the line immedia
   ```javascript
   // good:
   
-  /* greet (String, Array of Strings)
-   * returns: Array of Strings
-   *
-   ** WHAT IT DOES **
-   * It concatenates a greeting message and a name, 
-   * adding an '!' at the end
-   */
+  // greet (String, Array of Strings)
+  // returns: Array of Strings
+  //
+  // WHAT IT DOES
+  //-----------------------
+  // It concatenates a greeting message and a name, 
+  // adding an '!' at the end
+  //
   var greet = function(greeting, names){
     var results = [];
     names.forEach(function(name) {
@@ -208,12 +209,13 @@ When writing any block of code that is logically subordinate to the line immedia
   
   // good:
   
-  /* printName (Array of Strings)
-   * returns: null
-   *
-   ** WHAT IT DOES **
-   * It console.log's names provided on input. 
-   */
+  // printName (Array of Strings)
+  // returns: null
+  //
+  // WHAT IT DOES 
+  //----------------------
+  // It console.log's names provided on input. 
+  //
   var printName = function(names){
     names.forEach(function(name) {
       console.log(name);
