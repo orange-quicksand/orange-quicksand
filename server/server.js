@@ -2,7 +2,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 var Game = require('./games/gamesModel.js');
 var Rom = require('./games/romsModel.js');
-var library = require('./library.js');
+var library = require('./gameLibrary.js');
+var romLibrary = require('./romLibrary.js');
 
 var app = express();
 
@@ -11,16 +12,20 @@ app.use(express.static(__dirname + '/../client'));
 var port = process.env.PORT || 3000;
 app.listen(port);
 
-// create database
+// Create mongo database
 var location = process.env.LOC || 'localhost/orangequicksand';
 mongoose.connect('mongodb://' + location);
 
-// initialize database
+// Initialize database with test game info
 for (var i = 0; i < library.length; i++) {
   new Game(library[i]).save();
 }
 
-// routing for homepage
+for (var i = 0; i < romLibrary.length; i++) {
+  new Rom(romLibrary[i]).save();
+}
+
+// Routing for homepage
 app.get('/api/games', function(req, res){
   Game.find(function(err, results) {
     console.log(results);
@@ -28,7 +33,17 @@ app.get('/api/games', function(req, res){
   });
 });
 
-// routing for game page
-app.get('/api/game/:code', function(req, res){
+// Determine which game to send
+app.param('code', function(req, res, next, code){
+  req.id = code;
+  next();
+});
 
+// Routing for game page
+app.get('/api/game/:code', function(req, res){
+  var id = req.id;
+  Rom.find({id: id}, function(err, results) {
+    console.log('results: ' + results);
+    res.send(results);
+  });
 });
