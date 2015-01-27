@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Game = require('./games/gamesModel.js');
 var Rom = require('./games/romsModel.js');
 var library = require('./library.js');
+var romLibrary = require('./romLibrary.js');
 
 var app = express();
 
@@ -20,6 +21,8 @@ for (var i = 0; i < library.length; i++) {
   new Game(library[i]).save();
 }
 
+new Rom(romLibrary[0]).save();
+
 // routing for homepage
 app.get('/api/games', function(req, res){
   Game.find(function(err, results) {
@@ -30,5 +33,5 @@ app.get('/api/games', function(req, res){
 
 // routing for game page
 app.get('/api/game/:code', function(req, res){
-
+  
 });
