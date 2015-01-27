@@ -6,6 +6,11 @@ var RomsSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  title: {
+    type: String,
+    required: true,
+    unique: true
+  },
   rom: {
     type: String,
     required: true,
