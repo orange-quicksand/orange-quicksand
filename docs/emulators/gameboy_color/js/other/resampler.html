@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>resampler.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>resampler.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>JavaScript Audio Resampler (c) 2011 - Grant Galitz</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Resampler</span><span class="hljs-params">(fromSampleRate, toSampleRate, channels, outputBufferSize, noReturn)</span> </span>{
+	<span class="hljs-keyword">this</span>.fromSampleRate = fromSampleRate;
+	<span class="hljs-keyword">this</span>.toSampleRate = toSampleRate;
+	<span class="hljs-keyword">this</span>.channels = channels | <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">this</span>.outputBufferSize = outputBufferSize;
+	<span class="hljs-keyword">this</span>.noReturn = !!noReturn;
+	<span class="hljs-keyword">this</span>.initialize();
+}
+Resampler.prototype.initialize = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Perform some checks:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.fromSampleRate &gt; <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">this</span>.toSampleRate &gt; <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">this</span>.channels &gt; <span class="hljs-number">0</span>) {
+		<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.fromSampleRate == <span class="hljs-keyword">this</span>.toSampleRate) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Setup a resampler bypass:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			<span class="hljs-keyword">this</span>.resampler = <span class="hljs-keyword">this</span>.bypassResampler;		<span class="hljs-comment">//Resampler just returns what was passed through.</span>
+			<span class="hljs-keyword">this</span>.ratioWeight = <span class="hljs-number">1</span>;
+		}
+		<span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.fromSampleRate &lt; <span class="hljs-keyword">this</span>.toSampleRate) {
+				<span class="hljs-comment">/*
+					Use generic linear interpolation if upsampling,
+					as linear interpolation produces a gradient that we want
+					and works fine with two input sample points per output in this case.
+				*/</span>
+				<span class="hljs-keyword">this</span>.compileLinearInterpolationFunction();
+				<span class="hljs-keyword">this</span>.lastWeight = <span class="hljs-number">1</span>;
+			}
+			<span class="hljs-keyword">else</span> {
+				<span class="hljs-comment">/*
+					Custom resampler I wrote that doesn't skip samples
+					like standard linear interpolation in high downsampling.
+					This is more accurate than linear interpolation on downsampling.
+				*/</span>
+				<span class="hljs-keyword">this</span>.compileMultiTapFunction();
+				<span class="hljs-keyword">this</span>.tailExists = <span class="hljs-literal">false</span>;
+				<span class="hljs-keyword">this</span>.lastWeight = <span class="hljs-number">0</span>;
+			}
+			<span class="hljs-keyword">this</span>.ratioWeight = <span class="hljs-keyword">this</span>.fromSampleRate / <span class="hljs-keyword">this</span>.toSampleRate;
+			<span class="hljs-keyword">this</span>.initializeBuffers();
+		}
+	}
+	<span class="hljs-keyword">else</span> {
+		<span class="hljs-keyword">throw</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Invalid settings specified for the resampler."</span>));
+	}
+}
+Resampler.prototype.compileLinearInterpolationFunction = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> toCompile = <span class="hljs-string">"var bufferLength = buffer.length;\
+	var outLength = this.outputBufferSize;\
+	if ((bufferLength % "</span> + <span class="hljs-keyword">this</span>.channels + <span class="hljs-string">") == 0) {\
+		if (bufferLength &gt; 0) {\
+			var ratioWeight = this.ratioWeight;\
+			var weight = this.lastWeight;\
+			var firstWeight = 0;\
+			var secondWeight = 0;\
+			var sourceOffset = 0;\
+			var outputOffset = 0;\
+			var outputBuffer = this.outputBuffer;\
+			for (; weight &lt; 1; weight += ratioWeight) {\
+				secondWeight = weight % 1;\
+				firstWeight = 1 - secondWeight;"</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"outputBuffer[outputOffset++] = (this.lastOutput["</span> + channel + <span class="hljs-string">"] * firstWeight) + (buffer["</span> + channel + <span class="hljs-string">"] * secondWeight);"</span>;
+	}
+	toCompile += <span class="hljs-string">"}\
+			weight -= 1;\
+			for (bufferLength -= "</span> + <span class="hljs-keyword">this</span>.channels + <span class="hljs-string">", sourceOffset = Math.floor(weight) * "</span> + <span class="hljs-keyword">this</span>.channels + <span class="hljs-string">"; outputOffset &lt; outLength &amp;&amp; sourceOffset &lt; bufferLength;) {\
+				secondWeight = weight % 1;\
+				firstWeight = 1 - secondWeight;"</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"outputBuffer[outputOffset++] = (buffer[sourceOffset"</span> + ((channel &gt; <span class="hljs-number">0</span>) ? (<span class="hljs-string">" + "</span> + channel) : <span class="hljs-string">""</span>) + <span class="hljs-string">"] * firstWeight) + (buffer[sourceOffset + "</span> + (<span class="hljs-keyword">this</span>.channels + channel) + <span class="hljs-string">"] * secondWeight);"</span>;
+	}
+	toCompile += <span class="hljs-string">"weight += ratioWeight;\
+				sourceOffset = Math.floor(weight) * "</span> + <span class="hljs-keyword">this</span>.channels + <span class="hljs-string">";\
+			}"</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"this.lastOutput["</span> + channel + <span class="hljs-string">"] = buffer[sourceOffset++];"</span>;
+	}
+	toCompile += <span class="hljs-string">"this.lastWeight = weight % 1;\
+			return this.bufferSlice(outputOffset);\
+		}\
+		else {\
+			return (this.noReturn) ? 0 : [];\
+		}\
+	}\
+	else {\
+		throw(new Error(\"Buffer was of incorrect sample length.\"));\
+	}"</span>;
+	<span class="hljs-keyword">this</span>.resampler = <span class="hljs-built_in">Function</span>(<span class="hljs-string">"buffer"</span>, toCompile);
+}
+Resampler.prototype.compileMultiTapFunction = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> toCompile = <span class="hljs-string">"var bufferLength = buffer.length;\
+	var outLength = this.outputBufferSize;\
+	if ((bufferLength % "</span> + <span class="hljs-keyword">this</span>.channels + <span class="hljs-string">") == 0) {\
+		if (bufferLength &gt; 0) {\
+			var ratioWeight = this.ratioWeight;\
+			var weight = 0;"</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"var output"</span> + channel + <span class="hljs-string">" = 0;"</span>
+	}
+	toCompile += <span class="hljs-string">"var actualPosition = 0;\
+			var amountToNext = 0;\
+			var alreadyProcessedTail = !this.tailExists;\
+			this.tailExists = false;\
+			var outputBuffer = this.outputBuffer;\
+			var outputOffset = 0;\
+			var currentPosition = 0;\
+			do {\
+				if (alreadyProcessedTail) {\
+					weight = ratioWeight;"</span>;
+	<span class="hljs-keyword">for</span> (channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"output"</span> + channel + <span class="hljs-string">" = 0;"</span>
+	}
+	toCompile += <span class="hljs-string">"}\
+				else {\
+					weight = this.lastWeight;"</span>;
+	<span class="hljs-keyword">for</span> (channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"output"</span> + channel + <span class="hljs-string">" = this.lastOutput["</span> + channel + <span class="hljs-string">"];"</span>
+	}
+	toCompile += <span class="hljs-string">"alreadyProcessedTail = true;\
+				}\
+				while (weight &gt; 0 &amp;&amp; actualPosition &lt; bufferLength) {\
+					amountToNext = 1 + actualPosition - currentPosition;\
+					if (weight &gt;= amountToNext) {"</span>;
+	<span class="hljs-keyword">for</span> (channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"output"</span> + channel + <span class="hljs-string">" += buffer[actualPosition++] * amountToNext;"</span>
+	}
+	toCompile += <span class="hljs-string">"currentPosition = actualPosition;\
+						weight -= amountToNext;\
+					}\
+					else {"</span>;
+	<span class="hljs-keyword">for</span> (channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"output"</span> + channel + <span class="hljs-string">" += buffer[actualPosition"</span> + ((channel &gt; <span class="hljs-number">0</span>) ? (<span class="hljs-string">" + "</span> + channel) : <span class="hljs-string">""</span>) + <span class="hljs-string">"] * weight;"</span>
+	}
+	toCompile += <span class="hljs-string">"currentPosition += weight;\
+						weight = 0;\
+						break;\
+					}\
+				}\
+				if (weight == 0) {"</span>;
+	<span class="hljs-keyword">for</span> (channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"outputBuffer[outputOffset++] = output"</span> + channel + <span class="hljs-string">" / ratioWeight;"</span>
+	}
+	toCompile += <span class="hljs-string">"}\
+				else {\
+					this.lastWeight = weight;"</span>;
+	<span class="hljs-keyword">for</span> (channel = <span class="hljs-number">0</span>; channel &lt; <span class="hljs-keyword">this</span>.channels; ++channel) {
+		toCompile += <span class="hljs-string">"this.lastOutput["</span> + channel + <span class="hljs-string">"] = output"</span> + channel + <span class="hljs-string">";"</span>
+	}
+	toCompile += <span class="hljs-string">"this.tailExists = true;\
+					break;\
+				}\
+			} while (actualPosition &lt; bufferLength &amp;&amp; outputOffset &lt; outLength);\
+			return this.bufferSlice(outputOffset);\
+		}\
+		else {\
+			return (this.noReturn) ? 0 : [];\
+		}\
+	}\
+	else {\
+		throw(new Error(\"Buffer was of incorrect sample length.\"));\
+	}"</span>;
+	<span class="hljs-keyword">this</span>.resampler = <span class="hljs-built_in">Function</span>(<span class="hljs-string">"buffer"</span>, toCompile);
+}
+Resampler.prototype.bypassResampler = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(buffer)</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.noReturn) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Set the buffer passed as our own, as we don’t need to resample it:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">this</span>.outputBuffer = buffer;
+		<span class="hljs-keyword">return</span> buffer.length;
+	}
+	<span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Just return the buffer passsed:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">return</span> buffer;
+	}
+}
+Resampler.prototype.bufferSlice = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(sliceAmount)</span> </span>{
+	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.noReturn) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>If we’re going to access the properties directly from this object:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">return</span> sliceAmount;
+	}
+	<span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Typed array and normal array buffer section referencing:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">try</span> {
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.outputBuffer.subarray(<span class="hljs-number">0</span>, sliceAmount);
+		}
+		<span class="hljs-keyword">catch</span> (error) {
+			<span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Regular array pass:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>				<span class="hljs-keyword">this</span>.outputBuffer.length = sliceAmount;
+				<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.outputBuffer;
+			}
+			<span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Nightly Firefox 4 used to have the subarray function named as slice:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>				<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.outputBuffer.slice(<span class="hljs-number">0</span>, sliceAmount);
+			}
+		}
+	}
+}
+Resampler.prototype.initializeBuffers = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Initialize the internal buffer:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">try</span> {
+		<span class="hljs-keyword">this</span>.outputBuffer = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Float32Array</span>(<span class="hljs-keyword">this</span>.outputBufferSize);
+		<span class="hljs-keyword">this</span>.lastOutput = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Float32Array</span>(<span class="hljs-keyword">this</span>.channels);
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		<span class="hljs-keyword">this</span>.outputBuffer = [];
+		<span class="hljs-keyword">this</span>.lastOutput = [];
+	}
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

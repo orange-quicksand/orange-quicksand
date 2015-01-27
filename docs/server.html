@@ -32,11 +32,20 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
 <span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>);
+<span class="hljs-keyword">var</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>);
+<span class="hljs-keyword">var</span> User = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./users/userModel.js'</span>);
 <span class="hljs-keyword">var</span> Game = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./games/gamesModel.js'</span>);
 <span class="hljs-keyword">var</span> Rom = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./games/romsModel.js'</span>);
-<span class="hljs-keyword">var</span> library = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./library.js'</span>);
+<span class="hljs-keyword">var</span> library = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./gameLibrary.js'</span>);
+<span class="hljs-keyword">var</span> romLibrary = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./romLibrary.js'</span>);
 
 <span class="hljs-keyword">var</span> app = express();
+
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({
+  extended: <span class="hljs-literal">true</span>
+}));
 
 app.use(express.static(__dirname + <span class="hljs-string">'/../client'</span>));
 
@@ -52,7 +61,7 @@ app.listen(port);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>create database</p>
+              <p>Create mongo database</p>
 
             </div>
             
@@ -68,12 +77,16 @@ mongoose.connect(<span class="hljs-string">'mongodb://'</span> + location);</pre
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>initialize database</p>
+              <p>Initialize database with test game info</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; library.length; i++) {
   <span class="hljs-keyword">new</span> Game(library[i]).save();
+}
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; romLibrary.length; i++) {
+  <span class="hljs-keyword">new</span> Rom(romLibrary[i]).save();
 }</pre></div></div>
             
         </li>
@@ -85,7 +98,7 @@ mongoose.connect(<span class="hljs-string">'mongodb://'</span> + location);</pre
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>routing for homepage</p>
+              <p>Routing for homepage</p>
 
             </div>
             
@@ -105,12 +118,38 @@ mongoose.connect(<span class="hljs-string">'mongodb://'</span> + location);</pre
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>routing for game page</p>
+              <p>Determine which game to send</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.param(<span class="hljs-string">'code'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res, next, code)</span></span>{
+  req.id = code;
+  next();
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Routing for game page</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>app.get(<span class="hljs-string">'/api/game/:code'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+  <span class="hljs-keyword">var</span> id = req.id;
+  Rom.find({id: id}, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, results)</span> </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'results: '</span> + results);
+    res.send(results);
+  });
+});
 
+app.post(<span class="hljs-string">'/user/register'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+  <span class="hljs-built_in">console</span>.log(req.body);
 });</pre></div></div>
             
         </li>

@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>XAudioServer.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>XAudioServer.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>2010-2013 Grant Galitz - XAudioJS realtime audio output compatibility library:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> XAudioJSscriptsHandle = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"script"</span>);
+<span class="hljs-keyword">var</span> XAudioJSsourceHandle = XAudioJSscriptsHandle[XAudioJSscriptsHandle.length-<span class="hljs-number">1</span>].src;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioServer</span><span class="hljs-params">(channels, sampleRate, minBufferSize, maxBufferSize, underRunCallback, volume, failureCallback)</span> </span>{
+	XAudioJSChannelsAllocated = <span class="hljs-built_in">Math</span>.max(channels, <span class="hljs-number">1</span>);
+	<span class="hljs-keyword">this</span>.XAudioJSSampleRate = <span class="hljs-built_in">Math</span>.abs(sampleRate);
+	XAudioJSMinBufferSize = (minBufferSize &gt;= (XAudioJSSamplesPerCallback * XAudioJSChannelsAllocated) &amp;&amp; minBufferSize &lt; maxBufferSize) ? (minBufferSize &amp; (-XAudioJSChannelsAllocated)) : (XAudioJSSamplesPerCallback * XAudioJSChannelsAllocated);
+	XAudioJSMaxBufferSize = (<span class="hljs-built_in">Math</span>.floor(maxBufferSize) &gt; XAudioJSMinBufferSize + XAudioJSChannelsAllocated) ? (maxBufferSize &amp; (-XAudioJSChannelsAllocated)) : (XAudioJSMinBufferSize * XAudioJSChannelsAllocated);
+	<span class="hljs-keyword">this</span>.underRunCallback = (<span class="hljs-keyword">typeof</span> underRunCallback == <span class="hljs-string">"function"</span>) ? underRunCallback : <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{};
+	XAudioJSVolume = (volume &gt;= <span class="hljs-number">0</span> &amp;&amp; volume &lt;= <span class="hljs-number">1</span>) ? volume : <span class="hljs-number">1</span>;
+	<span class="hljs-keyword">this</span>.failureCallback = (<span class="hljs-keyword">typeof</span> failureCallback == <span class="hljs-string">"function"</span>) ? failureCallback : <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">throw</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"XAudioJS has encountered a fatal error."</span>)); };
+	<span class="hljs-keyword">this</span>.initializeAudio();
+}
+XAudioServer.prototype.MOZWriteAudioNoCallback = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(buffer)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Resample before passing to the moz audio api:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> bufferLength  = buffer.length;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> bufferIndex = <span class="hljs-number">0</span>; bufferIndex &lt; bufferLength;) {
+        <span class="hljs-keyword">var</span> sliceLength = <span class="hljs-built_in">Math</span>.min(bufferLength - bufferIndex, XAudioJSMaxBufferSize);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> sliceIndex = <span class="hljs-number">0</span>; sliceIndex &lt; sliceLength; ++sliceIndex) {
+            XAudioJSAudioContextSampleBuffer[sliceIndex] = buffer[bufferIndex++];
+        }
+        <span class="hljs-keyword">var</span> resampleLength = XAudioJSResampleControl.resampler(XAudioJSGetArraySlice(XAudioJSAudioContextSampleBuffer, sliceIndex));
+        <span class="hljs-keyword">if</span> (resampleLength &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">var</span> resampledResult = XAudioJSResampleControl.outputBuffer;
+            <span class="hljs-keyword">var</span> resampledBuffer = XAudioJSGetArraySlice(resampledResult, resampleLength);
+            <span class="hljs-keyword">this</span>.samplesAlreadyWritten += <span class="hljs-keyword">this</span>.audioHandleMoz.mozWriteAudio(resampledBuffer);
+        }
+    }
+}
+XAudioServer.prototype.callbackBasedWriteAudioNoCallback = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(buffer)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Callback-centered audio APIs:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> length = buffer.length;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> bufferCounter = <span class="hljs-number">0</span>; bufferCounter &lt; length &amp;&amp; XAudioJSAudioBufferSize &lt; XAudioJSMaxBufferSize;) {
+		XAudioJSAudioContextSampleBuffer[XAudioJSAudioBufferSize++] = buffer[bufferCounter++];
+	}
+}
+<span class="hljs-comment">/*Pass your samples into here!
+Pack your samples as a one-dimenional array
+With the channel samples packed uniformly.
+examples:
+    mono - [left, left, left, left]
+    stereo - [left, right, left, right, left, right, left, right]
+*/</span>
+XAudioServer.prototype.writeAudio = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(buffer)</span> </span>{
+	<span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.audioType) {
+		<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+			<span class="hljs-keyword">this</span>.MOZWriteAudioNoCallback(buffer);
+			<span class="hljs-keyword">this</span>.MOZExecuteCallback();
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+			<span class="hljs-keyword">this</span>.checkFlashInit();
+		<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+		<span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:
+			<span class="hljs-keyword">this</span>.callbackBasedWriteAudioNoCallback(buffer);
+			<span class="hljs-keyword">this</span>.callbackBasedExecuteCallback();
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">default</span>:
+			<span class="hljs-keyword">this</span>.failureCallback();
+	}
+}
+<span class="hljs-comment">/*Pass your samples into here if you don't want automatic callback calling:
+Pack your samples as a one-dimenional array
+With the channel samples packed uniformly.
+examples:
+    mono - [left, left, left, left]
+    stereo - [left, right, left, right, left, right, left, right]
+Useful in preventing infinite recursion issues with calling writeAudio inside your callback.
+*/</span>
+XAudioServer.prototype.writeAudioNoCallback = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(buffer)</span> </span>{
+	<span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.audioType) {
+		<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+			<span class="hljs-keyword">this</span>.MOZWriteAudioNoCallback(buffer);
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+			<span class="hljs-keyword">this</span>.checkFlashInit();
+		<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+		<span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:
+			<span class="hljs-keyword">this</span>.callbackBasedWriteAudioNoCallback(buffer);
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">default</span>:
+			<span class="hljs-keyword">this</span>.failureCallback();
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Developer can use this to see how many samples to write (example: minimum buffer allotment minus remaining samples left returned from this function to make sure maximum buffering is done…)
+If null is returned, then that means metric could not be done.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>XAudioServer.prototype.remainingBuffer = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.audioType) {
+		<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+			<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.floor((<span class="hljs-keyword">this</span>.samplesAlreadyWritten - <span class="hljs-keyword">this</span>.audioHandleMoz.mozCurrentSampleOffset()) * XAudioJSResampleControl.ratioWeight / XAudioJSChannelsAllocated) * XAudioJSChannelsAllocated;
+		<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+			<span class="hljs-keyword">this</span>.checkFlashInit();
+		<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+		<span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:
+			<span class="hljs-keyword">return</span> (<span class="hljs-built_in">Math</span>.floor((XAudioJSResampledSamplesLeft() * XAudioJSResampleControl.ratioWeight) / XAudioJSChannelsAllocated) * XAudioJSChannelsAllocated) + XAudioJSAudioBufferSize;
+		<span class="hljs-keyword">default</span>:
+			<span class="hljs-keyword">this</span>.failureCallback();
+			<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+	}
+}
+XAudioServer.prototype.MOZExecuteCallback = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>mozAudio:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> samplesRequested = XAudioJSMinBufferSize - <span class="hljs-keyword">this</span>.remainingBuffer();
+	<span class="hljs-keyword">if</span> (samplesRequested &gt; <span class="hljs-number">0</span>) {
+		<span class="hljs-keyword">this</span>.MOZWriteAudioNoCallback(<span class="hljs-keyword">this</span>.underRunCallback(samplesRequested));
+	}
+}
+XAudioServer.prototype.callbackBasedExecuteCallback = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>WebKit /Flash Audio:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> samplesRequested = XAudioJSMinBufferSize - <span class="hljs-keyword">this</span>.remainingBuffer();
+	<span class="hljs-keyword">if</span> (samplesRequested &gt; <span class="hljs-number">0</span>) {
+		<span class="hljs-keyword">this</span>.callbackBasedWriteAudioNoCallback(<span class="hljs-keyword">this</span>.underRunCallback(samplesRequested));
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>If you just want your callback called for any possible refill (Execution of callback is still conditional):</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>XAudioServer.prototype.executeCallback = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.audioType) {
+		<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+			<span class="hljs-keyword">this</span>.MOZExecuteCallback();
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+			<span class="hljs-keyword">this</span>.checkFlashInit();
+		<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+		<span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:
+			<span class="hljs-keyword">this</span>.callbackBasedExecuteCallback();
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">default</span>:
+			<span class="hljs-keyword">this</span>.failureCallback();
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>DO NOT CALL THIS, the lib calls this internally!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>XAudioServer.prototype.initializeAudio = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">this</span>.initializeMozAudio();
+    }
+    <span class="hljs-keyword">catch</span> (error) {
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">this</span>.initializeWebAudio();
+        }
+        <span class="hljs-keyword">catch</span> (error) {
+            <span class="hljs-keyword">try</span> {
+                <span class="hljs-keyword">this</span>.initializeMediaStream();
+            }
+            <span class="hljs-keyword">catch</span> (error) {
+                <span class="hljs-keyword">try</span> {
+                    <span class="hljs-keyword">this</span>.initializeFlashAudio();
+                }
+                <span class="hljs-keyword">catch</span> (error) {
+                    <span class="hljs-keyword">this</span>.audioType = -<span class="hljs-number">1</span>;
+                    <span class="hljs-keyword">this</span>.failureCallback();
+                }
+            }
+        }
+    }
+}
+XAudioServer.prototype.initializeMediaStream = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">this</span>.audioHandleMediaStream = <span class="hljs-keyword">new</span> Audio();
+	<span class="hljs-keyword">this</span>.resetCallbackAPIAudioBuffer(XAudioJSMediaStreamSampleRate);
+	<span class="hljs-keyword">if</span> (XAudioJSMediaStreamWorker) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>WebWorker is not GC’d, so manually collect it:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		XAudioJSMediaStreamWorker.terminate();
+	}
+	XAudioJSMediaStreamWorker = <span class="hljs-keyword">new</span> Worker(XAudioJSsourceHandle.substring(<span class="hljs-number">0</span>, XAudioJSsourceHandle.length - <span class="hljs-number">3</span>) + <span class="hljs-string">"MediaStreamWorker.js"</span>);
+	<span class="hljs-keyword">this</span>.audioHandleMediaStreamProcessing = <span class="hljs-keyword">new</span> ProcessedMediaStream(XAudioJSMediaStreamWorker, XAudioJSMediaStreamSampleRate, XAudioJSChannelsAllocated);
+	<span class="hljs-keyword">this</span>.audioHandleMediaStream.src = <span class="hljs-keyword">this</span>.audioHandleMediaStreamProcessing;
+	<span class="hljs-keyword">this</span>.audioHandleMediaStream.volume = XAudioJSVolume;
+	XAudioJSMediaStreamWorker.onmessage = XAudioJSMediaStreamPushAudio;
+	XAudioJSMediaStreamWorker.postMessage([<span class="hljs-number">1</span>, XAudioJSResampleBufferSize, XAudioJSChannelsAllocated]);
+	<span class="hljs-keyword">this</span>.audioHandleMediaStream.play();
+	<span class="hljs-keyword">this</span>.audioType = <span class="hljs-number">3</span>;
+}
+XAudioServer.prototype.initializeMozAudio = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">this</span>.audioHandleMoz = <span class="hljs-keyword">new</span> Audio();
+	<span class="hljs-keyword">this</span>.audioHandleMoz.mozSetup(XAudioJSChannelsAllocated, XAudioJSMozAudioSampleRate);
+	<span class="hljs-keyword">this</span>.audioHandleMoz.volume = XAudioJSVolume;
+	<span class="hljs-keyword">this</span>.samplesAlreadyWritten = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">this</span>.audioType = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>if (navigator.platform != “MacIntel” &amp;&amp; navigator.platform != “MacPPC”) {
+Add some additional buffering space to workaround a moz audio api issue:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> bufferAmount = (<span class="hljs-keyword">this</span>.XAudioJSSampleRate * XAudioJSChannelsAllocated / <span class="hljs-number">10</span>) | <span class="hljs-number">0</span>;
+		bufferAmount -= bufferAmount % XAudioJSChannelsAllocated;
+		<span class="hljs-keyword">this</span>.samplesAlreadyWritten -= bufferAmount;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>}</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.initializeResampler(XAudioJSMozAudioSampleRate);
+}
+XAudioServer.prototype.initializeWebAudio = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (!XAudioJSWebAudioLaunchedContext) {
+        <span class="hljs-keyword">try</span> {
+            XAudioJSWebAudioContextHandle = <span class="hljs-keyword">new</span> AudioContext();								<span class="hljs-comment">//Create a system audio context.</span>
+        }
+        <span class="hljs-keyword">catch</span> (error) {
+            XAudioJSWebAudioContextHandle = <span class="hljs-keyword">new</span> webkitAudioContext();							<span class="hljs-comment">//Create a system audio context.</span>
+        }
+        XAudioJSWebAudioLaunchedContext = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">if</span> (XAudioJSWebAudioAudioNode) {
+        XAudioJSWebAudioAudioNode.disconnect();
+        XAudioJSWebAudioAudioNode.onaudioprocess = <span class="hljs-literal">null</span>;
+        XAudioJSWebAudioAudioNode = <span class="hljs-literal">null</span>;
+    }
+    <span class="hljs-keyword">try</span> {
+        XAudioJSWebAudioAudioNode = XAudioJSWebAudioContextHandle.createScriptProcessor(XAudioJSSamplesPerCallback, <span class="hljs-number">0</span>, XAudioJSChannelsAllocated);	<span class="hljs-comment">//Create the js event node.</span>
+    }
+    <span class="hljs-keyword">catch</span> (error) {
+        XAudioJSWebAudioAudioNode = XAudioJSWebAudioContextHandle.createJavaScriptNode(XAudioJSSamplesPerCallback, <span class="hljs-number">0</span>, XAudioJSChannelsAllocated);	<span class="hljs-comment">//Create the js event node.</span>
+    }
+    XAudioJSWebAudioAudioNode.onaudioprocess = XAudioJSWebAudioEvent;																			<span class="hljs-comment">//Connect the audio processing event to a handling function so we can manipulate output</span>
+    XAudioJSWebAudioAudioNode.connect(XAudioJSWebAudioContextHandle.destination);																<span class="hljs-comment">//Send and chain the output of the audio manipulation to the system audio output.</span>
+    <span class="hljs-keyword">this</span>.resetCallbackAPIAudioBuffer(XAudioJSWebAudioContextHandle.sampleRate);
+    <span class="hljs-keyword">this</span>.audioType = <span class="hljs-number">1</span>;
+}
+XAudioServer.prototype.initializeFlashAudio = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> existingFlashload = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"XAudioJS"</span>);
+	<span class="hljs-keyword">this</span>.flashInitialized = <span class="hljs-literal">false</span>;
+	<span class="hljs-keyword">this</span>.resetCallbackAPIAudioBuffer(<span class="hljs-number">44100</span>);
+	<span class="hljs-keyword">switch</span> (XAudioJSChannelsAllocated) {
+		<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+			XAudioJSFlashTransportEncoder = XAudioJSGenerateFlashMonoString;
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+			XAudioJSFlashTransportEncoder = XAudioJSGenerateFlashStereoString;
+			<span class="hljs-keyword">break</span>;
+		<span class="hljs-keyword">default</span>:
+			XAudioJSFlashTransportEncoder = XAudioJSGenerateFlashSurroundString;
+	}
+	<span class="hljs-keyword">if</span> (existingFlashload == <span class="hljs-literal">null</span>) {
+		<span class="hljs-keyword">this</span>.audioHandleFlash = <span class="hljs-literal">null</span>;
+		<span class="hljs-keyword">var</span> thisObj = <span class="hljs-keyword">this</span>;
+		<span class="hljs-keyword">var</span> mainContainerNode = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+		mainContainerNode.setAttribute(<span class="hljs-string">"style"</span>, <span class="hljs-string">"position: fixed; bottom: 0px; right: 0px; margin: 0px; padding: 0px; border: none; width: 8px; height: 8px; overflow: hidden; z-index: -1000; "</span>);
+		<span class="hljs-keyword">var</span> containerNode = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+		containerNode.setAttribute(<span class="hljs-string">"style"</span>, <span class="hljs-string">"position: static; border: none; width: 0px; height: 0px; visibility: hidden; margin: 8px; padding: 0px;"</span>);
+		containerNode.setAttribute(<span class="hljs-string">"id"</span>, <span class="hljs-string">"XAudioJS"</span>);
+		mainContainerNode.appendChild(containerNode);
+		<span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"body"</span>)[<span class="hljs-number">0</span>].appendChild(mainContainerNode);
+		swfobject.embedSWF(
+			XAudioJSsourceHandle.substring(<span class="hljs-number">0</span>, XAudioJSsourceHandle.length - <span class="hljs-number">9</span>) + <span class="hljs-string">"JS.swf"</span>,
+			<span class="hljs-string">"XAudioJS"</span>,
+			<span class="hljs-string">"8"</span>,
+			<span class="hljs-string">"8"</span>,
+			<span class="hljs-string">"9.0.0"</span>,
+			<span class="hljs-string">""</span>,
+			{},
+			{<span class="hljs-string">"allowscriptaccess"</span>:<span class="hljs-string">"always"</span>},
+			{<span class="hljs-string">"style"</span>:<span class="hljs-string">"position: static; visibility: hidden; margin: 8px; padding: 0px; border: none"</span>},
+			<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+				<span class="hljs-keyword">if</span> (event.success) {
+					thisObj.audioHandleFlash = event.ref;
+					thisObj.checkFlashInit();
+				}
+				<span class="hljs-keyword">else</span> {
+					thisObj.failureCallback();
+					thisObj.audioType = -<span class="hljs-number">1</span>;
+				}
+			}
+		);
+	}
+	<span class="hljs-keyword">else</span> {
+		<span class="hljs-keyword">this</span>.audioHandleFlash = existingFlashload;
+		<span class="hljs-keyword">this</span>.checkFlashInit();
+	}
+	<span class="hljs-keyword">this</span>.audioType = <span class="hljs-number">2</span>;
+}
+XAudioServer.prototype.changeVolume = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(newVolume)</span> </span>{
+	<span class="hljs-keyword">if</span> (newVolume &gt;= <span class="hljs-number">0</span> &amp;&amp; newVolume &lt;= <span class="hljs-number">1</span>) {
+		XAudioJSVolume = newVolume;
+		<span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.audioType) {
+			<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+				<span class="hljs-keyword">this</span>.audioHandleMoz.volume = XAudioJSVolume;
+			<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+				<span class="hljs-keyword">break</span>;
+			<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+				<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.flashInitialized) {
+					<span class="hljs-keyword">this</span>.audioHandleFlash.changeVolume(XAudioJSVolume);
+				}
+				<span class="hljs-keyword">else</span> {
+					<span class="hljs-keyword">this</span>.checkFlashInit();
+				}
+				<span class="hljs-keyword">break</span>;
+			<span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:
+				<span class="hljs-keyword">this</span>.audioHandleMediaStream.volume = XAudioJSVolume;
+				<span class="hljs-keyword">break</span>;
+			<span class="hljs-keyword">default</span>:
+				<span class="hljs-keyword">this</span>.failureCallback();
+		}
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Checks to see if the NPAPI Adobe Flash bridge is ready yet:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>XAudioServer.prototype.checkFlashInit = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.flashInitialized) {
+		<span class="hljs-keyword">try</span> {
+			<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.audioHandleFlash &amp;&amp; <span class="hljs-keyword">this</span>.audioHandleFlash.initialize) {
+				<span class="hljs-keyword">this</span>.flashInitialized = <span class="hljs-literal">true</span>;
+				<span class="hljs-keyword">this</span>.audioHandleFlash.initialize(XAudioJSChannelsAllocated, XAudioJSVolume);
+			}
+		}
+		<span class="hljs-keyword">catch</span> (error) {
+			<span class="hljs-keyword">this</span>.flashInitialized = <span class="hljs-literal">false</span>;
+		}
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Set up the resampling:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>XAudioServer.prototype.resetCallbackAPIAudioBuffer = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(APISampleRate)</span> </span>{
+	XAudioJSAudioBufferSize = XAudioJSResampleBufferEnd = XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.initializeResampler(APISampleRate);
+    XAudioJSResampledBuffer = <span class="hljs-keyword">this</span>.getFloat32(XAudioJSResampleBufferSize);
+}
+XAudioServer.prototype.initializeResampler = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(sampleRate)</span> </span>{
+    XAudioJSAudioContextSampleBuffer = <span class="hljs-keyword">this</span>.getFloat32(XAudioJSMaxBufferSize);
+    XAudioJSResampleBufferSize = <span class="hljs-built_in">Math</span>.max(XAudioJSMaxBufferSize * <span class="hljs-built_in">Math</span>.ceil(sampleRate / <span class="hljs-keyword">this</span>.XAudioJSSampleRate) + XAudioJSChannelsAllocated, XAudioJSSamplesPerCallback * XAudioJSChannelsAllocated);
+	XAudioJSResampleControl = <span class="hljs-keyword">new</span> Resampler(<span class="hljs-keyword">this</span>.XAudioJSSampleRate, sampleRate, XAudioJSChannelsAllocated, XAudioJSResampleBufferSize, <span class="hljs-literal">true</span>);
+}
+XAudioServer.prototype.getFloat32 = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(size)</span> </span>{
+	<span class="hljs-keyword">try</span> {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Float32Array</span>(size);
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		<span class="hljs-keyword">return</span> [];
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSFlashAudioEvent</span><span class="hljs-params">()</span> </span>{		<span class="hljs-comment">//The callback that flash calls...</span>
+	XAudioJSResampleRefill();
+	<span class="hljs-keyword">return</span> XAudioJSFlashTransportEncoder();
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSGenerateFlashSurroundString</span><span class="hljs-params">()</span> </span>{	<span class="hljs-comment">//Convert the arrays to one long string for speed.</span>
+	<span class="hljs-keyword">var</span> XAudioJSTotalSamples = XAudioJSSamplesPerCallback &lt;&lt; <span class="hljs-number">1</span>;
+	<span class="hljs-keyword">if</span> (XAudioJSBinaryString.length &gt; XAudioJSTotalSamples) {
+		XAudioJSBinaryString = [];
+	}
+	XAudioJSTotalSamples = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; XAudioJSSamplesPerCallback &amp;&amp; XAudioJSResampleBufferStart != XAudioJSResampleBufferEnd; ++index) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Sanitize the buffer:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		XAudioJSBinaryString[XAudioJSTotalSamples++] = <span class="hljs-built_in">String</span>.fromCharCode(((<span class="hljs-built_in">Math</span>.min(<span class="hljs-built_in">Math</span>.max(XAudioJSResampledBuffer[XAudioJSResampleBufferStart++] + <span class="hljs-number">1</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>) * <span class="hljs-number">0x3FFF</span>) | <span class="hljs-number">0</span>) + <span class="hljs-number">0x3000</span>);
+		XAudioJSBinaryString[XAudioJSTotalSamples++] = <span class="hljs-built_in">String</span>.fromCharCode(((<span class="hljs-built_in">Math</span>.min(<span class="hljs-built_in">Math</span>.max(XAudioJSResampledBuffer[XAudioJSResampleBufferStart++] + <span class="hljs-number">1</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>) * <span class="hljs-number">0x3FFF</span>) | <span class="hljs-number">0</span>) + <span class="hljs-number">0x3000</span>);
+		XAudioJSResampleBufferStart += XAudioJSChannelsAllocated - <span class="hljs-number">2</span>;
+		<span class="hljs-keyword">if</span> (XAudioJSResampleBufferStart == XAudioJSResampleBufferSize) {
+			XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+		}
+	}
+	<span class="hljs-keyword">return</span> XAudioJSBinaryString.join(<span class="hljs-string">""</span>);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSGenerateFlashStereoString</span><span class="hljs-params">()</span> </span>{	<span class="hljs-comment">//Convert the arrays to one long string for speed.</span>
+	<span class="hljs-keyword">var</span> XAudioJSTotalSamples = XAudioJSSamplesPerCallback &lt;&lt; <span class="hljs-number">1</span>;
+	<span class="hljs-keyword">if</span> (XAudioJSBinaryString.length &gt; XAudioJSTotalSamples) {
+		XAudioJSBinaryString = [];
+	}
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; XAudioJSTotalSamples &amp;&amp; XAudioJSResampleBufferStart != XAudioJSResampleBufferEnd;) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Sanitize the buffer:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		XAudioJSBinaryString[index++] = <span class="hljs-built_in">String</span>.fromCharCode(((<span class="hljs-built_in">Math</span>.min(<span class="hljs-built_in">Math</span>.max(XAudioJSResampledBuffer[XAudioJSResampleBufferStart++] + <span class="hljs-number">1</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>) * <span class="hljs-number">0x3FFF</span>) | <span class="hljs-number">0</span>) + <span class="hljs-number">0x3000</span>);
+		XAudioJSBinaryString[index++] = <span class="hljs-built_in">String</span>.fromCharCode(((<span class="hljs-built_in">Math</span>.min(<span class="hljs-built_in">Math</span>.max(XAudioJSResampledBuffer[XAudioJSResampleBufferStart++] + <span class="hljs-number">1</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>) * <span class="hljs-number">0x3FFF</span>) | <span class="hljs-number">0</span>) + <span class="hljs-number">0x3000</span>);
+		<span class="hljs-keyword">if</span> (XAudioJSResampleBufferStart == XAudioJSResampleBufferSize) {
+			XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+		}
+	}
+	<span class="hljs-keyword">return</span> XAudioJSBinaryString.join(<span class="hljs-string">""</span>);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSGenerateFlashMonoString</span><span class="hljs-params">()</span> </span>{	<span class="hljs-comment">//Convert the array to one long string for speed.</span>
+	<span class="hljs-keyword">if</span> (XAudioJSBinaryString.length &gt; XAudioJSSamplesPerCallback) {
+		XAudioJSBinaryString = [];
+	}
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; XAudioJSSamplesPerCallback &amp;&amp; XAudioJSResampleBufferStart != XAudioJSResampleBufferEnd;) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Sanitize the buffer:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		XAudioJSBinaryString[index++] = <span class="hljs-built_in">String</span>.fromCharCode(((<span class="hljs-built_in">Math</span>.min(<span class="hljs-built_in">Math</span>.max(XAudioJSResampledBuffer[XAudioJSResampleBufferStart++] + <span class="hljs-number">1</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>) * <span class="hljs-number">0x3FFF</span>) | <span class="hljs-number">0</span>) + <span class="hljs-number">0x3000</span>);
+		<span class="hljs-keyword">if</span> (XAudioJSResampleBufferStart == XAudioJSResampleBufferSize) {
+			XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+		}
+	}
+	<span class="hljs-keyword">return</span> XAudioJSBinaryString.join(<span class="hljs-string">""</span>);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Some Required Globals:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> XAudioJSWebAudioContextHandle = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">var</span> XAudioJSWebAudioAudioNode = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">var</span> XAudioJSWebAudioLaunchedContext = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">var</span> XAudioJSAudioContextSampleBuffer = [];
+<span class="hljs-keyword">var</span> XAudioJSResampledBuffer = [];
+<span class="hljs-keyword">var</span> XAudioJSMinBufferSize = <span class="hljs-number">15000</span>;
+<span class="hljs-keyword">var</span> XAudioJSMaxBufferSize = <span class="hljs-number">25000</span>;
+<span class="hljs-keyword">var</span> XAudioJSChannelsAllocated = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">var</span> XAudioJSVolume = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">var</span> XAudioJSResampleControl = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">var</span> XAudioJSAudioBufferSize = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> XAudioJSResampleBufferEnd = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> XAudioJSResampleBufferSize = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> XAudioJSMediaStreamWorker = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">var</span> XAudioJSMediaStreamBuffer = [];
+<span class="hljs-keyword">var</span> XAudioJSMediaStreamSampleRate = <span class="hljs-number">44100</span>;
+<span class="hljs-keyword">var</span> XAudioJSMozAudioSampleRate = <span class="hljs-number">44100</span>;
+<span class="hljs-keyword">var</span> XAudioJSSamplesPerCallback = <span class="hljs-number">2048</span>;			<span class="hljs-comment">//Has to be between 2048 and 4096 (If over, then samples are ignored, if under then silence is added).</span>
+<span class="hljs-keyword">var</span> XAudioJSFlashTransportEncoder = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">var</span> XAudioJSMediaStreamLengthAliasCounter = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> XAudioJSBinaryString = [];
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSWebAudioEvent</span><span class="hljs-params">(event)</span> </span>{		<span class="hljs-comment">//Web Audio API callback...</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Find all output channels:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> bufferCount = <span class="hljs-number">0</span>, buffers = []; bufferCount &lt; XAudioJSChannelsAllocated; ++bufferCount) {
+		buffers[bufferCount] = event.outputBuffer.getChannelData(bufferCount);
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Make sure we have resampled samples ready:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	XAudioJSResampleRefill();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Copy samples from XAudioJS to the Web Audio API:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; XAudioJSSamplesPerCallback &amp;&amp; XAudioJSResampleBufferStart != XAudioJSResampleBufferEnd; ++index) {
+		<span class="hljs-keyword">for</span> (bufferCount = <span class="hljs-number">0</span>; bufferCount &lt; XAudioJSChannelsAllocated; ++bufferCount) {
+			buffers[bufferCount][index] = XAudioJSResampledBuffer[XAudioJSResampleBufferStart++] * XAudioJSVolume;
+		}
+		<span class="hljs-keyword">if</span> (XAudioJSResampleBufferStart == XAudioJSResampleBufferSize) {
+			XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+		}
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Pad with silence if we’re underrunning:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">while</span> (index &lt; XAudioJSSamplesPerCallback) {
+		<span class="hljs-keyword">for</span> (bufferCount = <span class="hljs-number">0</span>; bufferCount &lt; XAudioJSChannelsAllocated; ++bufferCount) {
+			buffers[bufferCount][index] = <span class="hljs-number">0</span>;
+		}
+		++index;
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>MediaStream API buffer push</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSMediaStreamPushAudio</span><span class="hljs-params">(event)</span> </span>{
+	<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">var</span> audioLengthRequested = event.data;
+	<span class="hljs-keyword">var</span> samplesPerCallbackAll = XAudioJSSamplesPerCallback * XAudioJSChannelsAllocated;
+	<span class="hljs-keyword">var</span> XAudioJSMediaStreamLengthAlias = audioLengthRequested % XAudioJSSamplesPerCallback;
+	audioLengthRequested = audioLengthRequested - (XAudioJSMediaStreamLengthAliasCounter - (XAudioJSMediaStreamLengthAliasCounter % XAudioJSSamplesPerCallback)) - XAudioJSMediaStreamLengthAlias + XAudioJSSamplesPerCallback;
+	XAudioJSMediaStreamLengthAliasCounter -= XAudioJSMediaStreamLengthAliasCounter - (XAudioJSMediaStreamLengthAliasCounter % XAudioJSSamplesPerCallback);
+	XAudioJSMediaStreamLengthAliasCounter += XAudioJSSamplesPerCallback - XAudioJSMediaStreamLengthAlias;
+	<span class="hljs-keyword">if</span> (XAudioJSMediaStreamBuffer.length != samplesPerCallbackAll) {
+		XAudioJSMediaStreamBuffer = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Float32Array</span>(samplesPerCallbackAll);
+	}
+	XAudioJSResampleRefill();
+	<span class="hljs-keyword">while</span> (index &lt; audioLengthRequested) {
+		<span class="hljs-keyword">var</span> index2 = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">while</span> (index2 &lt; samplesPerCallbackAll &amp;&amp; XAudioJSResampleBufferStart != XAudioJSResampleBufferEnd) {
+			XAudioJSMediaStreamBuffer[index2++] = XAudioJSResampledBuffer[XAudioJSResampleBufferStart++];
+			<span class="hljs-keyword">if</span> (XAudioJSResampleBufferStart == XAudioJSResampleBufferSize) {
+				XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+			}
+		}
+		XAudioJSMediaStreamWorker.postMessage([<span class="hljs-number">0</span>, XAudioJSMediaStreamBuffer]);
+		index += XAudioJSSamplesPerCallback;
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSResampleRefill</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">if</span> (XAudioJSAudioBufferSize &gt; <span class="hljs-number">0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Resample a chunk of audio:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> resampleLength = XAudioJSResampleControl.resampler(XAudioJSGetBufferSamples());
+		<span class="hljs-keyword">var</span> resampledResult = XAudioJSResampleControl.outputBuffer;
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index2 = <span class="hljs-number">0</span>; index2 &lt; resampleLength;) {
+			XAudioJSResampledBuffer[XAudioJSResampleBufferEnd++] = resampledResult[index2++];
+			<span class="hljs-keyword">if</span> (XAudioJSResampleBufferEnd == XAudioJSResampleBufferSize) {
+				XAudioJSResampleBufferEnd = <span class="hljs-number">0</span>;
+			}
+			<span class="hljs-keyword">if</span> (XAudioJSResampleBufferStart == XAudioJSResampleBufferEnd) {
+				XAudioJSResampleBufferStart += XAudioJSChannelsAllocated;
+				<span class="hljs-keyword">if</span> (XAudioJSResampleBufferStart == XAudioJSResampleBufferSize) {
+					XAudioJSResampleBufferStart = <span class="hljs-number">0</span>;
+				}
+			}
+		}
+		XAudioJSAudioBufferSize = <span class="hljs-number">0</span>;
+	}
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSResampledSamplesLeft</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">return</span> ((XAudioJSResampleBufferStart &lt;= XAudioJSResampleBufferEnd) ? <span class="hljs-number">0</span> : XAudioJSResampleBufferSize) + XAudioJSResampleBufferEnd - XAudioJSResampleBufferStart;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSGetBufferSamples</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> XAudioJSGetArraySlice(XAudioJSAudioContextSampleBuffer, XAudioJSAudioBufferSize);
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XAudioJSGetArraySlice</span><span class="hljs-params">(buffer, lengthOf)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Typed array and normal array buffer section referencing:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">try</span> {
+		<span class="hljs-keyword">return</span> buffer.subarray(<span class="hljs-number">0</span>, lengthOf);
+	}
+	<span class="hljs-keyword">catch</span> (error) {
+		<span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Regular array pass:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			buffer.length = lengthOf;
+			<span class="hljs-keyword">return</span> buffer;
+		}
+		<span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Nightly Firefox 4 used to have the subarray function named as slice:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			<span class="hljs-keyword">return</span> buffer.slice(<span class="hljs-number">0</span>, lengthOf);
+		}
+	}
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
