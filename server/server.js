@@ -1,11 +1,19 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var User = require('./users/userModel.js');
 var Game = require('./games/gamesModel.js');
 var Rom = require('./games/romsModel.js');
 var library = require('./gameLibrary.js');
 var romLibrary = require('./romLibrary.js');
 
 var app = express();
+
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 app.use(express.static(__dirname + '/../client'));
 
@@ -46,4 +54,8 @@ app.get('/api/game/:code', function(req, res){
     console.log('results: ' + results);
     res.send(results);
   });
+});
+
+app.post('/user/register', function(req, res){
+  console.log(req.body);
 });
