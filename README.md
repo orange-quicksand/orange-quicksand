@@ -1,6 +1,6 @@
 # uGame
 
-> Netflix for Video Games
+Netflix for Video Games
 
 ## Team
 
@@ -20,11 +20,15 @@
 
 ## Usage
 
-> Some usage instructions
+```
+npm start
+```
 
 ## Requirements
 
 - Node 0.10.x
+- MongoDB 2.6
+- SASS
 
 ## Development
 
@@ -32,8 +36,8 @@
 
 From within the root directory:
 
-```sh
-sudo npm install -g bower
+```
+npm install -g bower nodemon gulp
 npm install
 bower install
 ```
