@@ -10,14 +10,9 @@ angular.module('uGame.game', [])
 .controller('GameController', function($scope, $window, $stateParams, $http, Game) {
   
   $scope.loadGame = function() {
-    Game.get($stateParams.id)
-      .success(function(game) {        
-        $scope.API.init(game[0].rom);
-      })
-      .error(function(error) {
-        console.error(error);
-        $scope.API.init();
-      });
+    Game.get($stateParams.id).then(function(game) {          
+      $scope.API.init(game.rom);
+    });      
   };
 
   $scope.getGameBoyAPI = function() {
