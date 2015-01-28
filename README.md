@@ -37,7 +37,7 @@ npm start
 From within the root directory:
 
 ```
-npm install -g nodemon bower nodemon gulp
+npm install -g bower nodemon gulp
 npm install
 bower install
 ```
