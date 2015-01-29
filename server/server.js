@@ -24,7 +24,11 @@ var port = process.env.PORT || 3000;
 app.listen(port);
 
 // Configure passport authorization
-app.use(session({secret: 'orange quicksand'}));
+app.use(session({
+  secret: 'orange quicksand',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
