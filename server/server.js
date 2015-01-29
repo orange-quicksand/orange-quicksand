@@ -10,6 +10,7 @@ var Game = require('./games/gamesModel.js');
 var Rom = require('./games/romsModel.js');
 var library = require('./gameLibrary.js');
 var romLibrary = require('./romLibrary.js');
+// var romLibrary = require('./romLibrary2.js');
 
 var app = express();
 
@@ -24,7 +25,11 @@ var port = process.env.PORT || 3000;
 app.listen(port);
 
 // Configure passport authorization
-app.use(session({secret: 'orange quicksand'}));
+app.use(session({
+  secret: 'orange quicksand',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -47,11 +52,16 @@ passport.use(new LocalStrategy(function(username, password, done) {
     if (!user) {
       return done(null, false, { message: 'Unknown user ' + username });
     }
-    if (user.password === password) {
-      return done(null, user);
-    } else {
-      return done(null, false, { message: 'Invalid password' });
-    }
+    user.comparePassword(password, function(err, isMatch) {
+      if (err) {
+        return done(err);
+      }
+      if (isMatch) {
+        return done(null, user);
+      } else {
+        return done(null, false, { message: 'Invalid password' });
+      }
+    });
   });
 }));
 
