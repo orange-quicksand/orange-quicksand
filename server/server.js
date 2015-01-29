@@ -34,14 +34,9 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  done(null, id);
-  // User.findOne({ id: id }, function(err, user) {
-  //   if (err) {
-  //     done(err);
-  //   } else {
-  //     done(null, user);
-  //   }
-  // });
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
 });
 
 passport.use(new LocalStrategy(function(username, password, done) {
@@ -143,5 +138,5 @@ app.post('/api/login', function(req, res, next) {
 // Handles log out requests
 app.get('/api/logout', function(req, res){
   req.logout();
-  res.send(true);
+  res.send();
 });
