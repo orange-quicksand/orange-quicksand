@@ -22,6 +22,8 @@ angular.module('uGame.login', [])
       Game.gameLogin($scope.user).then(function(data){
         console.log(data);
       });
+    }else{
+      return false;
     }
   };
 

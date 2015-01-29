@@ -4,7 +4,7 @@ var watch   = require('gulp-watch');
 var sass    = require('gulp-ruby-sass');
 var jshint  = require('gulp-jshint');
 var docco   = require('gulp-docco');
-
+var shell   = require('gulp-shell');
 
 // The paths to our app's files
 var paths = {
@@ -15,7 +15,7 @@ var paths = {
   styles: ['./client/styles/*.scss'],
   styleFolder: './client/styles/',
   html: [],
-  test: ['./specs/*.js']
+  test: ['./specs/**/*.js']
 };
 
 // Compile SASS to CSS
@@ -56,3 +56,8 @@ gulp.task('watch', function () {
   gulp.watch(paths.styles, ['sass']);
   gulp.watch(paths.scripts, ['jshint']);  
 });
+
+//runs karma in terminal
+gulp.task('karma', shell.task([
+  'karma start'
+]));
