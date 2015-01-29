@@ -36,7 +36,6 @@ for (var i = 0; i < romLibrary.length; i++) {
 // Routing for homepage
 app.get('/api/games', function(req, res){
   Game.find(function(err, results) {
-    console.log(results);
     res.send(results);
   });
 });
@@ -51,7 +50,6 @@ app.param('code', function(req, res, next, code){
 app.get('/api/game/:code', function(req, res){
   var id = req.id;
   Rom.find({id: id}, function(err, results) {
-    console.log('results: ' + results);
     res.send(results);
   });
 });
