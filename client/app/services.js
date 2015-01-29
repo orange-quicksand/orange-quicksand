@@ -1,4 +1,4 @@
-app.factory('Game', function($http) {
+app.factory('Game', function($http, $location) {
   return {
 
     get: function(id) {
@@ -30,13 +30,29 @@ app.factory('Game', function($http) {
       });
     },
 
-    gameLogin: function(userObj){
+    userLogin: function(userObj){
       return $http({
         url: '/api/login',
         method: 'POST',
         data: userObj
       }).then(function(resp){
         return resp;
+      });
+    },
+
+    userRegister: function(userObj){
+      return $http({
+        url: '/api/register',
+        method: 'POST',
+        data: userObj
+      }).then(function(resp) {
+        if (resp.data) {
+          //if true, will redirect to login for user to login
+          $location.path('/login');
+        } else {
+          //if false, will let user know username is already in use
+          console.log('Already exists');
+        }
       });
     }
 

@@ -19,7 +19,7 @@ angular.module('uGame.login', [])
     //only makes post request to log in if user placed a valid
     //username and password
     if($scope.user.username && $scope.user.password){
-      Game.gameLogin($scope.user).then(function(resp){
+      Game.userLogin($scope.user).then(function(resp){
         if (resp.data) {
           $location.path('/home');
         } else {
