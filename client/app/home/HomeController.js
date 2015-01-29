@@ -1,15 +1,18 @@
 angular.module('uGame.home', [])
 
 
-.controller('HomeController', function ($scope, $http, $interval, $state, Game) {
+.controller('HomeController', function($scope, $http, $interval, $state, Game, $location) {
 
   $http({
     method: 'GET',
     url: '/api/games'
   })
   .then(function(resp){
-    $scope.data = resp.data;
-    console.log($scope.data);
+    if (resp.data) {
+      $scope.data = resp.data;
+    } else {
+      $location.path('/login');
+    }
   });
 
   var array = ['I', 'we', 'They', 'U'];

@@ -8,7 +8,11 @@ app.factory('Game', function($http) {
       })
       .then(
         function(resp) {
-          return resp.data[0];
+          if (resp.data) {
+            return resp.data[0];
+          } else {
+            return false;
+          }
         },
         function(error){
           throw error.status + ' : ' + error.data;
@@ -28,12 +32,12 @@ app.factory('Game', function($http) {
 
     gameLogin: function(userObj){
       return $http({
-        url: '/user/login',
+        url: '/api/login',
         method: 'POST',
         data: userObj
       }).then(function(resp){
         return resp;
-      });  
+      });
     }
 
   };

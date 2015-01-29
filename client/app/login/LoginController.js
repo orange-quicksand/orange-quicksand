@@ -1,6 +1,6 @@
 angular.module('uGame.login', [])
 
-.controller('LoginController', function($scope, $interval, $http, Game){
+.controller('LoginController', function($scope, $interval, $http, Game, $location){
   $scope.user = {};
 
   var array = ['i', 'we', 'they', 'u'];
@@ -19,8 +19,12 @@ angular.module('uGame.login', [])
     //only makes post request to log in if user placed a valid
     //username and password
     if($scope.user.username && $scope.user.password){
-      Game.gameLogin($scope.user).then(function(data){
-        console.log(data);
+      Game.gameLogin($scope.user).then(function(resp){
+        if (resp.data) {
+          $location.path('/home');
+        } else {
+          console.log('Invalid entry');
+        }
       });
     }else{
       return false;

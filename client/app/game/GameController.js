@@ -7,11 +7,15 @@ angular.module('uGame.game', [])
 //
 // Controller for the Gameboy Color emulator.
 // 
-.controller('GameController', function($scope, $window, $stateParams, $http, Game) {
+.controller('GameController', function($scope, $window, $stateParams, $http, Game, $location) {
   
   $scope.loadGame = function() {
-    Game.get($stateParams.id).then(function(game) {          
-      $scope.API.init(game.rom);
+    Game.get($stateParams.id).then(function(game) {
+      if (game) {
+        $scope.API.init(game.rom);
+      } else {
+        $location.path('/login');
+      }
     });      
   };
 
@@ -47,4 +51,3 @@ angular.module('uGame.game', [])
     }
   };
 }]);
-
