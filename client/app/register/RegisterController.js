@@ -8,13 +8,13 @@ angular.module('uGame.register', [])
     //will only post if username and password is present
     if($scope.user.username && $scope.user.password){
       $http({
-        url: '/user/register',
+        url: '/api/register',
         method: 'POST',
         data: $scope.user
       }).then(function(resp) {
         if (resp.data) {
           //if true, will redirect to login for user to login
-          $location.path('/#/login')
+          $location.path('/login');
         } else {
           //if false, will let user know username is already in use
           console.log('Already exists');

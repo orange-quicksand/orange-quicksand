@@ -35,8 +35,12 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   done(null, id);
-  // findById(id, function (err, user) {
-  //   done(err, user);
+  // User.findOne({ id: id }, function(err, user) {
+  //   if (err) {
+  //     done(err);
+  //   } else {
+  //     done(null, user);
+  //   }
   // });
 });
 
@@ -56,24 +60,11 @@ passport.use(new LocalStrategy(function(username, password, done) {
   });
 }));
 
-// passport.use(new LocalStrategy(
-//   function(username, password, done) {
-//     process.nextTick(function () {
-//       findByUsername(username, function(err, user) {
-//         if (err) { return done(err); }
-//         if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-//         if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
-//         return done(null, user);
-//       })
-//     });
-//   }
-// ));
-
 var ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/');
+  res.send(false);
 };
 
 
@@ -93,7 +84,7 @@ for (var i = 0; i < romLibrary.length; i++) {
 
 
 // Routing for homepage
-app.get('/api/games', function(req, res){
+app.get('/api/games', ensureAuthenticated, function(req, res){
   Game.find(function(err, results) {
     res.send(results);
   });
@@ -106,15 +97,15 @@ app.param('code', function(req, res, next, code){
 });
 
 // Routing for game page
-app.get('/api/game/:code', function(req, res){
+app.get('/api/game/:code', ensureAuthenticated, function(req, res){
   var id = req.id;
   Rom.find({id: id}, function(err, results) {
     res.send(results);
   });
 });
 
-// Routing for registering page
-app.post('/user/register', function(req, res){
+// Handles registration requests
+app.post('/api/register', function(req, res){
   var username = req.body.username;
   var password = req.body.password;
 
@@ -129,4 +120,28 @@ app.post('/user/register', function(req, res){
       res.send(true);
     }
   });
+});
+
+// Handles login requests
+app.post('/api/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.send(false);
+    }
+    req.logIn(user, function(err) {
+      if (err) {
+        return next(err);
+      }
+      return res.send(true);
+    });
+  })(req, res, next);
+});
+
+// Handles log out requests
+app.get('/api/logout', function(req, res){
+  req.logout();
+  res.send(true);
 });
