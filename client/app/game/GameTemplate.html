@@ -1,7 +1,15 @@
 <div class="game-view" ng-controller="GameController">
   
+  <div class="game-view-overlay top-overlay">
+   Top Nav
+  </div>
+
   <container class="emulator">
   	<iframe name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" u-game-iframe-onload="getGameBoyAPI()"></iframe>
   </container>
+
+  <div class="game-view-overlay bottom-overlay">
+   Bottom Nav
+  </div>
 
 </div>

@@ -22,24 +22,67 @@ header{
 }
 
 .game-view {
-  display: block; 
-  width: 100%;
-  height: 100%;
-}
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0; 
+  width: 100vw;
+  height: 100vh;
+  background-color: $black;
+  
+  .game-view-overlay {
+    position: fixed;
+    display: block;    
+    left: 0;
+    width: 100%;
+    height: 45vh;    
+    // background-color: rgba($black-2, 0.54);    
+  }
 
-.emulator {
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-  margin: 0 auto;
-}
+  .top-overlay  {
+    top: 0;
+    z-index: 5;
 
-.gameboy-color-emulator {
-  margin: 0 auto;
-  height: 100%;
-  width: 100%;	
-}
+    // THIS WAS GENERATED FROM cssmatic.com Gradient generator
+    background: rgba(0,0,0,0.9);/* Old Browsers */
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.9) 36%, rgba(0,0,0,0.6) 61%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(left top, left bottom, color-stop(35%, rgba(0,0,0,0.9)), color-stop(36%, rgba(0,0,0,0.9)), color-stop(61%, rgba(0,0,0,0.6)), color-stop(80%, rgba(0,0,0,0.4)), color-stop(100%, rgba(0,0,0,0)));/* Chrome, Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.9) 36%, rgba(0,0,0,0.6) 61%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.9) 36%, rgba(0,0,0,0.6) 61%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.9) 36%, rgba(0,0,0,0.6) 61%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0) 100%); /* IE 10+ */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.9) 36%, rgba(0,0,0,0.6) 61%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0) 100%);/* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#000000', GradientType=0 );/* IE6-9 */
+  }
 
-.userForm button {
-  margin: 30 0 6px;
+  .bottom-overlay {
+    bottom: 0;
+    z-index: 1;
+
+    background: rgba(0,0,0,0); /* Old Browsers */
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0.6) 39%, rgba(0,0,0,0.9) 64%, rgba(0,0,0,0.9) 65%); /* FF3.6+ */
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(0,0,0,0)), color-stop(20%, rgba(0,0,0,0.4)), color-stop(39%, rgba(0,0,0,0.6)), color-stop(64%, rgba(0,0,0,0.9)), color-stop(65%, rgba(0,0,0,0.9))); /* Chrome, Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0.6) 39%, rgba(0,0,0,0.9) 64%, rgba(0,0,0,0.9) 65%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0.6) 39%, rgba(0,0,0,0.9) 64%, rgba(0,0,0,0.9) 65%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0.6) 39%, rgba(0,0,0,0.9) 64%, rgba(0,0,0,0.9) 65%); /* IE 10+ */background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0.6) 39%, rgba(0,0,0,0.9) 64%, rgba(0,0,0,0.9) 65%); /* W3C */
+  }
+
+  .emulator {
+    display: block;
+    border: 0; 
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+
+    .gameboy-color-emulator {
+      margin: 0 auto;
+      height: 100%;
+      width: 100%;	
+    }
+  }
+
+  .userForm button {
+    margin: 30 0 6px;
+  }
+  
 }
