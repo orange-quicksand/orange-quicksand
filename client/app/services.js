@@ -1,8 +1,21 @@
 app.factory('Game', function($http) {
   return {
+
     get: function(id) {
-      return $http.get('/api/game/' + id);
+      return $http({
+        method: 'GET',
+        url: '/api/game/' + id
+      })
+      .then(
+        function(resp) {
+          return resp.data[0];
+        },
+        function(error){
+          throw error.status + ' : ' + error.data;
+        }
+      );
     },
+
     gameData: function() {
       return $http({
         method: 'GET',
@@ -12,6 +25,7 @@ app.factory('Game', function($http) {
         return resp.data;
       });
     },
+
     gameLogin: function(userObj){
       return $http({
         url: '/user/login',
@@ -21,5 +35,6 @@ app.factory('Game', function($http) {
         return resp;
       });  
     }
+
   };
 });
