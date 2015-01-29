@@ -12,11 +12,13 @@ angular.module('uGame.register', [])
         method: 'POST',
         data: $scope.user
       }).then(function(resp){
-        //resp === ture || false depending on if username is already taken
+        //resp === true || false depending on if username is already taken
         //if true, will redirect to login for user to login
         //if false, will let user know username is already in use
         console.log(resp);
       });
+    }else{
+      return false;
     }
   };
 });
