@@ -1,13 +1,24 @@
-<div>
+<div class="userForm">
   <header>
     <h1 class="fs-display-4">{{changedWords}}Game</h1>
   </header>
-  <label>Username:</label>
-  <input ng-model="user.username" type="text" placeholder="Username"/>
-  
-  <label>Password:</label>
-  <input ng-model="user.password" type="text" placeholder="Password"/>
-  <button ng-click="login()" class="btn btn--m btn--raised bgc-indigo-200 tc-indigo-600">Login</button>
-  <a ui-sref="register">No login? Register here</a>
+
+  <h1>Log In</h1>
+  <form nonvalidate class="grid">
+    <div class="grid__col3">
+        <lx-text-field label="Username">
+            <input type="text" ng-model="user.username">
+        </lx-text-field>
+    </div>
+
+    <div class="grid__col3">
+        <lx-text-field label="Password">
+            <input type="text" ng-model="user.password">
+        </lx-text-field>
+    </div>
+    <button ng-click="login()" class="btn btn--m btn--raised bgc-indigo-200 tc-indigo-600" lx-ripple="purple-400">Log In</button>
+  </form>
+  <br>
+  <a ui-sref="register">New user? Register here</a>
 
 </div>
