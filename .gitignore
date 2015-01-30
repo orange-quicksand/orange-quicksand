@@ -2,6 +2,9 @@ node_modules/
 bower_components/
 *.log
 
+build/
+dist/
+client/lib
 
 #Files that might appear on external disk
 server/data
