@@ -1,6 +1,6 @@
 angular.module('uGame.register', [])
 
-.controller('RegisterController', function($scope, $http, $location, Game){
+.controller('RegisterController', function($scope, $location, Game){
   $scope.user = {};
 
   //click listener for sending post request to server
