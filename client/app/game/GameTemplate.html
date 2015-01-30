@@ -1,6 +1,6 @@
 <div class="game-view" ng-controller="GameController">
   
-  <div class="overlays" ng-show="menuIsShown" ng-mousemove="showMenuWhileMoving()">
+  <div class="overlays fx-fade-down fx-easing-expo fx-speed-450" ng-show="menuIsShown" ng-mousemove="showMenuWhileMoving()" >
     
     <div class="game-view-overlay top-overlay">     
       <ul>
@@ -28,17 +28,18 @@
     </div>
 
     <div class="game-view-overlay bottom-overlay" ng-show="menuIsShown">
-     <h1>{{ gameInfo.title }}</h1>
+      <h1>{{ gameInfo.title }}</h1>
     </div>
   </div>
 
-  <div class="hug-all" ng-mousemove="showMenuWhileMoving()">
-
-  </div>
+  <!-- 
+    This transparent div is going on top of all other elements (except menu items). 
+    Used to catch mouse movements 
+  -->
+  <div class="hug-all" ng-mousemove="showMenuWhileMoving()"></div>
 
   <div class="emulator" >
     <iframe name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" u-game-iframe-onload="getGameBoyAPI()"></iframe>
   </div>
-
 
 </div>
