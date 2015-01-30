@@ -1,6 +1,6 @@
 angular.module('uGame.login', [])
 
-.controller('LoginController', function($scope, $interval, $http, Game, $location, LxNotificationService){
+.controller('LoginController', function($scope, $interval, $location, Game, LxNotificationService){
   $scope.user = {};
 
   var array = ['i', 'we', 'they', 'u'];

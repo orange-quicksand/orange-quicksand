@@ -46,13 +46,7 @@ app.factory('Game', function($http, $location) {
         method: 'POST',
         data: userObj
       }).then(function(resp) {
-        if (resp.data) {
-          //if true, will redirect to login for user to login
-          $location.path('/login');
-        } else {
-          //if false, will let user know username is already in use
-          console.log('Already exists');
-        }
+        return resp;
       });
     }
 

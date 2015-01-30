@@ -1,7 +1,7 @@
 angular.module('uGame.home', [])
 
 
-.controller('HomeController', function($scope, $state, Game, $location) {
+.controller('HomeController', function($scope, $state, $location, Game) {
 
   //depending on game, your url will match its id from the database
   $scope.goToState = function(id){
