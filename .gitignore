@@ -4,9 +4,9 @@ bower_components/
 
 build/
 dist/
+client/lib
 
 #Files that might appear on external disk
-client/lib
 server/data
 server/romLibrary2.js
 .DS_Store
