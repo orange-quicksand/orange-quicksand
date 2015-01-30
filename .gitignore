@@ -2,8 +2,6 @@ node_modules/
 bower_components/
 *.log
 
-build/
-dist/
 
 #Files that might appear on external disk
 server/data
