@@ -8,13 +8,13 @@ angular.module('uGame.home', [])
    $state.go('game', {id: id});
   };
 
-  // //initial get request to receive game data
-  // Game.gameData().then(function(data) {
-  //   if(data){
-  //     //$scope.data is displayed on page
-  //     $scope.data = data; 
-  //   }else{
-  //     $location.path('/login');
-  //   }
-  // });  
+  //initial get request to receive game data
+  Game.gameData().then(function(data) {
+    if(data){
+      //$scope.data is displayed on page
+      $scope.data = data; 
+    }else{
+      $location.path('/login');
+    }
+  });  
 });
