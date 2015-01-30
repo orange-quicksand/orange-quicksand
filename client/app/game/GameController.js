@@ -34,16 +34,18 @@ angular.module('uGame.game', ['ngFx'])
   //
   $scope.loadGame = function() {
     Game.get($stateParams.id)
-      .success(function(game) {        
-        $scope.API.init(game[0].rom);
-        $scope.gameInfo = {
-          title: game[0].title
-        };
-        gameIsLoaded = true;
-      })
-      .error(function(error) {
-        console.error(error);
-        $location.path('/login');
+      .then(function(game){
+        if (game) {
+
+          $scope.API.init(game.rom);
+          $scope.gameInfo = {
+            title: game.title
+          };
+          gameIsLoaded = true;
+
+        } else {
+          $location.path('/login');
+        }
       });
   };
 
@@ -90,7 +92,6 @@ angular.module('uGame.game', ['ngFx'])
   //
   $scope.showMenuWhileMoving = function() {    
     if (gameIsLoaded && !menuHasJustBeenShow && !menuIsPinned) {
-      
       $scope.menuIsShown = true;
 
       if (menuTimer) { 
