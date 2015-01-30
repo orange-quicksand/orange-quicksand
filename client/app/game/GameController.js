@@ -32,7 +32,7 @@ angular.module('uGame.game', ['ngFx'])
   //
   // GETs the game from server and loads it into the emulator;
   //
-  $scope.loadGame = function() {
+  var loadGame = function() {
     Game.get($stateParams.id)
       .then(function(game){
         if (game) {
@@ -49,6 +49,7 @@ angular.module('uGame.game', ['ngFx'])
       });
   };
 
+
   // getGameBoyApi ()
   //-----------------
   //
@@ -61,7 +62,8 @@ angular.module('uGame.game', ['ngFx'])
   //
   $scope.getGameBoyAPI = function() {
     $scope.API = window.frames.GBC.gameBoyAPI;
-    $scope.loadGame();
+    loadGame();
+    window.frames.GBC.focus();
   };
 
   // goHome ()
@@ -110,7 +112,7 @@ angular.module('uGame.game', ['ngFx'])
       
       menuTimer = $timeout(function() { 
         if (!menuIsPinned) {
-          $scope.hideMenu();         
+          hideMenu();         
         }
       }, 3500);      
     }
@@ -125,9 +127,10 @@ angular.module('uGame.game', ['ngFx'])
   // Hides the menu.
   // Hosts a hack.
   //
-  $scope.hideMenu = function() {
+  var hideMenu = function() {
     $scope.menuIsShown = false;
     menuIsPinned = false;
+    window.frames.GBC.focus();
 
     // HACK - Omar
     // If we don't do this, the Menu will flash again.
