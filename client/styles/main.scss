@@ -1,4 +1,6 @@
-$roboto-font-path: "../assets/fonts";
+// Lumx paths
+$roboto-font-path: "../lib/lumx/dist/fonts/roboto";
+$md-icons-font-path: "../lib/lumx/dist/fonts/md-icons";
 @import "../lib/lumx/dist/scss/main/lumx";
 
 body {
