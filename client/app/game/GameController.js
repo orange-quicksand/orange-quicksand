@@ -64,6 +64,16 @@ angular.module('uGame.game', ['ngFx'])
     $scope.loadGame();
   };
 
+  // goHome ()
+  //-----------------
+  //
+  // WHAT IT DOES
+  //
+  // Routes the user back home page.
+  //
+  $scope.goHome = function() {
+    $location.path('/home');
+  };
 
 
   // MENU HELPER FUNCTIONS RUNDOWN
