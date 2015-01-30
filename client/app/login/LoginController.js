@@ -1,11 +1,11 @@
 angular.module('uGame.login', [])
 
-.controller('LoginController', function($scope, $interval, $http, Game, $location){
+.controller('LoginController', function($scope, $interval, $http, Game, $location, LxNotificationService){
   $scope.user = {};
 
   var array = ['i', 'we', 'they', 'u'];
   var i = -1;
-  //creates the banner for the login page. Change if wanted
+  // Creates banner animation
   $interval(function(){
     if(i >= array.length){
       i = -1;
@@ -14,16 +14,17 @@ angular.module('uGame.login', [])
     $scope.changedWords = array[i];
   }, 500, 4);
 
-  //sends login information to server
+  // Sends login information through a POST request to server for access to api
   $scope.login = function(){
-    //only makes post request to log in if user placed a valid
-    //username and password
+    // Sends POST request only if username and password is present
     if($scope.user.username && $scope.user.password){
       Game.userLogin($scope.user).then(function(resp){
         if (resp.data) {
+          // If valid entry, redirect to home page
           $location.path('/home');
-        } else {
-          console.log('Invalid entry');
+        }else{
+          // If invalid entry, notify user
+          LxNotificationService.error('Invalid username and password');
         }
       });
     }else{
