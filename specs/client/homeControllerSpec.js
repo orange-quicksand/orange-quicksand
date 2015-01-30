@@ -4,18 +4,61 @@ describe('HomeController', function(){
   var $controller;
   var $state;
   var Game;
-  
-  beforeEach(inject(function(_$controller_, $state, Game){
-    $controller = _$controller_;
-    $state = $state;
-    Game = Game;
+  var $location;
+  var $scope;
+  var $httpBackend;
+  var $rootScope;
+
+  beforeEach(inject(function($injector){
+    $rootScope = $injector.get('$rootScope');
+    $controller = $injector.get('$controller');
+    $state = $injector.get('$state');
+    $httpBackend = $injector.get('$httpBackend');
+    $scope = $rootScope.$new();
+    Game = $injector.get('Game');
+
+
+    createController = function(){
+      return $controller('HomeController', {
+        $scope: $scope,
+        $state: $state,
+        $location: $location,
+        Game: Game
+      });
+    };
+
   }));
 
-  describe('$scope.goToState', function(){
-    it('should be a function', function(){
-      var $scope = {};
-      var controller = $controller('HomeController', {$scope: $scope});
-      expect($scope.goToState).to.be.a('function');
-    });
-  }); 
+  afterEach(function(){
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should make initial get request to obtain game data', function(){
+    var mockData = [{}, {}, {}];
+    $httpBackend.expectGET('/api/games').respond(mockData);
+    createController();
+    $httpBackend.expectGET('app/login/LoginTemplate.html').respond();
+    $httpBackend.flush();
+    expect($scope.data).to.eql(mockData);
+  });
+
+  it('should have a goToState method', function(){
+    createController();
+    $httpBackend.expectGET('/api/games').respond([{}]);
+    $httpBackend.expectGET('app/login/LoginTemplate.html').respond();
+    $httpBackend.flush();
+    expect($scope.goToState).to.be.a('function');
+  });
+
+  it('should redirect to login if no game data', function(){
+    createController();
+    $httpBackend.expectGET('/api/games').respond([{}]);
+    $httpBackend.expectGET('app/login/LoginTemplate.html').respond();
+    $httpBackend.flush();
+    expect($state.current.url).to.be('/');
+    expect($state.current.templateUrl).to.be('app/login/LoginTemplate.html');
+    expect($state.current.name).to.be('login');
+  });
+
 });
