@@ -1,15 +1,44 @@
 <div class="game-view" ng-controller="GameController">
   
-  <div class="game-view-overlay top-overlay">
-   Top Nav
+  <div class="overlays" ng-show="menuIsShown" ng-mousemove="showMenuWhileMoving()">
+    
+    <div class="game-view-overlay top-overlay">     
+      <ul>
+        <li>
+          <a lx-ripple lx-tooltip="Go Back To Browsing Games" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()">
+            Back
+          </a>
+        </li>
+        <li>
+          <a lx-ripple lx-tooltip="Save Current Game Progress" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()">
+            Save
+          </a>
+        </li>
+        <li>
+          <a lx-ripple lx-tooltip="Continue Playing Previously Saved Game" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()">
+            Load
+          </a>
+        </li>
+        <li>
+          <a lx-ripple lx-tooltip="Setup Your Controller" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()">
+            Controller
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="game-view-overlay bottom-overlay" ng-show="menuIsShown">
+     <h1>{{ gameInfo.title }}</h1>
+    </div>
   </div>
 
-  <container class="emulator">
-  	<iframe name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" u-game-iframe-onload="getGameBoyAPI()"></iframe>
-  </container>
+  <div class="hug-all" ng-mousemove="showMenuWhileMoving()">
 
-  <div class="game-view-overlay bottom-overlay">
-   Bottom Nav
   </div>
+
+  <div class="emulator" >
+    <iframe name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" u-game-iframe-onload="getGameBoyAPI()"></iframe>
+  </div>
+
 
 </div>
