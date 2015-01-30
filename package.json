@@ -1,6 +1,9 @@
 {
   "name": "orange-quicksand",
   "version": "1.0.0",
+  "engines": {
+    "node": "~0.10.36"
+  },
   "description": "",
   "main": "app.js",
   "scripts": {
