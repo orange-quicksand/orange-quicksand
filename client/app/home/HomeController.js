@@ -29,8 +29,4 @@ angular.module('uGame.home', [])
   $scope.goToState = function(id){
    $state.go('game', {id: id});
   };
-
-  Game.gameData().then(function(data) {
-    $scope.data = data; 
-  });
 });
