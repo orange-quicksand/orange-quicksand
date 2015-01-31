@@ -1,23 +1,26 @@
-<div class="container">
+<div class="login-container">
   <header>
-    <h1 class="fs-display-4">{{changedWords}}Game</h1>
+    <h1 class="logo">{{changedWords}}Game</h1>
   </header>
 
   <div class="login-form">
     <h2>Log In</h2>
     <form nonvalidate class="grid">
-      <div class="grid__col4">
+      <div class="login-row">
           <lx-text-field label="Username" theme="dark">
               <input type="text" ng-model="user.username">
           </lx-text-field>
       </div>
 
-      <div class="grid__col4">
+      <div class="login-row">
           <lx-text-field label="Password"  theme="dark">
               <input type="password" ng-model="user.password">
           </lx-text-field>
       </div>
-      <button ng-click="login()" class="btn btn--m btn--raised bgc-blue-grey-800 tc-blue-grey-200" lx-ripple="blue-grey-400">Log In</button>
+
+      <div class="login-row">
+      <button ng-click="login()" class="btn btn--xl btn--raised bgc-blue-grey-800 tc-blue-grey-200" lx-ripple="blue-grey-400"><i class="mdi mdi--edit"></i> Log In</button>
+      </div>
     </form>
     <br>
     <a ui-sref="register">New user? Register here</a>

@@ -1,10 +1,11 @@
 <div class="container">
   <header>
-    <h1 class="fs-display-4">uGame</h1>
+    <a href="#" ng-click="logout()">Logout</a>
+    <h1 class="logo">uGame</h1>
   </header>
   
   <div class="games-list">
-    <h3>Select a Game</h3>
+    <h2>Games</h2>
     <img class="game-cover" ng-click="goToState(object.id)" ng-repeat="object in data" src='/assets/{{object.image}}'/>    
     <!-- <div id="game-container" ng-repeat="object in data">
       <h1>{{object.title}}</h1>

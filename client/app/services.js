@@ -48,6 +48,15 @@ app.factory('Game', function($http, $location) {
       }).then(function(resp) {
         return resp;
       });
+    },
+
+    userLogout: function(cb){
+      return $http({
+        url: '/api/logout',
+        method: 'POST',
+      }).then(function() {
+        cb();
+      });
     }
 
   };
