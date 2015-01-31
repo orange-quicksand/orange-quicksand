@@ -8,7 +8,7 @@ angular.module('uGame.game', ['ngFx'])
 // Controller for the Gameboy Color emulator.
 // 
 
-.controller('GameController', function($scope, $timeout, $stateParams, $location, $document, Game) {
+.controller('GameController', function($scope, $timeout, $stateParams, $location, $document, LxNotificationService, Game) {
 
   var gameIsLoaded = false;
   var gameIsPaused = false;
@@ -39,18 +39,17 @@ angular.module('uGame.game', ['ngFx'])
     title: 'Loading Game...'
   };
 
-  // loadGame ()
+  // getAndStartGame ()
   //----------------
   //
   // WHAT IT DOES
   //
-  // GETs the game from server and loads it into the emulator;
+  // GETs the game from server and starts it into the emulator.
   //
-  var loadGame = function() {
+  var getAndStartGame = function() {
     Game.get($stateParams.id)
       .then(function(game){
         if (game) {
-
           $scope.API.init(game.rom);
           $scope.gameInfo = {
             title: game.title
@@ -76,7 +75,7 @@ angular.module('uGame.game', ['ngFx'])
   //
   $scope.getGameBoyAPI = function() {
     $scope.API = window.frames.GBC.gameBoyAPI;
-    loadGame();
+    getAndStartGame();
   };
 
   // goHome ()
@@ -97,11 +96,32 @@ angular.module('uGame.game', ['ngFx'])
   // -----------------------------
 
   $scope.saveCurrentGame = function() {
-    state = $scope.API.saveFreezeState();    
+    LxNotificationService.notify('Saving Game...');
+    state = $scope.API.saveFreezeState();
+    Game.save({
+      game_id: $stateParams.id,
+      description: 'test',
+      payload: state
+    }).then(function(result) {
+      if (result) {
+        LxNotificationService.success('Game Saved Succesfully.');
+      } else {
+        LxNotificationService.error('There was problem saving your game.');
+      }
+    });  
   };
 
-  $scope.loadPreviousGame = function() {
-    $scope.API.openFreezeState(state);    
+  $scope.loadPreviousGame = function(id) {
+    LxNotificationService.notify('Loading Game...');
+    Game.load($stateParams.id)
+      .then(function(savedGame){
+        if (savedGame) {          
+          $scope.API.openFreezeState(savedGame.payload);
+          LxNotificationService.success('Game Loaded Succesfully.');
+        } else {
+          LxNotificationService.notify('No Save Files found for Current Game.');          
+        }
+    });    
   };
 
 
