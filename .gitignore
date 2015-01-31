@@ -1,13 +1,19 @@
 node_modules/
 bower_components/
+.DS_Store
+.sass-cache
 *.log
 
 build/
 dist/
+
+# Bower components
 client/lib
 
-#Files that might appear on external disk
+# CSS built from SASS
+client/styles/*.css
+client/styles/*.css.map
+
+# Games data
 server/data
 server/romLibrary2.js
-.DS_Store
-.sass-cache
