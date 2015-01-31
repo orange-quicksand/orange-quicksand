@@ -79,13 +79,25 @@ var location = process.env.LOC || 'localhost/orangequicksand';
 mongoose.connect('mongodb://' + location);
 
 // Initialize database with test game info
-for (var i = 0; i < library.length; i++) {
-  new Game(library[i]).save();
-}
+mongoose.connection.collections['games'].drop(function(err, result) {
+  for (var i = 0; i < library.length; i++) {
+    new Game(library[i]).save(function (err, game, numberAffected) {
+      if (err) {
+        console.log('Saving error: ' + err);
+      }
+    });
+  }
+});
 
-for (var i = 0; i < romLibrary.length; i++) {
-  new Rom(romLibrary[i]).save();
-}
+mongoose.connection.collections['roms'].drop(function(err, result) {
+  for (var i = 0; i < romLibrary.length; i++) {
+    new Rom(romLibrary[i]).save(function (err, rom, numberAffected) {
+      if (err) {
+        console.log('Saving error: ' + err);
+      }
+    });
+  }
+});
 
 
 // Routing for homepage
