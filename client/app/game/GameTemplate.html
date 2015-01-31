@@ -1,4 +1,4 @@
-<div class="game-view" ng-controller="GameController">
+<div class="game-view" ng-controller="GameController" u-game-keypress-events>
   
   <div class="overlays fx-fade-down fx-easing-expo fx-speed-450" ng-show="menuIsShown" ng-mousemove="showMenuWhileMoving()" >
     
@@ -10,12 +10,12 @@
           </a>
         </li>
         <li>
-          <a lx-ripple lx-tooltip="Save Current Game Progress" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()">
+          <a lx-ripple lx-tooltip="Save Current Game Progress" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()" ng-click="saveCurrentGame()">
             Save
           </a>
         </li>
         <li>
-          <a lx-ripple lx-tooltip="Continue Playing Previously Saved Game" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()">
+          <a lx-ripple lx-tooltip="Continue Playing Previously Saved Game" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()" ng-click="loadPreviousGame()">
             Load
           </a>
         </li>
@@ -38,8 +38,8 @@
   -->
   <div class="hug-all" ng-mousemove="showMenuWhileMoving()"></div>
 
-  <div class="emulator" >
-    <iframe name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" u-game-iframe-onload="getGameBoyAPI()"></iframe>
+  <div class="emulator">
+    <iframe ng-keydown="onKeyDown($event)" name="GBC" class="gameboy-color-emulator" src="emulators/gameboy_color/gameboy-color-emulator.html" sandbox="allow-same-origin allow-scripts" u-game-iframe-onload="getGameBoyAPI()"></iframe>
   </div>
 
 </div>

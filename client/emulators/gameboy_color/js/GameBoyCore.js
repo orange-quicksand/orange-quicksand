@@ -3939,6 +3939,7 @@ GameBoyCore.prototype.saveSRAMState = function () {
 	}
 	else {
 		//Return the MBC RAM for backup...
+		gameBoyAPI.letParentKnow('save');
 		return this.fromTypedArray(this.MBCRam);
 	}
 }
