@@ -1,4 +1,4 @@
-angular.module('uGame.game', ['ngFx'])
+angular.module('uGame.game', [])
 
 // GameController (controller)
 //===============================

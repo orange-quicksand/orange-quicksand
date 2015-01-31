@@ -32,7 +32,7 @@ module.exports = [
    {
     id: '5',
     title: 'Proxima',
-    image: 'Proxima.jpg',
+    image: 'Proxima.png',
     description: 'Space game with space ships'
   }
 ];
