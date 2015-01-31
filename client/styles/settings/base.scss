@@ -5,28 +5,35 @@
    -o-transition:      $trans;
 }
 
-html {
+@mixin dark-card {
+  border: 1px solid $blue-grey-500;
+  background-color: $black-3;
+  box-shadow: 0 1px 2px $black-1;  
 }
+
 body {
   margin: 0;
   padding: 0;
 
   font-family: 'Roboto', Arial;
   font-size: 16px;
+  font-weight: 300;
   
   background-color: $blue-grey-900;
   color: $blue-grey-50;
 }
 
 a {
-  color: $light-blue-A100;
+  color: $light-blue-200;
   transition: 0.4s;
 }
+
 a:hover {
-  color: $light-blue-A400;;
+  color: $light-blue-A200;;
   transition: 0.4s;
 }
 
 input {
   color: $blue-grey-50;
 }
+

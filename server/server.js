@@ -146,7 +146,7 @@ app.post('/api/login', function(req, res, next) {
 });
 
 // Handles log out requests
-app.get('/api/logout', function(req, res){
+app.post('/api/logout', function(req, res){
   req.logout();
   res.send();
 });

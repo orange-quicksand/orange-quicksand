@@ -16,5 +16,13 @@ angular.module('uGame.home', [])
     }else{
       $location.path('/login');
     }
-  });  
+  });
+
+  // Log out
+  $scope.logout = function () {
+    Game.userLogout(function () {
+      $location.path('/login');
+    });
+  };
+
 });

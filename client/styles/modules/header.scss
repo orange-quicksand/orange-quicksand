@@ -1,7 +1,35 @@
 header {
-  background-color: $blue-grey-800;
+  background-color: $black-4;
   color: $light-blue-A100;
-  text-align: center;
-  padding: 0.5em 0 1.2em;
+  padding: 10px 30px 10px ;
   display: block;
+  transition: 1s;
+  height: 5.7em;
+  box-shadow: 0 1px 2px $black-1;
+}
+
+header .logo {
+  float: left;
+  cursor: default;
+  font-weight: 300;
+  font-size: 3.3em;
+  text-align: left;
+  transition: 2s;
+  letter-spacing: -.09em;
+  color: $white-1;
+}
+
+header .logo:hover {
+  text-transform: italic;
+  color: $light-blue-A200;
+  transition: 3s;
+
+}
+
+header a {
+  float: right;
+  margin-top: 2em;
+  font-size: 1.2em;
+  text-decoration: none; 
+  color: $blue-grey-100;
 }

@@ -1,23 +1,25 @@
-<div class="userForm">
+<div class="login-container">
   <header>
-    <h1 class="fs-display-4">uGame</h1>
+    <h1 class="logo">uGame</h1>
   </header>
 
   <div class="login-form">
     <h2>Register</h2>
     <form nonvalidate class="grid">
-      <div class="grid__col4">
+      <div class="login-row">
           <lx-text-field label="Username" theme="dark">
               <input type="text" ng-model="user.username">
           </lx-text-field>
       </div>
 
-      <div class="grid__col4">
+      <div class="login-row">
           <lx-text-field label="Password" theme="dark">
               <input type="text" ng-model="user.password">
           </lx-text-field>
       </div>
-      <button ng-click="register()" class="btn btn--m btn--raised bgc-blue-grey-800 tc-blue-grey-200" lx-ripple="blue-grey-400">Register</button>
+      <div class="login-row">
+      <button ng-click="register()" class="btn btn--xl btn--raised bgc-blue-grey-800 tc-blue-grey-200" lx-ripple="blue-grey-400">Register</button>
+      </div>
     </form>
     <br>
     <a ui-sref="login">Already a user? Log in here</a>

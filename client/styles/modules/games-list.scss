@@ -1,24 +1,27 @@
 .games-list {
-  margin-top: 1em;
+  margin: 3em auto;
   @include span-columns(10);
   @include shift(1);
 }
 
 .game-cover {
   float: left;
-  width: 20vw;
-  height: 16.5vw;
-  text-align: center;
+  width: 22vw;
+  height: (22 * 0.825)+vw;
   margin: 20px;
   cursor: pointer;
-  transition: 1s;
+  transition: 3s;
+  @include dark-card;
+  border: none;
 }
 
 .game-cover:hover {
-  box-shadow: 0 0 40px $light-blue-A100;
-  transition: 0.1s;
+  box-shadow: 0 0 30px $light-blue-A100;
+  transition: 0.5s;
 }
 
-h3 {
-  text-align: center;
+.games-list h2 {
+  font-weight: 200;
+  font-size: 2em;
+  padding-bottom: 0.5em;
 }

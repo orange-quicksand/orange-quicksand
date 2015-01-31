@@ -1,9 +1,18 @@
-.userForm button {
-    margin: 30 0 6px;
+.login-form {
+  @include span-columns(4);
+  @include shift(4);
+  @include dark-card;
+  border: 1px solid $blue-grey-500;
+  margin-top: 4em;
+  padding: 1em 2em 3em;
 }
 
-.login-form {
-  margin-top: 1em;
-  @include span-columns(8);
-  @include shift(2);
+.login-form button {
+  margin: 3em auto;
+  float: right;
+}
+
+.login-form a {
+  float: right;
+  font-size: 0.9em;
 }
