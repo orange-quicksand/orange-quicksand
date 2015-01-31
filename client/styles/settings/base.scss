@@ -5,8 +5,28 @@
    -o-transition:      $trans;
 }
 
+html {
+}
 body {
+  margin: 0;
+  padding: 0;
+
   font-family: 'Roboto', Arial;
   font-size: 16px;
-  margin: 20px; 
+  
+  background-color: $blue-grey-900;
+  color: $blue-grey-50;
+}
+
+a {
+  color: $light-blue-A100;
+  transition: 0.4s;
+}
+a:hover {
+  color: $light-blue-A400;;
+  transition: 0.4s;
+}
+
+input {
+  color: $blue-grey-50;
 }

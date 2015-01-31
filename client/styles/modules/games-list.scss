@@ -1,7 +1,24 @@
-#game-container{
+.games-list {
+  margin-top: 1em;
+  @include span-columns(10);
+  @include shift(1);
+}
+
+.game-cover {
   float: left;
   width: 20vw;
   height: 16.5vw;
   text-align: center;
   margin: 20px;
+  cursor: pointer;
+  transition: 1s;
+}
+
+.game-cover:hover {
+  box-shadow: 0 0 40px $light-blue-A100;
+  transition: 0.1s;
+}
+
+h3 {
+  text-align: center;
 }
