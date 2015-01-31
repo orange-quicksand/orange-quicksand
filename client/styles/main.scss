@@ -1,6 +1,7 @@
+// Lumx paths
+$roboto-font-path: "../lib/lumx/dist/fonts/roboto";
+$md-icons-font-path: "../lib/lumx/dist/fonts/md-icons";
 @import "../lib/lumx/dist/scss/main/lumx";
-
-@import url(http://fonts.googleapis.com/css?family=Roboto);
 
 @mixin all-browser-transition($trans) {
    -webkit-transition: $trans;
