@@ -27,7 +27,7 @@ module.exports = function(config) {
       //emulator code
       'client/emulators/gameboy_color/js/**.js',
       'client/emulators/gameboy_color/js/**/*.js',
-      
+
       //our app code
       'client/app/*.js',
       'client/app/**/*.js',

@@ -13,6 +13,7 @@ describe('GameController', function(){
   var $timeout;
 
 
+
   beforeEach(inject(function($injector){
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
@@ -58,6 +59,7 @@ describe('GameController', function(){
     // $scope.getGameBoyAPI();
     // console.log($scope.API);
     // expect($scope.getAndStartGame).to.be.a('function');
+
   });
 
   it('should have a hideMenu method on the scope', function(){
