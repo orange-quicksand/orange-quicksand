@@ -1,0 +1,12 @@
+@mixin all-browser-transition($trans) {
+   -webkit-transition: $trans;
+   -moz-transition:    $trans;
+   -ms-transition:     $trans;
+   -o-transition:      $trans;
+}
+
+body {
+  font-family: 'Roboto', Arial;
+  font-size: 16px;
+  margin: 20px; 
+}

@@ -5,35 +5,32 @@ var sass    = require('gulp-ruby-sass');
 var jshint  = require('gulp-jshint');
 var docco   = require('gulp-docco');
 var shell   = require('gulp-shell');
+var concat  = require('gulp-concat');
+var del     = require('del');
+
 
 // The paths to our app's files
 var paths = {
   scripts: [
-    './client/app/**/*.js',
-    './server/**/*.js'
-    ],
-  styles: ['./client/styles/*.scss'],
-  styleFolder: './client/styles/',
-  html: [],
-  test: ['./specs/**/*.js']
+          './client/app/**/*.js',
+          './server/**/*.js'
+  ],
+  styles : ['.client/styles'],
+  scss: ['./client/styles/**/*.scss'],
+  test:   ['./specs/**/*.js']
 };
 
-// Compile SASS to CSS
-// OLD gulp-sass task
-// gulp.task('sass', function () {
-//   gulp.src(paths.styles)
-//     .pipe(sass())
-//     .pipe(gulp.dest('./client/styles/'));
-// });
+gulp.task('clean', function() {
+  del(['./client/styles/**/*.css']);
+  del(['./client/styles/**/*.css.map']);
+});
 
-// Compile SASS to CSS
-// NEW gulp-ruby-sass task
-gulp.task('sass', function() {
-    return sass(paths.styleFolder) 
+gulp.task('sass', ['clean'], function() {
+    return sass('./client/styles/main.scss') 
     .on('error', function (err) {
       console.error('Error!', err.message);
-   })
-    .pipe(gulp.dest(paths.styleFolder));
+    })
+    .pipe(gulp.dest('./client/styles'));
 });
 
 // Lint js files using JSHint
@@ -53,11 +50,11 @@ gulp.task('docco', function () {
 
 // Watch when files change
 gulp.task('watch', function () {
-  gulp.watch(paths.styles, ['sass']);
+  gulp.watch(paths.scss, ['sass']);
   gulp.watch(paths.scripts, ['jshint']);  
 });
 
-//runs karma in terminal
+// Run karma in terminal
 gulp.task('karma', shell.task([
   'karma start'
 ]));
