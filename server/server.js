@@ -5,6 +5,8 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+var UserSave = require('./saves/savesModel.js');
+
 var User = require('./users/userModel.js');
 var Game = require('./games/gamesModel.js');
 var Rom = require('./games/romsModel.js');
@@ -15,10 +17,8 @@ var romLibrary = require('./romLibrary.js');
 var app = express();
 
 // Configure express
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.json({limit: '10mb'}));
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
 app.use(express.static(__dirname + '/../client'));
 
 var port = process.env.PORT || 3000;
@@ -155,6 +155,57 @@ app.post('/api/login', function(req, res, next) {
       return res.send(true);
     });
   })(req, res, next);
+});
+
+//Handles game saves requests
+app.post('/api/save', ensureAuthenticated, function(req, res) {
+  
+  var query = {
+    user_id: req.user._id,
+    game_id: req.body.game_id
+  };
+
+  var document = {
+    user_id:       req.user._id,
+    game_id:       req.body.game_id,
+    description:   req.body.description,
+    payload:       req.body.payload
+  };
+
+  UserSave.findOneAndUpdate(query, document, function(err, found) {
+    if (err) { throw err; }
+    
+    if (!found) {
+      new UserSave(document).save(function(err, result) {
+        if (err) { 
+          res.sendStatus(500);
+          throw err;
+        } else {
+          console.log('Created New UserSave.');
+          res.sendStatus(201);
+        }
+      });
+
+    } else {
+      console.log('Updated UserSave.');    
+      res.sendStatus(201);
+    }
+  });
+});
+
+
+// Determines which Game user wants to load
+app.param('game_id', function(req, res, next, game_id){
+  req.game_id = game_id;
+  next();
+});
+
+app.get('/api/save/:game_id', ensureAuthenticated, function(req, res) {
+  UserSave.find({ user_id: req.user._id, game_id: req.game_id }, function(err, userSave) {
+    if (err) { throw err; }
+    console.log('Sending UserSave state.');
+    res.send(userSave);
+  });
 });
 
 // Handles log out requests

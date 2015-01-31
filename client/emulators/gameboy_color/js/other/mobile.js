@@ -16,6 +16,7 @@ var keyZones = [
 
 
 var cout = console.log.bind(console);
+
 function startGame (blob) {
   var binaryHandle = new FileReader();
   binaryHandle.onload = function () {
@@ -35,8 +36,8 @@ function startGame (blob) {
 function windowingInitialize() {
   cout("windowingInitialize() called.", 0);
   mainCanvas = document.getElementById("mainCanvas");
-  registerGUIEvents();
-  window.onunload = autoSave;
+  // registerGUIEvents();
+  //window.onunload = autoSave;
   //("MozActivity" in window ? loadViaMozActivity : loadViaXHR)();
 }
 

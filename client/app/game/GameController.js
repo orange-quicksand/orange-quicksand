@@ -8,13 +8,27 @@ angular.module('uGame.game', ['ngFx'])
 // Controller for the Gameboy Color emulator.
 // 
 
-.controller('GameController', function($scope, $timeout, $stateParams, $location, Game) {
+.controller('GameController', function($scope, $timeout, $stateParams, $location, $document, LxNotificationService, Game) {
 
-  
   var gameIsLoaded = false;
   var gameIsPaused = false;
   var menuTimer = null;
   var menuIsPinned = false;
+
+  // Temporary
+  var state;
+
+  // ALL KEY BINDINGS HERE
+  var keyboardControllerKeys = {
+    '39': 'right',
+    '37': 'left',
+    '38': 'up',
+    '40': 'down',
+    '88': 'a',
+    '90': 'b',
+    '16': 'select',
+    '13': 'start'
+  };
 
   // This var is used for a Hack in $scope.hideMenu()
   var menuHasJustBeenShow = false;
@@ -25,18 +39,17 @@ angular.module('uGame.game', ['ngFx'])
     title: 'Loading Game...'
   };
 
-  // loadGame ()
+  // getAndStartGame ()
   //----------------
   //
   // WHAT IT DOES
   //
-  // GETs the game from server and loads it into the emulator;
+  // GETs the game from server and starts it into the emulator.
   //
-  var loadGame = function() {
+  var getAndStartGame = function() {
     Game.get($stateParams.id)
       .then(function(game){
         if (game) {
-
           $scope.API.init(game.rom);
           $scope.gameInfo = {
             title: game.title
@@ -62,8 +75,7 @@ angular.module('uGame.game', ['ngFx'])
   //
   $scope.getGameBoyAPI = function() {
     $scope.API = window.frames.GBC.gameBoyAPI;
-    loadGame();
-    window.frames.GBC.focus();
+    getAndStartGame();
   };
 
   // goHome ()
@@ -71,10 +83,45 @@ angular.module('uGame.game', ['ngFx'])
   //
   // WHAT IT DOES
   //
-  // Routes the user back home page.
+  // Routes the user back home page. Removes keyboard events.
   //
   $scope.goHome = function() {
+    $document.off('keydown');
+    $document.off('keyup');
     $location.path('/home');
+  };
+
+
+  // SAVE AND LOAD GAMES
+  // -----------------------------
+
+  $scope.saveCurrentGame = function() {
+    LxNotificationService.notify('Saving Game...');
+    state = $scope.API.saveFreezeState();
+    Game.save({
+      game_id: $stateParams.id,
+      description: 'test',
+      payload: state
+    }).then(function(result) {
+      if (result) {
+        LxNotificationService.success('Game Saved Succesfully.');
+      } else {
+        LxNotificationService.error('There was problem saving your game.');
+      }
+    });  
+  };
+
+  $scope.loadPreviousGame = function(id) {
+    LxNotificationService.notify('Loading Game...');
+    Game.load($stateParams.id)
+      .then(function(savedGame){
+        if (savedGame) {          
+          $scope.API.openFreezeState(savedGame.payload);
+          LxNotificationService.success('Game Loaded Succesfully.');
+        } else {
+          LxNotificationService.notify('No Save Files found for Current Game.');          
+        }
+    });    
   };
 
 
@@ -89,7 +136,7 @@ angular.module('uGame.game', ['ngFx'])
   // It allows the menu to stay visible when the mouse
   // is over (ng-mouseover) a menu item.
   //
-  $scope.togglePinMenu = function() {    
+  $scope.togglePinMenu = function() {   
     menuIsPinned = !menuIsPinned;
   };
 
@@ -114,7 +161,7 @@ angular.module('uGame.game', ['ngFx'])
         if (!menuIsPinned) {
           hideMenu();         
         }
-      }, 3500);      
+      }, 2500);      
     }
   };
   
@@ -130,7 +177,6 @@ angular.module('uGame.game', ['ngFx'])
   var hideMenu = function() {
     $scope.menuIsShown = false;
     menuIsPinned = false;
-    window.frames.GBC.focus();
 
     // HACK - Omar
     // If we don't do this, the Menu will flash again.
@@ -139,6 +185,18 @@ angular.module('uGame.game', ['ngFx'])
     // Try removing this and see for yourself.
     menuHasJustBeenShow = true;
     $timeout(function() { menuHasJustBeenShow = false; }, 800);
+  };
+
+  $scope.onKeyDown = function(key) {
+    if (keyboardControllerKeys.hasOwnProperty(key)) {      
+      $scope.API.keyDown(keyboardControllerKeys[key]);
+    }
+  };
+
+  $scope.onKeyUp = function(key) {
+    if (keyboardControllerKeys.hasOwnProperty(key)) {
+      $scope.API.keyUp(keyboardControllerKeys[key]);
+    }
   };
 
 })
@@ -152,8 +210,7 @@ angular.module('uGame.game', ['ngFx'])
 // and calls it as a $scope function when the element
 // has loaded.
 //
-.directive('uGameIframeOnload', function($window){
-  var w = angular.element($window);
+.directive('uGameIframeOnload', function(){
 
   return {
 
@@ -167,4 +224,20 @@ angular.module('uGame.game', ['ngFx'])
       });
     }
   };
-});
+})
+
+.directive('uGameKeypressEvents', function($document) {
+    return {
+      scope: false,
+      link: function(scope) {
+        $document.on('keydown', function(e) {
+          scope.onKeyDown(e.keyCode);          
+        });
+
+        $document.on('keyup', function(e) {
+          scope.onKeyUp(e.keyCode);
+        });
+      }
+    };
+  }
+);

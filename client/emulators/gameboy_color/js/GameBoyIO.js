@@ -18,15 +18,17 @@ var settings = [						//Some settings.
 	true,								//Use image smoothing based scaling?
     [true, true, true, true]            //User controlled channel enables.
 ];
+
 function start(canvas, ROM) {
 	clearLastEmulation();
-	autoSave();	//If we are about to load a new game, then save the last one...
+	// autoSave();	//If we are about to load a new game, then save the last one...
 	gameboy = new GameBoyCore(canvas, ROM);
 	gameboy.openMBC = openSRAM;
 	gameboy.openRTC = openRTC;
 	gameboy.start();
 	run();
 }
+
 function run() {
 	if (GameBoyEmulatorInitialized()) {
 		if (!GameBoyEmulatorPlaying()) {
@@ -49,6 +51,7 @@ function run() {
 		cout("GameBoy core cannot run while it has not been initialized.", 1);
 	}
 }
+
 function pause() {
 	if (GameBoyEmulatorInitialized()) {
 		if (GameBoyEmulatorPlaying()) {
@@ -62,6 +65,7 @@ function pause() {
 		cout("GameBoy core cannot be paused while it has not been initialized.", 1);
 	}
 }
+
 function clearLastEmulation() {
 	if (GameBoyEmulatorInitialized() && GameBoyEmulatorPlaying()) {
 		clearInterval(gbRunInterval);
@@ -106,6 +110,7 @@ function saveSRAM() {
 						deleteValue("SRAM_" + gameboy.name);
 					}
 					setValue("B64_SRAM_" + gameboy.name, arrayToBase64(sram));
+					// letParentKnow('save', arrayToBase64(sram));
 				}
 				else {
 					cout("SRAM could not be saved because it was empty.", 1);
