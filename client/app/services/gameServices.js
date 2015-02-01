@@ -52,45 +52,6 @@ app.factory('Game', function($http, $location) {
           throw error.status + ' : ' + error.data;
         }
       );
-    },
-
-    gameData: function() {
-      return $http({
-        method: 'GET',
-        url: '/api/games'
-      })
-      .then(function(resp){
-        return resp.data;
-      });
-    },
-
-    userLogin: function(userObj){
-      return $http({
-        url: '/api/login',
-        method: 'POST',
-        data: userObj
-      }).then(function(resp){
-        return resp;
-      });
-    },
-
-    userRegister: function(userObj){
-      return $http({
-        url: '/api/register',
-        method: 'POST',
-        data: userObj
-      }).then(function(resp) {
-        return resp;
-      });
-    },
-
-    userLogout: function(cb){
-      return $http({
-        url: '/api/logout',
-        method: 'POST',
-      }).then(function() {
-        cb();
-      });
     }
 
   };
