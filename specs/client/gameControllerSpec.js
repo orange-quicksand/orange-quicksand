@@ -10,7 +10,7 @@ describe('GameController', function(){
   var $httpBackend;
   var $rootScope;
   var $window;
-  var $timout;
+  var $timeout;
 
 
   beforeEach(inject(function($injector){
@@ -45,7 +45,7 @@ describe('GameController', function(){
   
   it('should have a loadGame method on the scope', function(){
     createController();
-    expect($scope.loadGame).to.be.a('function');
+    expect($scope.getAndStartGame).to.be.a('function');
   });
 
   it('should have a getGameBoyAPI method on the scope', function(){

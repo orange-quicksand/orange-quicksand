@@ -46,7 +46,7 @@ angular.module('uGame.game', [])
   //
   // GETs the game from server and starts it into the emulator.
   //
-  var getAndStartGame = function() {
+  $scope.getAndStartGame = function() {
     Game.get($stateParams.id)
       .then(function(game){
         if (game) {
