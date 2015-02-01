@@ -1,6 +1,6 @@
 angular.module('uGame.login', [])
 
-.controller('LoginController', function($scope, $interval, $location, Game, LxNotificationService){
+.controller('LoginController', function($scope, $interval, $location, User, LxNotificationService){
   $scope.user = {};
 
   var array = ['i', 'we', 'they', 'u'];
@@ -18,7 +18,7 @@ angular.module('uGame.login', [])
   $scope.login = function(){
     // Sends POST request only if username and password is present
     if($scope.user.username && $scope.user.password){
-      Game.userLogin($scope.user).then(function(resp){
+      User.userLogin($scope.user).then(function(resp){
         if (resp.data) {
           // If valid entry, redirect to home page
           $location.path('/home');

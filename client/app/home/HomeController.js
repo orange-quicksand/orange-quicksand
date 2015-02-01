@@ -1,7 +1,7 @@
 angular.module('uGame.home', [])
 
 
-.controller('HomeController', function($scope, $state, $location, Game) {
+.controller('HomeController', function($scope, $state, $location, Home, User) {
 
   //depending on game, your url will match its id from the database
   $scope.goToState = function(id){
@@ -9,7 +9,7 @@ angular.module('uGame.home', [])
   };
 
   //initial get request to receive game data
-  Game.gameData().then(function(data) {
+  Home.gameData().then(function(data) {
     if(data){
       //$scope.data is displayed on page
       $scope.data = data; 
@@ -20,7 +20,7 @@ angular.module('uGame.home', [])
 
   // Log out
   $scope.logout = function () {
-    Game.userLogout(function () {
+    User.userLogout(function () {
       $location.path('/login');
     });
   };
