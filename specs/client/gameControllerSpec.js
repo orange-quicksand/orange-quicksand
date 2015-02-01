@@ -57,7 +57,7 @@ describe('GameController', function(){
     // createController();
     // $scope.getGameBoyAPI();
     // console.log($scope.API);
-    // expect($scope.loadGame).to.be.a('function');
+    // expect($scope.getAndStartGame).to.be.a('function');
   });
 
   it('should have a hideMenu method on the scope', function(){
@@ -76,7 +76,7 @@ describe('GameController', function(){
     var mockData = [{title: '', game: ''}]
     $httpBackend.expectGet('/api/game/' + $stateParams.id).respond(mockData);
     createController();
-    $scope.loadGame();
+    $scope.getAndStartGame();
     $httpBackend.expectGet('/api/game/' + $stateParams.id).respond();
     expect($scope.API.init).to.be.a('function');
     expect($scope.gameInfo).to.be.an('object');
