@@ -49,7 +49,7 @@ angular.module('uGame.game', [])
   $scope.getAndStartGame = function() {
     Game.get($stateParams.id)
       .then(function(game){
-        if (game) {
+        if (game) { 
           $scope.API.init(game.rom);
           $scope.gameInfo = {
             title: game.title
@@ -75,7 +75,7 @@ angular.module('uGame.game', [])
   //
   $scope.getGameBoyAPI = function() {
     $scope.API = window.frames.GBC.gameBoyAPI;
-    getAndStartGame();
+    $scope.getAndStartGame();
   };
 
   // goHome ()
