@@ -1,8 +1,8 @@
 <div class="game-view" ng-controller="GameController" u-game-keypress-events>
   
-  <div class="overlays fx-fade-down fx-easing-expo fx-speed-450" ng-show="menuIsShown" ng-mousemove="showMenuWhileMoving()" >
+  <div class="overlays" ng-mousemove="showMenuWhileMoving()">
     
-    <div class="game-view-overlay top-overlay">     
+    <div class="game-view-overlay top-overlay fx-fade-up fx-easing-expo fx-speed-450" ng-show="menuIsShown">     
       <ul>
         <li>
           <a lx-ripple lx-tooltip="Go Back To Browsing Games" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()" ng-click="goHome()">
@@ -27,7 +27,7 @@
       </ul>
     </div>
 
-    <div class="game-view-overlay bottom-overlay" ng-show="menuIsShown">
+    <div class="game-view-overlay bottom-overlay fx-fade-down fx-easing-expo fx-speed-450" ng-show="menuIsShown">
       <h1>{{ gameInfo.title }}</h1>
     </div>
   </div>
