@@ -189,13 +189,14 @@ When writing any block of code that is logically subordinate to the line immedia
 * Comment all interfaces with the following format
 
   ```javascript
-  // good:
+  // good - Functions:
   
   // greet (String, Array of Strings)
+  //==================================
   // returns: Array of Strings
   //
   // WHAT IT DOES
-  //-----------------------
+  //
   // It concatenates a greeting message and a name, 
   // adding an '!' at the end
   //
@@ -207,13 +208,14 @@ When writing any block of code that is logically subordinate to the line immedia
     return results;
   };
   
-  // good:
+  // good - Functions:
   
   // printName (Array of Strings)
+  //===============================
   // returns: null
   //
   // WHAT IT DOES 
-  //----------------------
+  //
   // It console.log's names provided on input. 
   //
   var printName = function(names){
@@ -221,6 +223,30 @@ When writing any block of code that is logically subordinate to the line immedia
       console.log(name);
     });
   };
+
+  // good - Angular Directives and Controllers:
+
+  // callBackOnLoad (directive)
+  //===============================
+  //
+  // WHAT IT DOES
+  //
+  // It takes a callback provided in the directive attibute
+  // and calls it as a $scope function when the element
+  // has loaded.
+  //
+  app.directive('callBackOnLoad', function(){
+    return {
+      scope: {
+        callBack: '&callBackOnLoad'
+      },
+      link: function(scope, element, attrs){
+        element.on('load', function() {
+          return scope.callBack();
+        });
+      }
+    };
+  })
   ```
 
 # Supplemental reading
@@ -394,3 +420,99 @@ When writing any block of code that is logically subordinate to the line immedia
     <!-- bad -->
     <script src="a.js" type="text/javascript"></script>
     ```
+
+### SASS/SCSS
+
+* Avoid vanilla CSS at all costs.
+
+* Use SCSS format (http://sass-lang.com/guide)
+   
+   ```css
+  /*
+    Good - SCSS:
+  */
+
+  $primary-color: #333;
+
+  body {    
+    color: $primary-color;
+  }
+
+  /*
+    Bad - SASS:
+  */
+
+  $primary-color: #333
+
+  body
+    color: $primary-color
+
+   ```
+
+* Each HTML view must have its own SCSS file defined in /client/styles/modules
+
+* Nest selectors of nested HTML elements
+
+  ```css
+  /* 
+    Good - nested: 
+  */
+
+  nav {
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li { 
+      display: inline-block; 
+    }
+  }
+
+  /* 
+   Bad - not nested (classic CSS style): 
+  */
+
+  nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  nav li {
+    display: inline-block;
+  }
+  ```
+
+* Use mixins to organize browser specific properties.
+
+  ```css
+  /* 
+    Good: 
+  */
+
+  @mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+       -moz-border-radius: $radius;
+        -ms-border-radius: $radius;
+            border-radius: $radius;
+  }
+
+  .box { 
+    @include border-radius(10px); 
+  }
+
+  /* 
+    Bad: 
+  */  
+
+  .box {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+  }
+
+  ```
+  
