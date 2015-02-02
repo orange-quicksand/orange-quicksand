@@ -19,6 +19,12 @@ angular.module('uGame.game', [])
   var state;
 
   // WebRTC Game Controller
+  var genId = function () {
+    return ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).slice(-4);
+  };
+
+  $scope.rtcId = genId();
+  $scope.rtcUrl = 'http://ugame.herokuapp.com/gamepad.html?' + $scope.rtcId;
 
   $scope.setupPeer = function () {
 
@@ -33,7 +39,7 @@ angular.module('uGame.game', [])
       'start':  13
     };
 
-    var peer = new Peer('0game', {key: 'kus7eqqnljgzxgvi', debug: 3});
+    var peer = new Peer($scope.rtcId, {key: 'kus7eqqnljgzxgvi', debug: 3});
     console.log(peer);
     peer.on('connection', function (connection) {
       console.log('oncon');
