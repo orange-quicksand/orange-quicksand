@@ -5,7 +5,8 @@ var app = angular
     'uGame.login',
     'uGame.register',
     'ui.router',
-    'lumx'
+    'lumx',
+    'ngFx'
   ])
   
   .config(function ($stateProvider, $urlRouterProvider) {
