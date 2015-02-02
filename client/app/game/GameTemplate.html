@@ -45,7 +45,7 @@
     <div class="dialog__content">
       
       <lx-tabs>
-        <lx-tab heading="Legend">
+        <lx-tab heading="Keyboard Controls">
           <table class="data-table data-table--has-primary data-table--has-secondary">
           <thead>
               <tr>
@@ -73,13 +73,13 @@
 
 
         
-        <lx-tab heading="QR Code">
+        <lx-tab heading="Use Your Phone as a Controller!">
         <!-- <qrcode version="2" error-correction-level="M" size="200" data="{{ rtcUrl }}"></qrcode> -->
-        <div style=" background-color: white; border:20px solid white">
-       <qrcode version="4" error-correction-level="M" size="400" data="{{ rtcUrl }}"></qrcode>
+        <div class="qr-container">
+          <qrcode version="4" error-correction-level="M" size="400" data="{{ rtcUrl }}"></qrcode>
         </div>
         <br />
-        {{ rtcUrl }}
+        <span class="qr-text">{{ rtcUrl }}</span>
         </lx-tab>
       </lx-tabs>
 

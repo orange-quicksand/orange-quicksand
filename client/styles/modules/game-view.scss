@@ -130,3 +130,20 @@
   }
   
 }
+
+
+.qr-container {
+  background-color: white;
+  border:20px solid white;
+
+  canvas {
+    display: block;
+    margin: 0 auto;
+    padding: 20px;
+  }
+}
+
+.qr-text {
+  display: block;
+  text-align: center;
+}
