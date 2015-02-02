@@ -20,6 +20,7 @@ module.exports = function(config) {
       'client/lib/angular-mocks/angular-mocks.js',
       'client/lib/angular-ui-router/src/**.js',
       'client/lib/angular-mocks/angular-mocks.js',
+      'client/lib/ngFx/dist/ngFx.js',
       'client/lib/lumx/dist/js/**.js',
       
       //our app code
