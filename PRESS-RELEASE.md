@@ -1,5 +1,5 @@
 # Project Name #
-
+Orange Quicksand
 <!-- 
 > This material was originally posted [here](http://www.quora.com/What-is-Amazons-approach-to-product-development-and-product-management). It is reproduced here for posterities sake.
 
@@ -18,27 +18,41 @@ Once the project moves into development, the press release can be used as a touc
  
 ## Heading ##
   > Name the product in a way the reader (i.e. your target customers) will understand.
+uGame
 
 ## Sub-Heading ##
   > Describe who the market for the product is and what benefit they get. One sentence only underneath the title.
+Play classic video games at a click of a button
 
 ## Summary ##
   > Give a summary of the product and the benefit. Assume the reader will not read anything else so make this paragraph good.
+An app that allows anyone to play classic video games from their browser. Simply sign in, click the game of your choice, and you'll be playing in no time. It allows you to not only play your favorite games of the past, but it also allows you to save your progress in each game you play on your account.
 
 ## Problem ##
   > Describe the problem your product solves.
+No one will need to dig up their old video game systems and games to play their old favorites. Nor will anyone will need to go store to store looking for these classics to experience them.
 
 ## Solution ##
   > Describe how your product elegantly solves the problem.
+Anyone can now access these classic video games easily through their browser. With a large selection of video games, people can choose their favorites or try games they haven't tried before.
 
 ## Quote from You ##
   > A quote from a spokesperson in your company.
+"It's Netflix for class video games"
+  Omar Duarte PhD
+  Scrum Master
 
 ## How to Get Started ##
   > Describe how easy it is to get started.
+Register a username and password, log in, click the game of your choice, and play. Once you're playing, use the save and load features to save and load your progress in any game.
 
 ## Customer Quote ##
   > Provide a quote from a hypothetical customer that describes how they experienced the benefit.
+"These guys deserve lots of money"
+  Bran Cubacube
+  Customer
+
 
 ## Closing and Call to Action ##
   > Wrap it up and give pointers where the reader should go next.
+Classic video games are just a click away. Pay Bren $8 a month and play today.
