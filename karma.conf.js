@@ -22,6 +22,12 @@ module.exports = function(config) {
       'client/lib/angular-mocks/angular-mocks.js',
       'client/lib/ngFx/dist/ngFx.js',
       'client/lib/lumx/dist/js/**.js',
+      'client/lib/ngFx/dist/*.js',
+
+      //emulator code
+      'client/emulators/gameboy_color/js/**.js',
+      'client/emulators/gameboy_color/js/**/*.js',
+
       
       //our app code
       'client/app/*.js',
@@ -43,13 +49,14 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'client/app/**/*.js': 'coverage'
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
 
 
     // web server port

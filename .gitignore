@@ -6,6 +6,7 @@ bower_components/
 
 build/
 dist/
+coverage/
 
 # Bower components
 client/lib

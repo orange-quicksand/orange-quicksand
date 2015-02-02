@@ -36,6 +36,7 @@
     "gulp-ruby-sass": "^1.0.0-alpha.2",
     "gulp-shell": "^0.2.11",
     "gulp-watch": "^4.0.2",
+    "karma-coverage": "^0.2.7",
     "mongoose": "^3.8.21",
     "node-sass": "^2.0.0-beta",
     "passport": "^0.2.1",
