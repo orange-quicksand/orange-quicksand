@@ -43,29 +43,46 @@
     </div>
 
     <div class="dialog__content">
-      <table class="data-table data-table--has-primary data-table--has-secondary">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Gameboy Color Action</th>
-                <th>Key to Press</th>                    
-                <th></th>
-            </tr>
-        </thead>
+      
+      <lx-tabs>
+        <lx-tab heading="Legend">
+          <table class="data-table data-table--has-primary data-table--has-secondary">
+          <thead>
+              <tr>
+                  <th></th>
+                  <th>Gameboy Color Action</th>
+                  <th>Key to Press</th>                    
+                  <th></th>
+              </tr>
+          </thead>
 
-        <tbody>
-            <tr class="data-table" ng-repeat="(keyCode, action) in keyboardControllerKeys">
-                <td></td>
-                <td>
-                    <span class="fs-subhead">{{ action.toUpperCase() }}</span>
-                </td>
-                <td>
-                    <span class="fs-subhead">{{ fromCharCodeToString(keyCode) }}</span>
-                </td>
-                <td></td>                    
-            </tr>               
-        </tbody>
-      </table>
+          <tbody>
+              <tr class="data-table" ng-repeat="(keyCode, action) in keyboardControllerKeys">
+                  <td></td>
+                  <td>
+                      <span class="fs-subhead">{{ action.toUpperCase() }}</span>
+                  </td>
+                  <td>
+                      <span class="fs-subhead">{{ fromCharCodeToString(keyCode) }}</span>
+                  </td>
+                  <td></td>                    
+              </tr>               
+          </tbody>
+          </table>
+        </lx-tab>
+
+
+        
+        <lx-tab heading="QR Code">
+        <!-- <qrcode version="2" error-correction-level="M" size="200" data="{{ rtcUrl }}"></qrcode> -->
+        <div style=" background-color: white; border:20px solid white">
+       <qrcode version="4" error-correction-level="M" size="400" data="{{ rtcUrl }}"></qrcode>
+        </div>
+        <br />
+        {{ rtcUrl }}
+        </lx-tab>
+      </lx-tabs>
+
     </div>
 
     <div class="dialog__actions bgc-white-4">

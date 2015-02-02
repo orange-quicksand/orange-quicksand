@@ -87,10 +87,11 @@ body {
 <script src="lib/peerjs/peer.min.js"></script>
 
 <script>
+var rtcId = location.search.slice(1);
 
-var peer = new Peer('0phone', {key: 'kus7eqqnljgzxgvi'});
+var peer = new Peer(rtcId, {key: 'kus7eqqnljgzxgvi'});
 peer.on('open', function (){
-  var c = peer.connect('0game');
+  var c = peer.connect(rtcId);
   console.log('con');
   c.on('open', function (data) {
     console.log("CONNECTED");

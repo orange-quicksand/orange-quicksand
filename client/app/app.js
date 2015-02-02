@@ -6,7 +6,8 @@ var app = angular
     'uGame.register',
     'ui.router',
     'lumx',
-    'ngFx'
+    'ngFx',
+    'monospaced.qrcode'
   ])
   
   .config(function ($stateProvider, $urlRouterProvider) {
