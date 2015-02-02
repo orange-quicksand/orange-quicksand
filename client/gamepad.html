@@ -1,0 +1,119 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"> 
+
+<style>
+body {
+  background-color: #000;
+  font-size: 50px;
+  margin: 20px;
+  padding: 0;
+}
+#up, #down, #left, #right, #middle {
+  width: 1.2em;
+  height: 1.2em;
+  background-color: #666;
+}
+
+#up, #down {
+  margin-left: 1.2em;
+}
+
+#left, #middle, #right {
+  display: inline-block;
+  float: left;
+}
+#down {
+  clear: left;
+}
+
+#a, #b {
+  width: 2em;
+  height: 2em;
+  background-color: purple;
+  border-radius: 1em;
+  position: absolute;
+}
+
+#b {
+  right: 2.5em;
+  top: 2.5em;
+}
+
+#a {
+  right: 20px;
+  top: 0.5em;
+}
+
+
+#start, #select {
+  position: absolute;
+  bottom: 30px;
+  width: 2em;
+  height: 0.6em;
+  background-color: #666;
+  border-radius: 0.2em;
+}
+
+#start {
+  left: 4em;
+}
+#select {
+  left: 7em;
+}
+
+.pressed {
+  background-color: #0ff !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="control" id="up"></div>
+<div class="control" id="left"></div>
+<div class="control" id="middle"></div>
+<div class="control" id="right"></div>
+<div class="control" id="down"></div>
+
+<div class="control" id="b"></div>
+<div class="control" id="a"></div>
+
+<div class="control" id="start"></div>
+<div class="control" id="select"></div>
+
+
+<script src="lib/jquery/dist/jquery.js"></script>
+<script src="lib/peerjs/peer.min.js"></script>
+
+<script>
+
+var peer = new Peer('0phone', {key: 'kus7eqqnljgzxgvi'});
+peer.on('open', function (){
+  var c = peer.connect('0game');
+  console.log('con');
+  c.on('open', function (data) {
+    console.log("CONNECTED");
+    $('div').on('touchstart touchend mousedown mouseup click', function (e) {
+      e.preventDefault();
+
+
+      if (e.type === 'touchstart' || e.type === 'mousedown') {
+        c.send({ 'key': 'down', 'button': this.id });
+        $(this).addClass('pressed');
+      }
+      if (e.type === 'touchend' || e.type === 'mouseup') {
+        c.send({ 'key': 'up', 'button': this.id  });
+        $(this).removeClass('pressed');        
+      }
+
+    });
+
+  });
+});
+
+
+</script>
+
+</body>
+</html>

@@ -18,6 +18,50 @@ angular.module('uGame.game', [])
   // Temporary
   var state;
 
+  // WebRTC Game Controller
+
+  $scope.setupPeer = function () {
+
+    var controllerKeyCodes = {
+      'right':  39,
+      'left':   37,
+      'up':     38,
+      'down':   40,
+      'a':      88,
+      'b':      90,
+      'select': 16,
+      'start':  13
+    };
+
+    var peer = new Peer('0game', {key: 'kus7eqqnljgzxgvi', debug: 3});
+    console.log(peer);
+    peer.on('connection', function (connection) {
+      console.log('oncon');
+
+      connection.on('open', function() {
+        console.log('open');
+        connection.on('data', function(data) {
+
+          console.log('data!!');
+          var gamepad = data;
+          
+          if (gamepad.key === 'down') {
+            console.log(controllerKeyCodes[gamepad.button]);
+            console.log($scope.onKeyDown);
+            $scope.onKeyDown(controllerKeyCodes[gamepad.button]);
+          }
+          if (gamepad.key === 'up') {
+            console.log(controllerKeyCodes[gamepad.button]);
+            $scope.onKeyUp(controllerKeyCodes[gamepad.button]);
+          }
+        });
+      });
+    });
+
+  };
+
+
+
   // ALL KEY BINDINGS HERE
   //-------------------------------------
   //
@@ -61,6 +105,7 @@ angular.module('uGame.game', [])
             title: game.title
           };
           gameIsLoaded = true;
+          $scope.setupPeer();
 
         } else {
           $location.path('/login');
