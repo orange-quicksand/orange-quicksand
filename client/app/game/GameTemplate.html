@@ -20,17 +20,58 @@
           </a>
         </li>
         <li>
-          <a lx-ripple lx-tooltip="Setup Your Controller" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()">
+          <a lx-ripple lx-tooltip="Setup Your Controller" tooltip-position="bottom" href="#" ng-mouseover="togglePinMenu()" ng-mouseleave="togglePinMenu()" ng-click="openControllerDialog('controllers')">
             Controller
           </a>
         </li>
       </ul>
     </div>
+    
 
     <div class="game-view-overlay bottom-overlay fx-fade-down fx-easing-expo fx-speed-450" ng-show="menuIsShown">
       <h1>{{ gameInfo.title }}</h1>
     </div>
   </div>
+
+  <lx-dialog class="dialog dialog--l bgc-blue-grey-900" id="controllers" onclose="closingDialog()">
+    <div class="dialog__header">
+      <div class="toolbar bgc-black-4 pl+">
+        <span class="toolbar__label tc-white fs-title">
+          Controllers
+        </span>
+      </div>
+    </div>
+
+    <div class="dialog__content">
+      <table class="data-table data-table--has-primary data-table--has-secondary">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Gameboy Color Action</th>
+                <th>Key to Press</th>                    
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr class="data-table" ng-repeat="(keyCode, action) in keyboardControllerKeys">
+                <td></td>
+                <td>
+                    <span class="fs-subhead">{{ action.toUpperCase() }}</span>
+                </td>
+                <td>
+                    <span class="fs-subhead">{{ fromCharCodeToString(keyCode) }}</span>
+                </td>
+                <td></td>                    
+            </tr>               
+        </tbody>
+      </table>
+    </div>
+
+    <div class="dialog__actions bgc-white-4">
+        <button class="btn btn--m btn--white btn--flat" lx-ripple lx-dialog-close>OK</button>
+    </div>
+  </lx-dialog>
 
   <!-- 
     This transparent div is going on top of all other elements (except menu items). 
