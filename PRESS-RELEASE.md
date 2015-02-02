@@ -55,4 +55,4 @@ Register a username and password, log in, click the game of your choice, and pla
 
 ## Closing and Call to Action ##
   > Wrap it up and give pointers where the reader should go next.
-Classic video games are just a click away. Pay Bren $8 a month and play today.
+Classic video games are just a click away. On our site, you don't just play... *uGame*.
