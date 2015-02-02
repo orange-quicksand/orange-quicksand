@@ -46,10 +46,10 @@ angular.module('uGame.game', [])
   //
   // GETs the game from server and starts it into the emulator.
   //
-  var getAndStartGame = function() {
+  $scope.getAndStartGame = function() {
     Game.get($stateParams.id)
       .then(function(game){
-        if (game) {
+        if (game) { 
           $scope.API.init(game.rom);
           $scope.gameInfo = {
             title: game.title
@@ -75,7 +75,7 @@ angular.module('uGame.game', [])
   //
   $scope.getGameBoyAPI = function() {
     $scope.API = window.frames.GBC.gameBoyAPI;
-    getAndStartGame();
+    $scope.getAndStartGame();
   };
 
   // goHome ()
@@ -159,7 +159,7 @@ angular.module('uGame.game', [])
       
       menuTimer = $timeout(function() { 
         if (!menuIsPinned) {
-          hideMenu();         
+          $scope.hideMenu();         
         }
       }, 2500);      
     }
@@ -174,7 +174,7 @@ angular.module('uGame.game', [])
   // Hides the menu.
   // Hosts a hack.
   //
-  var hideMenu = function() {
+  $scope.hideMenu = function() {
     $scope.menuIsShown = false;
     menuIsPinned = false;
 
