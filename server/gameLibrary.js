@@ -71,5 +71,17 @@ module.exports = [
     title: 'Bomberman GB',
     image: 'BombermanGB.jpg',
     description: 'A suspicious looking dude with tons of bombs'
+  },
+  {
+    id: '12',
+    title: 'Megaman Xtreme',
+    image: 'MegamanXtreme.jpg',
+    description: 'Boy in suit shoots photon balls'
+  },
+  {
+    id: '13',
+    title: 'Mortal Kombat 4',
+    image: 'MortalKombat4.jpg',
+    description: 'Angry people fighting'
   }
 ];
