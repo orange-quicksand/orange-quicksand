@@ -4,6 +4,10 @@
   @include shift(1);
 }
 
+body{
+  height: 100vh;
+}
+
 .game-cover {
   float: left;
   width: 17vw;
