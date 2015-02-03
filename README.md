@@ -14,8 +14,9 @@ Netflix for Video Games
 1. [Requirements](#requirements)
 1. [Development](#development)
     1. [Installing Dependencies](#installing-dependencies)
-    1. [Tasks](#tasks)
+    1. [Tasks](#roadmap)
 1. [Team](#team)
+1. [Documentation](#documentation)
 1. [Contributing](#contributing)
 
 ## Usage
