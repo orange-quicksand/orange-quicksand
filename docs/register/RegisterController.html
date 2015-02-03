@@ -32,7 +32,7 @@
             
             <div class="content"><div class='highlight'><pre>angular.module(<span class="hljs-string">'uGame.register'</span>, [])
 
-.controller(<span class="hljs-string">'RegisterController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($scope, $http)</span></span>{
+.controller(<span class="hljs-string">'RegisterController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($scope, $location, User, LxNotificationService)</span></span>{
   $scope.user = {};</pre></div></div>
             
         </li>
@@ -44,7 +44,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>click listener for sending post request to server</p>
+              <p>Sends username and password through a POST request to server to register user</p>
 
             </div>
             
@@ -59,16 +59,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>will only post if username and password is present</p>
+              <p>Sends POST request only if username and password is present</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>($scope.user.username &amp;&amp; $scope.user.password){
-      $http({
-        url: <span class="hljs-string">'/user/register'</span>,
-        method: <span class="hljs-string">'POST'</span>,
-        data: $scope.user
-      }).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resp)</span></span>{</pre></div></div>
+      User.userRegister($scope.user).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resp)</span></span>{
+        <span class="hljs-keyword">if</span> (resp.data) {</pre></div></div>
             
         </li>
         
@@ -79,16 +76,34 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>resp === ture || false depending on if username is already taken
-if true, will redirect to login for user to login
-if false, will let user know username is already in use</p>
+              <p>If valid entry, redirect to login page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">console</span>.log(resp);
-      })
+            <div class="content"><div class='highlight'><pre>          $location.path(<span class="hljs-string">'/login'</span>);
+        }<span class="hljs-keyword">else</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>If invalid entry, notify user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          LxNotificationService.error(<span class="hljs-string">'User already exists'</span>);
+        }
+      });
+    }<span class="hljs-keyword">else</span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
   };
+
 });</pre></div></div>
             
         </li>

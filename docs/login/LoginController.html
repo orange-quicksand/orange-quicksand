@@ -32,7 +32,7 @@
             
             <div class="content"><div class='highlight'><pre>angular.module(<span class="hljs-string">'uGame.login'</span>, [])
 
-.controller(<span class="hljs-string">'LoginController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($scope, $interval, $http, Game)</span></span>{
+.controller(<span class="hljs-string">'LoginController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($scope, $interval, $location, User, LxNotificationService)</span></span>{
   $scope.user = {};
 
   <span class="hljs-keyword">var</span> array = [<span class="hljs-string">'i'</span>, <span class="hljs-string">'we'</span>, <span class="hljs-string">'they'</span>, <span class="hljs-string">'u'</span>];
@@ -47,16 +47,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>creates the banner for the login page. Change if wanted</p>
+              <p>Creates banner animation</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  $interval(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
     <span class="hljs-keyword">if</span>(i &gt;= array.length){
-      i = -<span class="hljs-number">1</span>
+      i = -<span class="hljs-number">1</span>;
     }
-    i++
-    $scope.changedWords = array[i]
+    i++;
+    $scope.changedWords = array[i];
   }, <span class="hljs-number">500</span>, <span class="hljs-number">4</span>);</pre></div></div>
             
         </li>
@@ -68,7 +68,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>sends login information to server</p>
+              <p>Sends login information through a POST request to server for access to api</p>
 
             </div>
             
@@ -83,17 +83,50 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>only makes post request to log in if user placed a valid
-username and password</p>
+              <p>Sends POST request only if username and password is present</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>($scope.user.username &amp;&amp; $scope.user.password){
-      Game.gameLogin($scope.user).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span></span>{
-        <span class="hljs-built_in">console</span>.log(data);
-      })
+      User.userLogin($scope.user).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resp)</span></span>{
+        <span class="hljs-keyword">if</span> (resp.data) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>If valid entry, redirect to home page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          $location.path(<span class="hljs-string">'/home'</span>);
+        }<span class="hljs-keyword">else</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>If invalid entry, notify user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          LxNotificationService.error(<span class="hljs-string">'Invalid username and password'</span>);
+        }
+      });
+    }<span class="hljs-keyword">else</span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
-  }
+  };
 
 });</pre></div></div>
             
