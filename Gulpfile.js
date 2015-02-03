@@ -20,13 +20,13 @@ var paths = {
   test:   ['./specs/**/*.js']
 };
 
-gulp.task('clean', function() {
+gulp.task('cleanStyles', function() {
   del(['./client/styles/**/*.css']);
   del(['./client/styles/**/*.css.map']);
 });
 
-gulp.task('sass', ['clean'], function() {
-    return sass('./client/styles/main.scss') 
+gulp.task('sass', ['cleanStyles'], function() {
+    return sass('./client/styles/main.scss')
     .on('error', function (err) {
       console.error('Error!', err.message);
     })
@@ -41,7 +41,11 @@ gulp.task('jshint', function () {
 });
 
 // Build documentation using Docco
-gulp.task('docco', function () {
+gulp.task('cleanDocs', function() {
+  del(['./docs/**/*']);
+});
+
+gulp.task('docco', ['cleanDocs'], function () {
   gulp.src(paths.scripts)
     .pipe(docco())
     .pipe(gulp.dest('./docs'));
@@ -51,7 +55,7 @@ gulp.task('docco', function () {
 // Watch when files change
 gulp.task('watch', function () {
   gulp.watch(paths.scss, ['sass']);
-  gulp.watch(paths.scripts, ['jshint']);  
+  gulp.watch(paths.scripts, ['jshint']);
 });
 
 // Run karma in terminal
