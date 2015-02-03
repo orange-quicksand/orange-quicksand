@@ -3,9 +3,9 @@ angular.module('uGame.login', [])
 .controller('LoginController', function($scope, $interval, $location, User, LxNotificationService){
   $scope.user = {};
 
+  // Creates banner animation
   var array = ['i', 'we', 'they', 'u'];
   var i = -1;
-  // Creates banner animation
   $interval(function(){
     if(i >= array.length){
       i = -1;
@@ -14,7 +14,14 @@ angular.module('uGame.login', [])
     $scope.changedWords = array[i];
   }, 500, 4);
 
-  // Sends login information through a POST request to server for access to api
+  // login ()
+  //---------
+  // returns: null;
+  //
+  // WHAT IT DOES
+  //
+  // Sends login information through a POST request to server for access to api through the User service
+  //
   $scope.login = function(){
     // Sends POST request only if username and password is present
     if($scope.user.username && $scope.user.password){
