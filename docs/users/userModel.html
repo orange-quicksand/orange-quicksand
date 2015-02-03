@@ -27,10 +27,26 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h2 id="about">ABOUT</h2>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>);
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Contains the definition for the user model and helper functions
+that are used for handling data from the user’s model</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>);
 <span class="hljs-keyword">var</span> bcrypt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'bcrypt'</span>);
 
 <span class="hljs-keyword">var</span> UserSchema = <span class="hljs-keyword">new</span> mongoose.Schema({
@@ -48,17 +64,33 @@
         </li>
         
         
-        <li id="section-2">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+                <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Bcrypt middleware</p>
+              <h2 id="saving-new-users">SAVING NEW USERS</h2>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>UserSchema.pre(<span class="hljs-string">'save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(next)</span> </span>{
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>When a instance of <code>User</code> attemps to save to the DB throught the 
+.save method, this mongoose middleware will run and salt+hash
+the <code>User</code> instance’s password before storing into the DB.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+UserSchema.pre(<span class="hljs-string">'save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(next)</span> </span>{
   <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">this</span>;
 
   <span class="hljs-keyword">if</span>(!user.isModified(<span class="hljs-string">'password'</span>)) {
@@ -81,13 +113,29 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Password verification</p>
+              <h2 id="password-verification">PASSWORD VERIFICATION</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><code>UserSchema.methods</code> works similar to the “Object.prototype” pseudoclasical 
+instantiation pattern. This <code>.comparePassword</code> method will we included in
+all instances of the <code>User</code> model. <code>bcrypt.compare</code> will return <code>isMatch</code>
+as true if the matching was correct.</p>
 
             </div>
             

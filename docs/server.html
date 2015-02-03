@@ -31,8 +31,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
-<span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>);
-<span class="hljs-keyword">var</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>);</pre></div></div>
+<span class="hljs-keyword">var</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>);
+<span class="hljs-keyword">var</span> db = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./db.js'</span>);</pre></div></div>
             
         </li>
         
@@ -43,8 +43,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>var session = require(‘express-session’);
-var passport = require(‘passport’);</p>
+              <h2 id="express-configuration">EXPRESS CONFIGURATION</h2>
 
             </div>
             
@@ -57,15 +56,19 @@ var passport = require(‘passport’);</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>var UserSave = require(‘./saves/savesModel.js’);</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">var</span> Game = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./games/gamesModel.js'</span>);
-<span class="hljs-keyword">var</span> Rom = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./roms/romsModel.js'</span>);
-<span class="hljs-keyword">var</span> library = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./gameLibrary.js'</span>);
-<span class="hljs-keyword">var</span> romLibrary = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./romLibrary.js'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> app = express();
+<span class="hljs-built_in">module</span>.exports = app;
+
+app.use(bodyParser.json({limit: <span class="hljs-string">'10mb'</span>}));
+app.use(bodyParser.urlencoded({limit: <span class="hljs-string">'10mb'</span>, extended: <span class="hljs-literal">true</span>}));
+app.use(express.static(__dirname + <span class="hljs-string">'/../client'</span>));
+
+
+<span class="hljs-keyword">var</span> port = process.env.PORT || <span class="hljs-number">3000</span>;
+app.listen(port);</pre></div></div>
             
         </li>
         
@@ -76,13 +79,9 @@ var passport = require(‘passport’);</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>var romLibrary = require(‘./romLibrary2.js’);</p>
+              <h2 id="routes-setup">ROUTES SETUP</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">var</span> app = express();
-<span class="hljs-built_in">module</span>.exports = app;</pre></div></div>
             
         </li>
         
@@ -93,17 +92,13 @@ var passport = require(‘passport’);</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Configure express</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>app.use(bodyParser.json({limit: <span class="hljs-string">'10mb'</span>}));
-app.use(bodyParser.urlencoded({limit: <span class="hljs-string">'10mb'</span>, extended: <span class="hljs-literal">true</span>}));
-app.use(express.static(__dirname + <span class="hljs-string">'/../client'</span>));
-
-<span class="hljs-keyword">var</span> port = process.env.PORT || <span class="hljs-number">3000</span>;
-
-app.listen(port);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">require</span>(<span class="hljs-string">'./users/userRoutes.js'</span>)(app);
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'./games/gamesRoutes.js'</span>)(app);
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'./saves/savesRoutes.js'</span>)(app);
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'./roms/romsRoutes.js'</span>)(app);</pre></div></div>
             
         </li>
         
@@ -114,8 +109,7 @@ app.listen(port);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>app.use(passport.initialize());
-app.use(passport.session());</p>
+              <h1 id="file-structure">FILE STRUCTURE</h1>
 
             </div>
             
@@ -128,50 +122,12 @@ app.use(passport.session());</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Create mongo database</p>
+              <p>/server/db.js
+/server/<code>modelName</code>/<code>modelNameController</code>/
+/server/<code>modelName</code>/<code>modelNameRoutes</code>/
+/server/<code>modelName</code>/<code>modelNameModel</code>/ </p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> location = process.env.LOC || <span class="hljs-string">'localhost/orangequicksand'</span>;
-mongoose.connect(<span class="hljs-string">'mongodb://'</span> + location);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Initialize database with test game info</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>mongoose.connection.collections[<span class="hljs-string">'games'</span>].drop(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, result)</span> </span>{
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; library.length; i++) {
-    <span class="hljs-keyword">new</span> Game(library[i]).save(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, game, numberAffected)</span> </span>{
-      <span class="hljs-keyword">if</span> (err) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Saving error: '</span> + err);
-      }
-    });
-  }
-});
-
-mongoose.connection.collections[<span class="hljs-string">'roms'</span>].drop(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, result)</span> </span>{
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; romLibrary.length; i++) {
-    <span class="hljs-keyword">new</span> Rom(romLibrary[i]).save(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, rom, numberAffected)</span> </span>{
-      <span class="hljs-keyword">if</span> (err) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Saving error: '</span> + err);
-      }
-    });
-  }
-});
-
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'./users/userRoutes.js'</span>)(app);
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'./games/gamesRoutes.js'</span>)(app);
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'./saves/savesRoutes.js'</span>)(app);
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'./roms/romsRoutes.js'</span>)(app);</pre></div></div>
             
         </li>
         

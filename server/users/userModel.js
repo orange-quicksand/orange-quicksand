@@ -1,3 +1,10 @@
+// ABOUT
+//-------
+//
+// Contains the definition for the user model and helper functions
+// that are used for handling data from the user's model
+//
+
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
@@ -13,7 +20,13 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
-// Bcrypt middleware
+// SAVING NEW USERS
+//------------------
+//
+// When a instance of `User` attemps to save to the DB throught the 
+// .save method, this mongoose middleware will run and salt+hash
+// the `User` instance's password before storing into the DB.
+
 UserSchema.pre('save', function(next) {
   var user = this;
 
@@ -34,7 +47,13 @@ UserSchema.pre('save', function(next) {
   });
 });
 
-// Password verification
+// PASSWORD VERIFICATION
+//-----------------------
+//
+// `UserSchema.methods` works similar to the "Object.prototype" pseudoclasical 
+// instantiation pattern. This `.comparePassword` method will we included in
+// all instances of the `User` model. `bcrypt.compare` will return `isMatch`
+// as true if the matching was correct.
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
     if(err) {

@@ -1,3 +1,10 @@
+// ABOUT
+//------
+//
+// The UserSave model stores all user initiated Saved Games.
+// It was named UserSave given a future oportunity of creating a new model
+// called AutoSave.
+
 var mongoose = require('mongoose');
 
 var UserSavesSchema = new mongoose.Schema({

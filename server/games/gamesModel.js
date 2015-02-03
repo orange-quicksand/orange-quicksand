@@ -1,3 +1,10 @@
+// ABOUT
+//------
+//
+// The Game model stores all meta data related to the game. The 
+// game files themselves are stored in the Rom model.
+// 
+
 var mongoose = require('mongoose');
 
 var GamesSchema = new mongoose.Schema({
