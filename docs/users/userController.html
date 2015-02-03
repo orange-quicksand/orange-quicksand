@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>userController.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>userController.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> User = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./userModel.js'</span>);
+<span class="hljs-keyword">var</span> app = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../server.js'</span>);
+<span class="hljs-keyword">var</span> session = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express-session'</span>);
+<span class="hljs-keyword">var</span> passport = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport'</span>);
+<span class="hljs-keyword">var</span> LocalStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport-local'</span>).Strategy;
+
+<span class="hljs-keyword">var</span> sessionSecret = process.env.SECRET || <span class="hljs-string">'orange quicksand'</span>;
+
+app.use(session({
+  secret: sessionSecret,
+  resave: <span class="hljs-literal">false</span>,
+  saveUninitialized: <span class="hljs-literal">false</span>
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+passport.serializeUser(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(user, done)</span> </span>{
+  done(<span class="hljs-literal">null</span>, user.id);
+});
+
+passport.deserializeUser(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id, done)</span> </span>{
+  User.findById(id, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, user)</span> </span>{
+    done(err, user);
+  });
+});
+
+passport.use(<span class="hljs-keyword">new</span> LocalStrategy(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(username, password, done)</span> </span>{
+  User.findOne({ username: username }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, user)</span> </span>{
+    <span class="hljs-keyword">if</span> (err) {
+      <span class="hljs-keyword">return</span> done(err);
+    }
+    <span class="hljs-keyword">if</span> (!user) {
+      <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, <span class="hljs-literal">false</span>, { message: <span class="hljs-string">'Unknown user '</span> + username });
+    }
+    user.comparePassword(password, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, isMatch)</span> </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> done(err);
+      }
+      <span class="hljs-keyword">if</span> (isMatch) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, user);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, <span class="hljs-literal">false</span>, { message: <span class="hljs-string">'Invalid password'</span> });
+      }
+    });
+  });
+}));
+
+
+<span class="hljs-built_in">module</span>.exports = {
+    login: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res, next)</span> </span>{
+    passport.authenticate(<span class="hljs-string">'local'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, user, info)</span> </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> next(err);
+      }
+      <span class="hljs-keyword">if</span> (!user) {
+        <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">false</span>);
+      }
+      req.logIn(user, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> next(err);
+          }
+          <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">true</span>);
+        });
+      })(req, res, next);
+    },
+
+    register:  <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+    <span class="hljs-keyword">var</span> username = req.body.username;
+    <span class="hljs-keyword">var</span> password = req.body.password;
+
+    User.findOne({username: username}, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, found)</span> </span>{
+      <span class="hljs-keyword">if</span> (found) {
+        res.send(<span class="hljs-literal">false</span>);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">new</span> User({
+          username: username,
+          password: password
+        }).save();
+        res.send(<span class="hljs-literal">true</span>);
+      }
+    });
+  },
+
+  logout: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+    req.logout();
+    res.send();
+  }
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -33,10 +33,7 @@
             <div class="content"><div class='highlight'><pre>angular.module(<span class="hljs-string">'uGame.login'</span>, [])
 
 .controller(<span class="hljs-string">'LoginController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($scope, $interval, $location, User, LxNotificationService)</span></span>{
-  $scope.user = {};
-
-  <span class="hljs-keyword">var</span> array = [<span class="hljs-string">'i'</span>, <span class="hljs-string">'we'</span>, <span class="hljs-string">'they'</span>, <span class="hljs-string">'u'</span>];
-  <span class="hljs-keyword">var</span> i = -<span class="hljs-number">1</span>;</pre></div></div>
+  $scope.user = {};</pre></div></div>
             
         </li>
         
@@ -51,7 +48,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  $interval(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> array = [<span class="hljs-string">'i'</span>, <span class="hljs-string">'we'</span>, <span class="hljs-string">'they'</span>, <span class="hljs-string">'u'</span>];
+  <span class="hljs-keyword">var</span> i = -<span class="hljs-number">1</span>;
+  $interval(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
     <span class="hljs-keyword">if</span>(i &gt;= array.length){
       i = -<span class="hljs-number">1</span>;
     }
@@ -68,11 +67,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Sends login information through a POST request to server for access to api</p>
+              <h2 id="login-">login ()</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  $scope.login = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
             
         </li>
         
@@ -82,6 +79,23 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>returns: null;</p>
+<p>WHAT IT DOES</p>
+<p>Sends login information through a POST request to server for access to api through the User service</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.login = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Sends POST request only if username and password is present</p>
 
@@ -94,11 +108,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>If valid entry, redirect to home page</p>
 
@@ -110,11 +124,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>If invalid entry, notify user</p>
 
