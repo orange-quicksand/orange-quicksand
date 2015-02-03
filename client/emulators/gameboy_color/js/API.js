@@ -1,10 +1,11 @@
 var gameBoyAPI = {
 
   // dataUriOpen(String)
+  //=====================
   // returns: null
   //
   // WHAT IT DOES
-  //--------------
+  //
   // It takes in an ESCAPED base64 enconded version of the ROM.
   // It thens loads the game and starts it.
   //
@@ -21,10 +22,11 @@ var gameBoyAPI = {
   },
   
   // restart()
+  //=====================
   // returns: null
   //
   // WHAT IT DOES
-  //--------------
+  //
   // It restarts the ROM that is currently running.
   // 
   restart : function() {
@@ -49,10 +51,11 @@ var gameBoyAPI = {
   },
 
   // resume()
+  //============
   // returns: null
   //
   // WHAT IT DOES
-  //--------------
+  //
   // It unpauses the game.
   //
   resume : function() {
@@ -60,9 +63,10 @@ var gameBoyAPI = {
   },
 
   // pause()
+  //=====================
   // return: null
   //
-  //
+  // WHAT IT DOES
   //
   // Function is alredy defined in global scope.
   pause: function() {
@@ -70,10 +74,11 @@ var gameBoyAPI = {
   },
 
   // saveFreezeState()
+  //=====================
   // returns: Array
   //
   // WHAT IT DOES
-  //--------------
+  //
   // It returns the current Freeze State of the game
   // as an Array.
   //
@@ -82,10 +87,11 @@ var gameBoyAPI = {
   },
   
   // openFreezeState(Array)
+  //=====================
   // returns: null
   //
   // WHAT IT DOES
-  //--------------
+  //
   // It returns the current Freeze State of the game
   // as an Array.
   //
@@ -103,6 +109,7 @@ var gameBoyAPI = {
   },
 
   // fullScreenMode()
+  //=====================
   // returns: null
   //
   // WHAT IT DOES
@@ -118,33 +125,12 @@ var gameBoyAPI = {
     windowStacks[0].hide();
   },
 
-  // TODO
-  //=====================
-  // setKeyZones(Object)
-  // returns null
-  //
-  // WHAT IT DOES
-  //--------------
-  // Set the keyZones to other.
-  // 
-  // Default keyZones = [
-  //   ["right", [39]],
-  //   ["left", [37]],
-  //   ["up", [38]],
-  //   ["down", [40]],
-  //   ["a", [88, 74]],
-  //   ["b", [90, 81, 89]],
-  //   ["select", [16]],
-  //   ["start", [13]]
-  // ];
-
-
 
   // init(String !!MUST BE BASE64 ENCONDED AND THEN ESCAPED AS A JS STRING!!)
+  //=====================
   // returns: null
   // 
   // WHAT IT DOES
-  //-----------------
   //
   // Starts the emulator with the inputed game
   //
@@ -157,24 +143,27 @@ var gameBoyAPI = {
     }
   },
 
-  // letParentKnow(String, Object)
+  // keyDown(String)
   //==============================
   // returns: null
   // 
   // WHAT IT DOES
-  //-----------------
   //
-  // It sends an event to the containing parent.
+  // It tells the emulator to press down a key (THIS IS NOT A CLICK)
   //
-  letParentKnow: function(type, payload) {
-    var event = new CustomEvent(type, { 'payload': payload } );        
-    window.dispatchEvent(event);
-  },
-
   keyDown: function(key) {
     GameBoyKeyDown(key);
   },
 
+  // keyup(String)
+  //==============================
+  // returns: null
+  // 
+  // WHAT IT DOES
+  //
+  // It tells the emulator to release a previously pressed key
+  // This always goes after keyDown for the same key.
+  //
   keyUp: function(key) {
     GameBoyKeyUp(key);
   }
