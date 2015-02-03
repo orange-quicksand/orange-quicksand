@@ -1,9 +1,23 @@
+// ABOUT
+//-------
+// The User Controller contains all the logic for handling
+// user sessions, login and registration.
+//
+// It is called from userRoutes.js.
+
 var User = require('./userModel.js');
 var app = require('../server.js');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+
+// SESSIONS HANDLING
+//======================
+//
+// Passport.js is used for session handling.
+// You have to setup your process.env.SECRET in your server
+// manually.
 var sessionSecret = process.env.SECRET || 'orange quicksand';
 
 app.use(session({
@@ -48,7 +62,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 
 
 module.exports = {
-    login: function(req, res, next) {
+  login: function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
       if (err) {
         return next(err);
@@ -65,7 +79,7 @@ module.exports = {
       })(req, res, next);
     },
 
-    register:  function(req, res){
+  register: function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
 
