@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>db.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>db.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>);
+
+<span class="hljs-keyword">var</span> Game = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./games/gamesModel.js'</span>);
+<span class="hljs-keyword">var</span> Rom = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./roms/romsModel.js'</span>);
+
+<span class="hljs-keyword">var</span> library = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./gameLibrary.js'</span>);
+<span class="hljs-keyword">var</span> romLibrary = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./romLibrary.js'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h1 id="setting-up-db-connection">SETTING UP DB CONNECTION</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> location = process.env.LOC || <span class="hljs-string">'localhost/orangequicksand'</span>;
+mongoose.connect(<span class="hljs-string">'mongodb://'</span> + location);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h1 id="db-init">DB INIT</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Inserting the game froms the romLibrary.js before starting.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>mongoose.connection.collections[<span class="hljs-string">'games'</span>].drop(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, result)</span> </span>{
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; library.length; i++) {
+    <span class="hljs-keyword">new</span> Game(library[i]).save(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, game, numberAffected)</span> </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Saving error: '</span> + err);
+      }
+    });
+  }
+});
+
+mongoose.connection.collections[<span class="hljs-string">'roms'</span>].drop(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, result)</span> </span>{
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; romLibrary.length; i++) {
+    <span class="hljs-keyword">new</span> Rom(romLibrary[i]).save(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, rom, numberAffected)</span> </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Saving error: '</span> + err);
+      }
+    });
+  }
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

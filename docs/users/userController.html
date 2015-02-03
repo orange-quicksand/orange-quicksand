@@ -27,16 +27,61 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h2 id="about">ABOUT</h2>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> User = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./userModel.js'</span>);
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The User Controller contains all the logic for handling
+user sessions, login and registration.</p>
+<p>It is called from userRoutes.js.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> User = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./userModel.js'</span>);
 <span class="hljs-keyword">var</span> app = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../server.js'</span>);
 <span class="hljs-keyword">var</span> session = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express-session'</span>);
 <span class="hljs-keyword">var</span> passport = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport'</span>);
-<span class="hljs-keyword">var</span> LocalStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport-local'</span>).Strategy;
+<span class="hljs-keyword">var</span> LocalStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport-local'</span>).Strategy;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h1 id="sessions-handling">SESSIONS HANDLING</h1>
 
-<span class="hljs-keyword">var</span> sessionSecret = process.env.SECRET || <span class="hljs-string">'orange quicksand'</span>;
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Passport.js is used for session handling.
+You have to setup your process.env.SECRET in your server
+manually.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> sessionSecret = process.env.SECRET || <span class="hljs-string">'orange quicksand'</span>;
 
 app.use(session({
   secret: sessionSecret,
@@ -80,7 +125,7 @@ passport.use(<span class="hljs-keyword">new</span> LocalStrategy(<span class="hl
 
 
 <span class="hljs-built_in">module</span>.exports = {
-    login: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res, next)</span> </span>{
+  login: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res, next)</span> </span>{
     passport.authenticate(<span class="hljs-string">'local'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, user, info)</span> </span>{
       <span class="hljs-keyword">if</span> (err) {
         <span class="hljs-keyword">return</span> next(err);
@@ -97,7 +142,7 @@ passport.use(<span class="hljs-keyword">new</span> LocalStrategy(<span class="hl
       })(req, res, next);
     },
 
-    register:  <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+  register: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> </span>{
     <span class="hljs-keyword">var</span> username = req.body.username;
     <span class="hljs-keyword">var</span> password = req.body.password;
 
