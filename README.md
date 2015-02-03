@@ -26,7 +26,7 @@ npm start
 
 - Create an account, log in, select a game
 - Save and load your game progress using the menu
-- Turn you phone into a gamepad by scanning the QR code in the controller tab
+- Turn your phone into a gamepad by scanning the QR code in the controller section
 
 ## Requirements
 
