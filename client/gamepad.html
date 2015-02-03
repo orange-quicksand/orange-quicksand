@@ -89,7 +89,7 @@ body {
 <script>
 var rtcId = location.search.slice(1);
 
-var peer = new Peer(rtcId, {key: 'kus7eqqnljgzxgvi'});
+var peer = new Peer('phone' + rtcId, {key: 'kus7eqqnljgzxgvi'});
 peer.on('open', function (){
   var c = peer.connect(rtcId);
   console.log('con');

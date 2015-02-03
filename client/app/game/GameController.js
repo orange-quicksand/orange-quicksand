@@ -46,9 +46,13 @@ angular.module('uGame.game', [])
 
       connection.on('open', function() {
         console.log('open');
+
+        LxDialogService.close('controllers');
+        LxNotificationService.notify('Phone connected!');
+
         connection.on('data', function(data) {
 
-          console.log('data!!');
+
           var gamepad = data;
           
           if (gamepad.key === 'down') {
