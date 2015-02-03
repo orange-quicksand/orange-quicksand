@@ -28,7 +28,7 @@ npm start
 
 - Node 0.10.x
 - MongoDB 2.6
-- SASS
+- Ruby SASS
 
 ## Development
 
@@ -37,15 +37,16 @@ npm start
 From within the root directory:
 
 ```
-npm install -g bower nodemon gulp
 npm install
-bower install
 ```
 
 ### Roadmap
 
 View the project roadmap [here](https://github.com/orange-quicksand/orange-quicksand/issues)
 
+### Documentation
+
+Run `gulp docco` and docs will be generated in the `docs` folder.
 
 ## Contributing
 
