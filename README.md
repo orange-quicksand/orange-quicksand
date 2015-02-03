@@ -24,11 +24,16 @@ Netflix for Video Games
 npm start
 ```
 
+- Create an account, log in, select a game
+- Save and load your game progress using the menu
+- Turn you phone into a gamepad by scanning the QR code in the controller tab
+
 ## Requirements
 
 - Node 0.10.x
 - MongoDB 2.6
 - Ruby SASS
+- PeerJS API Key
 
 ## Development
 
