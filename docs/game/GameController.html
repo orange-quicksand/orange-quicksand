@@ -91,17 +91,83 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>WebRTC Game Controller</p>
+              <h2 id="webrtc-game-controller">WebRTC Game Controller</h2>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> genId = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="genid-">genId()</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Generate a random 4 character id to use for WebRTC</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-keyword">var</span> genId = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
     <span class="hljs-keyword">return</span> (<span class="hljs-string">"0000"</span> + (<span class="hljs-built_in">Math</span>.random()*<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">36</span>,<span class="hljs-number">4</span>) &lt;&lt; <span class="hljs-number">0</span>).toString(<span class="hljs-number">36</span>)).slice(-<span class="hljs-number">4</span>);
   };
 
   $scope.rtcId = genId();
-  $scope.rtcUrl = <span class="hljs-string">'http://ugame.herokuapp.com/gamepad.html?'</span> + $scope.rtcId;
+  $scope.rtcUrl = <span class="hljs-string">'http://ugame.herokuapp.com/gamepad.html?'</span> + $scope.rtcId;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="setuppeer-">setupPeer()</h2>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Establishes WebRTC connection. Runs after ROM has been loaded.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
   $scope.setupPeer = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
 
     <span class="hljs-keyword">var</span> controllerKeyCodes = {
@@ -113,24 +179,60 @@
       <span class="hljs-string">'b'</span>:      <span class="hljs-number">90</span>,
       <span class="hljs-string">'select'</span>: <span class="hljs-number">16</span>,
       <span class="hljs-string">'start'</span>:  <span class="hljs-number">13</span>
-    };
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Establish PeerJS connection with generated id</p>
 
-    <span class="hljs-keyword">var</span> peer = <span class="hljs-keyword">new</span> Peer($scope.rtcId, {key: <span class="hljs-string">'kus7eqqnljgzxgvi'</span>, debug: <span class="hljs-number">3</span>});
-    <span class="hljs-built_in">console</span>.log(peer);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> peer = <span class="hljs-keyword">new</span> Peer($scope.rtcId, {key: <span class="hljs-string">'kus7eqqnljgzxgvi'</span>, debug: <span class="hljs-number">3</span>});
+
     peer.on(<span class="hljs-string">'connection'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(connection)</span> </span>{
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'oncon'</span>);
 
-      connection.on(<span class="hljs-string">'open'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'open'</span>);
+      connection.on(<span class="hljs-string">'open'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Upon connection with phone, close QR dialog</p>
 
-        LxDialogService.close(<span class="hljs-string">'controllers'</span>);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        LxDialogService.close(<span class="hljs-string">'controllers'</span>);
         LxNotificationService.notify(<span class="hljs-string">'Phone connected!'</span>);
 
-        connection.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{
+        connection.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Handle data sent from phone. Translate into game button keyup/keydown.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> gamepad = data;
 
-          <span class="hljs-keyword">var</span> gamepad = data;
-          
           <span class="hljs-keyword">if</span> (gamepad.key === <span class="hljs-string">'down'</span>) {
             <span class="hljs-built_in">console</span>.log(controllerKeyCodes[gamepad.button]);
             <span class="hljs-built_in">console</span>.log($scope.onKeyDown);
@@ -149,11 +251,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h2 id="all-key-bindings-here">ALL KEY BINDINGS HERE</h2>
 
@@ -162,11 +264,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Names of known key codes (0-255)</p>
 
@@ -177,11 +279,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Controller keys.</p>
 
@@ -201,11 +303,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>This var is used for a Hack in $scope.hideMenu()</p>
 
@@ -222,11 +324,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <h2 id="getandstartgame-">getAndStartGame ()</h2>
 
@@ -235,11 +337,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>WHAT IT DOES</p>
 <p>GETs the game from server and starts it into the emulator.</p>
@@ -249,7 +351,7 @@
             <div class="content"><div class='highlight'><pre>  $scope.getAndStartGame = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
     Game.get($stateParams.id)
       .then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(game)</span></span>{
-        <span class="hljs-keyword">if</span> (game) { 
+        <span class="hljs-keyword">if</span> (game) {
           $scope.API.init(game.rom);
           $scope.gameInfo = {
             title: game.title
@@ -266,11 +368,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h2 id="getgameboyapi-">getGameBoyApi ()</h2>
 
@@ -279,11 +381,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>NOTE: This is called when the ‘u-game-i-frame-on-load’ directive
 determines that the Emulator has finished loading.</p>
@@ -300,11 +402,11 @@ determines that the Emulator has finished loading.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h2 id="gohome-">goHome ()</h2>
 
@@ -313,11 +415,11 @@ determines that the Emulator has finished loading.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>WHAT IT DOES</p>
 <p>Routes the user back home page. Removes keyboard events.</p>
@@ -333,11 +435,11 @@ determines that the Emulator has finished loading.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h2 id="save-and-load-games">SAVE AND LOAD GAMES</h2>
 
@@ -346,11 +448,11 @@ determines that the Emulator has finished loading.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               
             </div>
@@ -369,30 +471,30 @@ determines that the Emulator has finished loading.</p>
       } <span class="hljs-keyword">else</span> {
         LxNotificationService.error(<span class="hljs-string">'There was problem saving your game.'</span>);
       }
-    });  
+    });
   };
 
   $scope.loadPreviousGame = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> </span>{
     LxNotificationService.notify(<span class="hljs-string">'Loading Game...'</span>);
     Game.load($stateParams.id)
       .then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(savedGame)</span></span>{
-        <span class="hljs-keyword">if</span> (savedGame) {          
+        <span class="hljs-keyword">if</span> (savedGame) {
           $scope.API.openFreezeState(savedGame.payload);
           LxNotificationService.success(<span class="hljs-string">'Game Loaded Succesfully.'</span>);
         } <span class="hljs-keyword">else</span> {
-          LxNotificationService.notify(<span class="hljs-string">'No Save Files found for Current Game.'</span>);          
+          LxNotificationService.notify(<span class="hljs-string">'No Save Files found for Current Game.'</span>);
         }
-    });    
+    });
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h2 id="menu-helper-functions-rundown">MENU HELPER FUNCTIONS RUNDOWN</h2>
 
@@ -401,11 +503,11 @@ determines that the Emulator has finished loading.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h2 id="togglepinmenu-">togglePinMenu ()</h2>
 
@@ -414,11 +516,11 @@ determines that the Emulator has finished loading.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>WHAT IT DOES</p>
 <p>It allows the menu to stay visible when the mouse
@@ -426,18 +528,18 @@ is over (ng-mouseover) a menu item.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  $scope.togglePinMenu = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{   
+            <div class="content"><div class='highlight'><pre>  $scope.togglePinMenu = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
     menuIsPinned = !menuIsPinned;
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h2 id="showmenuwhilemoving-">showMenuWhileMoving ()</h2>
 
@@ -446,11 +548,11 @@ is over (ng-mouseover) a menu item.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>WHAT IT DOES</p>
 <p>It shows the menu when the mouse moves.
@@ -459,30 +561,30 @@ Destroys previous hideMenu timeouts on posterior mouse move events.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  $scope.showMenuWhileMoving = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{    
+            <div class="content"><div class='highlight'><pre>  $scope.showMenuWhileMoving = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
     <span class="hljs-keyword">if</span> (gameIsLoaded &amp;&amp; !menuHasJustBeenShow &amp;&amp; !menuIsPinned) {
       $scope.menuIsShown = <span class="hljs-literal">true</span>;
 
-      <span class="hljs-keyword">if</span> (menuTimer) { 
-        $timeout.cancel(menuTimer); 
+      <span class="hljs-keyword">if</span> (menuTimer) {
+        $timeout.cancel(menuTimer);
       }
-      
-      menuTimer = $timeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ 
+
+      menuTimer = $timeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
         <span class="hljs-keyword">if</span> (!menuIsPinned) {
-          $scope.hideMenu();         
+          $scope.hideMenu();
         }
-      }, <span class="hljs-number">2500</span>);      
+      }, <span class="hljs-number">2500</span>);
     }
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-23">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h2 id="hidemenu-">hideMenu ()</h2>
 
@@ -491,11 +593,11 @@ Destroys previous hideMenu timeouts on posterior mouse move events.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>WHAT IT DOES</p>
 <p>Hides the menu.
@@ -510,11 +612,11 @@ Hosts a hack.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>HACK - Omar
 If we don’t do this, the Menu will flash again.
@@ -531,11 +633,11 @@ Try removing this and see for yourself.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h2 id="controller">CONTROLLER</h2>
 
@@ -544,17 +646,17 @@ Try removing this and see for yourself.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               
             </div>
             
             <div class="content"><div class='highlight'><pre>  $scope.onKeyDown = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span> </span>{
-    <span class="hljs-keyword">if</span> ($scope.keyboardControllerKeys.hasOwnProperty(key)) {      
+    <span class="hljs-keyword">if</span> ($scope.keyboardControllerKeys.hasOwnProperty(key)) {
       $scope.API.keyDown($scope.keyboardControllerKeys[key]);
     }
   };
@@ -578,11 +680,11 @@ Try removing this and see for yourself.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <h1 id="ugameiframeonload-directive-">uGameIframeOnload (directive)</h1>
 
@@ -591,11 +693,11 @@ Try removing this and see for yourself.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>WHAT IT DOES</p>
 <p>It takes a callback provided in the directive attibute
@@ -625,7 +727,7 @@ has loaded.</p>
       scope: <span class="hljs-literal">false</span>,
       link: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scope)</span> </span>{
         $<span class="hljs-built_in">document</span>.on(<span class="hljs-string">'keydown'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> </span>{
-          scope.onKeyDown(e.keyCode);          
+          scope.onKeyDown(e.keyCode);
         });
 
         $<span class="hljs-built_in">document</span>.on(<span class="hljs-string">'keyup'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> </span>{

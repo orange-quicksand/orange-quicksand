@@ -44,11 +44,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Sends username and password through a POST request to server to register user</p>
+              <h2 id="register-">register ()</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  $scope.register = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
             
         </li>
         
@@ -58,6 +56,24 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>returns: null;</p>
+<p>WHAT IT DOES</p>
+<p>Checks if text boxes contain strings and then sends username and
+password to the server through the User service to register the user. </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.register = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Sends POST request only if username and password is present</p>
 
@@ -70,11 +86,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>If valid entry, redirect to login page</p>
 
@@ -86,11 +102,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>If invalid entry, notify user</p>
 

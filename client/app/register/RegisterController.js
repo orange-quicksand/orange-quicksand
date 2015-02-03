@@ -3,7 +3,15 @@ angular.module('uGame.register', [])
 .controller('RegisterController', function($scope, $location, User, LxNotificationService){
   $scope.user = {};
 
-  // Sends username and password through a POST request to server to register user
+  // register ()
+  //------------
+  // returns: null;
+  //
+  // WHAT IT DOES
+  //
+  // Checks if text boxes contain strings and then sends username and
+  // password to the server through the User service to register the user. 
+  //
   $scope.register = function(){
     // Sends POST request only if username and password is present
     if($scope.user.username && $scope.user.password){
