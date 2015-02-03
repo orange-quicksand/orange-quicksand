@@ -1,7 +1,11 @@
+<!--
+
+This file loads in your phone allowing you to use your phone as a gamepad controller.
+
+-->
 <html>
 <head>
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"> 
-
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <style>
 body {
   background-color: #000;
@@ -87,25 +91,31 @@ body {
 <script src="lib/peerjs/peer.min.js"></script>
 
 <script>
+
+// Get game's PeerJS id from URL
 var rtcId = location.search.slice(1);
 
+// Establish PeerJs connection
 var peer = new Peer('phone' + rtcId, {key: 'kus7eqqnljgzxgvi'});
+
+// Connect to your game
 peer.on('open', function (){
   var c = peer.connect(rtcId);
-  console.log('con');
-  c.on('open', function (data) {
-    console.log("CONNECTED");
-    $('div').on('touchstart touchend mousedown mouseup click', function (e) {
-      e.preventDefault();
 
+  c.on('open', function (data) {
+
+    // When connected to game, send data from event listeners
+
+    $('div').on('touchstart touchend mousedown mouseup', function (e) {
+      e.preventDefault();
 
       if (e.type === 'touchstart' || e.type === 'mousedown') {
         c.send({ 'key': 'down', 'button': this.id });
-        $(this).addClass('pressed');
+        $(this).addClass('pressed'); // Show visual feedback for tapping button
       }
       if (e.type === 'touchend' || e.type === 'mouseup') {
         c.send({ 'key': 'up', 'button': this.id  });
-        $(this).removeClass('pressed');        
+        $(this).removeClass('pressed');
       }
 
     });
